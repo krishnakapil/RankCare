@@ -28,6 +28,9 @@ public class SignUpRequest {
 
     private String designation;
 
+    private String modifyFlg;
+    
+    private Long id;
     public String getName() {
         return name;
     }
@@ -83,4 +86,20 @@ public class SignUpRequest {
     public void setDesignation(String designation) {
         this.designation = designation;
     }
+
+	public String getModifyFlg() {
+		return modifyFlg;
+	}
+
+	public void setModifyFlg(String modifyFlg) {
+		this.modifyFlg = modifyFlg;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

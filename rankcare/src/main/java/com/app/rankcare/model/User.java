@@ -1,6 +1,10 @@
 package com.app.rankcare.model;
 
 import org.hibernate.annotations.NaturalId;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -43,25 +47,33 @@ public class User extends DateAudit {
     @Size(max = 15)
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
-    @NaturalId
-    @Column(length = 60)
-    private RoleName role;
+    @Size(max = 100)
+    private String organization;
+
+    @Size(max = 100)
+    private String designation;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
 
     }
 
-    public User(Long id, @NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username,
+    public User(@NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username,
             @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password,
-            @Size(max = 15) String phoneNumber, RoleName role) {
-        this.id = id;
+            @Size(max = 15) String phoneNumber, @Size(max = 100) String organization,
+            @Size(max = 100) String designation) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.role = role;
+        this.organization = organization;
+        this.designation = designation;
     }
 
     public Long getId() {
@@ -112,11 +124,27 @@ public class User extends DateAudit {
         this.phoneNumber = phoneNumber;
     }
 
-    public RoleName getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(RoleName role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 }

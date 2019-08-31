@@ -147,4 +147,14 @@ public class User extends DateAudit {
     public void setDesignation(String designation) {
         this.designation = designation;
     }
+
+    public Boolean isAdmin() {
+        for(Role role : roles) {
+            if(role.getName() == RoleName.ROLE_ADMIN) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

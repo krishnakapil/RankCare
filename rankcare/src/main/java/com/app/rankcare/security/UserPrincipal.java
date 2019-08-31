@@ -20,6 +20,8 @@ public class UserPrincipal implements UserDetails {
 
     private String username;
 
+    private Boolean isAdmin;
+
     @JsonIgnore
     private String email;
 
@@ -31,13 +33,14 @@ public class UserPrincipal implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password, String phoneNumber, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String name, String username, String email, String password, String phoneNumber, Boolean isAdmin, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.isAdmin = isAdmin;
         this.authorities = authorities;
     }
 
@@ -53,6 +56,7 @@ public class UserPrincipal implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getPhoneNumber(),
+                user.isAdmin(),
                 authorities
         );
     }
@@ -71,6 +75,10 @@ public class UserPrincipal implements UserDetails {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public Boolean isAdmin() {
+        return isAdmin;
     }
 
     @Override

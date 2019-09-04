@@ -41,3 +41,36 @@ CREATE TABLE `rank_care`.`toxicity_data` (
   `reference` VARCHAR(20) NULL,
   `cancer_slope_factor` VARCHAR(20) NULL,
   PRIMARY KEY (`id`));
+
+
+CREATE TABLE `rank_care`.`site_calculation` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `site_id` VARCHAR(20) NOT NULL,
+  `chemical_name` VARCHAR(45) NULL,
+  `contamination_type` VARCHAR(45) NULL,
+  `contamination_value` VARCHAR(8) NULL,
+  INDEX `site_id_idx` (`site_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `site_id`
+    FOREIGN KEY (`site_id`)
+    REFERENCES `rank_care`.`site_data` (`site_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+	
+	
+	
+	CREATE TABLE `rank_care`.`site_calculation_data` (
+  `site_id` VARCHAR(20) NOT NULL,
+  `tier1_water_val` DECIMAL(10,2) NULL,
+  `tier1_soil_val` DECIMAL(10,2) NULL,
+  `tier2_cr_val` DECIMAL(10,2) NULL,
+  `tier2_ncr_val` DECIMAL(10,2) NULL,
+  `tier3_cr_val` DECIMAL(10,2) NULL,
+  `tier3_ncr_val` DECIMAL(10,2) NULL,
+  PRIMARY KEY (`site_id`),
+  CONSTRAINT `site_id_data`
+    FOREIGN KEY (`site_id`)
+    REFERENCES `rank_care`.`site_data` (`site_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+

@@ -8,8 +8,7 @@ INSERT IGNORE INTO roles(name) VALUES('ROLE_ADMIN');
 ```
 insert into user_roles values (1,2);
 insert into users values('1', now(),now(), 'desg', 'abc@gmail.com', 'test name', 'org', 'pwd', '1234567899', 'admin');
-
-
+ 
 CREATE TABLE `rank_care`.`site_data` (
   `site_id` VARCHAR(20) NOT NULL,
   `site_name` VARCHAR(40) NULL,
@@ -73,9 +72,14 @@ CREATE TABLE `rank_care`.`site_calculation` (
     REFERENCES `rank_care`.`site_data` (`site_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+---------------------------------------------------
 
--------------
 alter table rank_care.site_calculation add column(active_yn varchar(1));
 ALTER TABLE `rank_care`.`site_calculation` 
 CHANGE COLUMN `active_yn` `active_yn` VARCHAR(1) NULL DEFAULT 'Y' ;
+--------------------------------------------
+ALTER TABLE `rank_care`.`site_calculation` 
+CHANGE COLUMN `chemical_name` `chemical_id` INT(11) NULL DEFAULT NULL ;
+
+
 

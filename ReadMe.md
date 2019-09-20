@@ -1,6 +1,6 @@
 ### Sql Query
 
-Run this query after running Spring Boot application to add users
+--Run this query after running Spring Boot application to add users
 
 ```sql
 INSERT IGNORE INTO roles(name) VALUES('ROLE_CLIENT');
@@ -73,4 +73,9 @@ CREATE TABLE `rank_care`.`site_calculation` (
     REFERENCES `rank_care`.`site_data` (`site_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+-------------
+alter table rank_care.site_calculation add column(active_yn varchar(1));
+ALTER TABLE `rank_care`.`site_calculation` 
+CHANGE COLUMN `active_yn` `active_yn` VARCHAR(1) NULL DEFAULT 'Y' ;
 

@@ -1,9 +1,6 @@
 package com.app.rankcare.payload;
 
-import java.util.List;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class SiteRegisterRequest {
 	  
@@ -26,9 +23,6 @@ public class SiteRegisterRequest {
     @NotBlank
     @Size(min = 3, max = 40)
     private String orgName;
-    
-    
-    private List<SiteContaminantData> siteContaminant;
 
 	public String getSiteName() {
 		return siteName;
@@ -68,14 +62,6 @@ public class SiteRegisterRequest {
 
 	public void setOrgName(String orgName) {
 		this.orgName = orgName;
-	}
-
-	public List<SiteContaminantData> getSiteContaminant() {
-		return siteContaminant;
-	}
-
-	public void setSiteContaminant(List<SiteContaminantData> siteContaminant) {
-		this.siteContaminant = siteContaminant;
 	}
  
 }

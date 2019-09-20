@@ -2,6 +2,8 @@ package com.app.rankcare.payload;
 
 public class SiteContaminantData {
 
+	private Long id;
+	
 	private String chemicalName;
 
 	private String contaminationType;
@@ -9,6 +11,14 @@ public class SiteContaminantData {
 	private String contaminationValue;
 	
 	private String activeYN; 
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getChemicalName() {
 		return chemicalName;

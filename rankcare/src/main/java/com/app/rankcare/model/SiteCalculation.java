@@ -47,12 +47,23 @@ public class SiteCalculation extends DateAudit{
 	}
 
 	public SiteCalculation(String siteId, String chemicalName, String contaminationType,
-			String contaminationValue) {
+			String contaminationValue,String activeYN) {
 		super();
 		this.siteId = siteId;
 		this.chemicalName = chemicalName;
 		this.contaminationType = contaminationType;
 		this.contaminationValue = contaminationValue;
+		this.activeYN=activeYN;
+	}
+	public SiteCalculation(Long id,String siteId, String chemicalName, String contaminationType,
+			String contaminationValue,String activeYN) {
+		super();
+		this.id = id;
+		this.siteId = siteId;
+		this.chemicalName = chemicalName;
+		this.contaminationType = contaminationType;
+		this.contaminationValue = contaminationValue;
+		this.activeYN=activeYN;
 	}
 
 	public Long getId() {

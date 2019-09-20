@@ -59,6 +59,14 @@ public class Site extends DateAudit{
 		this.siteName = siteName;
 	}
 
+	public String getSiteLocation() {
+		return siteLocation;
+	}
+
+	public void setSiteLocation(String siteLocation) {
+		this.siteLocation = siteLocation;
+	}
+
 	public String getSiteState() {
 		return siteState;
 	}

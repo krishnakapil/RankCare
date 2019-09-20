@@ -39,6 +39,9 @@ public class SiteCalculation extends DateAudit{
 	@Column(name="contamination_value")
 	private String contaminationValue;
 	
+	@Column(name="active_yn")
+	private String activeYN;
+	
 	public SiteCalculation() {
 		
 	}
@@ -91,6 +94,14 @@ public class SiteCalculation extends DateAudit{
 
 	public void setContaminationValue(String contaminationValue) {
 		this.contaminationValue = contaminationValue;
+	}
+
+	public String getActiveYN() {
+		return activeYN;
+	}
+
+	public void setActiveYN(String activeYN) {
+		this.activeYN = activeYN;
 	}
 	
 }

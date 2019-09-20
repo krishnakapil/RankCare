@@ -7,6 +7,8 @@ public class SiteContaminantData {
 	private String contaminationType;
 
 	private String contaminationValue;
+	
+	private String activeYN; 
 
 	public String getChemicalName() {
 		return chemicalName;
@@ -30,6 +32,14 @@ public class SiteContaminantData {
 
 	public void setContaminationValue(String contaminationValue) {
 		this.contaminationValue = contaminationValue;
+	}
+
+	public String getActiveYN() {
+		return activeYN;
+	}
+
+	public void setActiveYN(String activeYN) {
+		this.activeYN = activeYN;
 	}
 	
 	

@@ -44,7 +44,7 @@ public class SiteDataController {
     	if(siteRegisterRequest.getSiteContaminant()!=null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
     		SiteCalculation res;
     		for(SiteContaminantData contaminantData:siteRegisterRequest.getSiteContaminant()){
-    			res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getSiteId(),contaminantData.getChemicalName(),contaminantData.getContaminationType(),contaminantData.getContaminationValue(),"Y"));
+    			res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getSiteId(),contaminantData.getChemicalId(),contaminantData.getContaminationType(),contaminantData.getContaminationValue(),"Y"));
     			logger.info("Data Saved>"+res);
     		}
     	}
@@ -63,9 +63,9 @@ public class SiteDataController {
     		SiteCalculation res;
     		for(SiteContaminantData contaminantData:siteRegisterRequest.getSiteContaminant()){
     			if(contaminantData.getId()!=null) {
-    				res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(),siteRegisterRequest.getSiteId(),contaminantData.getChemicalName(),contaminantData.getContaminationType(),contaminantData.getContaminationValue(),contaminantData.getActiveYN()));
+    				res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(),siteRegisterRequest.getSiteId(),contaminantData.getChemicalId(),contaminantData.getContaminationType(),contaminantData.getContaminationValue(),contaminantData.getActiveYN()));
     			}else {
-    				res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getSiteId(),contaminantData.getChemicalName(),contaminantData.getContaminationType(),contaminantData.getContaminationValue(),"Y"));
+    				res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getSiteId(),contaminantData.getChemicalId(),contaminantData.getContaminationType(),contaminantData.getContaminationValue(),"Y"));
     			}
     			logger.info("Data Saved>"+res);
     		}
@@ -94,7 +94,7 @@ public class SiteDataController {
     		e.setActiveYN(siteCalc.getActiveYN());
     		e.setId(siteCalc.getId());
     		e.setContaminationType(siteCalc.getContaminationType());
-    		e.setChemicalName(siteCalc.getChemicalName());
+    		e.setChemicalId(siteCalc.getChemicalId());
     		e.setContaminationValue(siteCalc.getContaminationValue());
 			contaLst.add(e);
     	}

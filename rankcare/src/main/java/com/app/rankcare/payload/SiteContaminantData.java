@@ -4,6 +4,9 @@ public class SiteContaminantData {
 
 	private Long id;
 	
+
+	private Long chemicalId;
+	
 	private String chemicalName;
 
 	private String contaminationType;
@@ -18,6 +21,14 @@ public class SiteContaminantData {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getChemicalId() {
+		return chemicalId;
+	}
+
+	public void setChemicalId(Long chemicalId) {
+		this.chemicalId = chemicalId;
 	}
 
 	public String getChemicalName() {

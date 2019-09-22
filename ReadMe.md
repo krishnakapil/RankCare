@@ -81,5 +81,9 @@ CHANGE COLUMN `active_yn` `active_yn` VARCHAR(1) NULL DEFAULT 'Y' ;
 ALTER TABLE `rank_care`.`site_calculation` 
 CHANGE COLUMN `chemical_name` `chemical_id` INT(11) NULL DEFAULT NULL ;
 
+------
+
+ALTER TABLE `rank_care`.`toxicity_data` 
+ADD COLUMN `cancer_slope_ref` VARCHAR(20) NULL AFTER `cancer_slope_factor`;
 
 

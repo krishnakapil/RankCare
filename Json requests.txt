@@ -1,0 +1,82 @@
+/api/site/register
+{
+  "siteName":"testSite",
+  "siteLocation":"location",
+  "state":"state",
+  "siteId":"A123",
+  "orgName":"test",
+  "siteContaminant":[
+    {"chemicalId":"1",
+	 "contaminationType":"Water",
+	 "contaminationValue":"0.2",
+	 "activeYN":"Y"
+	},	
+    {"chemicalId":"2",
+	 "contaminationType":"Water",
+	 "contaminationValue":"0.4",
+	 "activeYN":"Y"
+	},
+    {"chemicalId":"1",
+	 "contaminationType":"Soil",
+	 "contaminationValue":"0.6",
+	 "activeYN":"Y"
+	},	
+    {"chemicalId":"2",
+	 "contaminationType":"Soil",
+	 "contaminationValue":"0.8",
+	 "activeYN":"Y"
+	}
+  ]
+}
+----------------------------------------------------------------
+/api/site/getSiteData
+{
+  "siteId":"A123"
+  }
+-------------
+/api/site/updateRegistration
+{
+  "siteName":"testSite",
+  "siteLocation":"location",
+  "state":"state",
+  "siteId":"A123",
+  "orgName":"test",
+  "siteContaminant":[
+    {"id":1,
+      "chemicalId":"1",
+	 "contaminationType":"Water",
+	 "contaminationValue":"0.2",
+     "activeYN":"Y"
+	},	
+    {
+      "id":2,
+      "chemicalId":"2",
+	 "contaminationType":"Water",
+	 "contaminationValue":"0.4",
+      "activeYN":"Y"
+	},
+    {"id":3,
+      "chemicalId":"1",
+	 "contaminationType":"Soil",
+	 "contaminationValue":"0.6",
+     "activeYN":"Y"
+	},	
+    {"id":4,
+      "chemicalId":"2",
+	 "contaminationType":"Soil",
+	 "contaminationValue":"0.9",
+     "activeYN":"Y"
+	},
+    {"chemicalId":"3",
+	 "contaminationType":"Soil",
+	 "contaminationValue":"0.86",
+	 "activeYN":"Y"
+	},	
+    {"chemicalId":"3",
+	 "contaminationType":"Water",
+	 "contaminationValue":"0.19",
+	 "activeYN":"Y"
+	}
+  ]
+}
+------------

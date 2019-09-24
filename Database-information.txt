@@ -1,0 +1,128 @@
+CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `designation` varchar(100) DEFAULT NULL,
+  `email` varchar(40) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `organization` varchar(100) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `phone_number` varchar(15) DEFAULT NULL,
+  `username` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UKr43af9ap4edm43mmtq01oddj6` (`username`),
+  UNIQUE KEY `UK6dotkott2kjsp8vw4d0m25fb7` (`email`)
+);
+INSERT INTO `users` VALUES (1,'2019-09-01 00:45:02','2019-09-01 00:45:02','desg','abc@gmail.com','test name','org','$2a$10$fRVE16MV8chlVYMxJ/MK0u/sILQT0FZahF5mpthbQ0ov7haXXlbcm','1234567899','admin');
+
+--------------------------------------------------------------------------------------------------
+
+CREATE TABLE `roles` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_nb4h0p6txrmfc0xbrd1kglp9t` (`name`)
+);
+INSERT INTO `roles` VALUES (2,'ROLE_ADMIN'),(1,'ROLE_CLIENT');
+
+--------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE `user_roles` (
+  `user_id` bigint(20) NOT NULL,
+  `role_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`),
+  KEY `FKh8ciramu9cc9q3qcqiv4ue8a6` (`role_id`),
+  CONSTRAINT `FKh8ciramu9cc9q3qcqiv4ue8a6` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
+  CONSTRAINT `FKhfh9dx7w3ubf1co1vdev94g3f` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+);
+INSERT INTO `user_roles` VALUES (1,2);
+
+--------------------------------------------------------------------------------------------------
+
+CREATE TABLE `toxicity_data` (
+  `id` int(11) NOT NULL,
+  `chemical_name` varchar(45) DEFAULT NULL,
+  `chemical_formula` varchar(45) DEFAULT NULL,
+  `soil_guideline` varchar(20) DEFAULT NULL,
+  `soil_ref` varchar(20) DEFAULT NULL,
+  `water_guideline` varchar(20) DEFAULT NULL,
+  `water_ref` varchar(20) DEFAULT NULL,
+  `dosage_ref` varchar(20) DEFAULT NULL,
+  `reference` varchar(20) DEFAULT NULL,
+  `cancer_slope_factor` varchar(20) DEFAULT NULL,
+  `cancer_slope_ref` varchar(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `toxicity_data` VALUES (1,'Pb',NULL,'1','NEPM','2','NEPM','3','IRIS','123','IRIS','2019-09-22 20:14:32','2019-09-22 20:14:32'),(2,'Arsenic',NULL,'10','NEPM','20','NEPM','30','IRIS','40','IRIS','2019-09-22 20:14:32','2019-09-22 20:14:32'),(3,'Cadmium',NULL,'15','NEPM','24','NEPM','20','IRIS','20','IRIS','2019-09-22 20:14:32','2019-09-22 20:14:32'),(4,'DDT',NULL,'8','NEPM','12','NEPM','16','IRIS','12','IRIS','2019-09-22 20:14:32','2019-09-22 20:14:32');
+
+
+--------------------------------------------------------------------------------------------------
+CREATE TABLE `consumption_data` (
+  `id` int(11) NOT NULL,
+  `age_grp` varchar(20) DEFAULT NULL,
+  `body_wt_avg` varchar(20) DEFAULT NULL,
+  `ci_data_1` varchar(10) DEFAULT NULL,
+  `soil_inv_avg` varchar(20) DEFAULT NULL,
+  `water_cons_avg` varchar(20) DEFAULT NULL,
+  `ci_data_2` varchar(10) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `consumption_data` VALUES (1,'0-3','11','13','100','0.3','0.9','2019-09-20 10:33:49','2019-09-20 17:42:28'),(2,'3-6','24','33','100','0.4','1.1','2019-09-20 10:33:49','2019-09-20 17:42:28'),(3,'6-10','24','33','100','0.5','1.3','2019-09-20 10:33:49','2019-09-20 17:42:28'),(4,'10-18','56','83','50','0.7','1.7','2019-09-20 10:33:49','2019-09-20 17:42:28'),(5,'18-','85.2','114','50','0.85','2.8','2019-09-20 10:33:49','2019-09-20 17:42:28');
+
+--------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE `site_data` (
+  `site_id` varchar(20) NOT NULL,
+  `site_name` varchar(40) DEFAULT NULL,
+  `site_location` varchar(40) DEFAULT NULL,
+  `site_state` varchar(15) DEFAULT NULL,
+  `site_org` varchar(40) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`site_id`)
+);
+INSERT INTO `site_data` VALUES ('A123','testSite','location','state','test','2019-09-20 10:33:49','2019-09-20 17:42:28');
+
+
+--------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE `site_calculation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `site_id` varchar(20) NOT NULL,
+  `chemical_id` int(11) DEFAULT NULL,
+  `contamination_type` varchar(45) DEFAULT NULL,
+  `contamination_value` varchar(8) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `active_yn` varchar(1) DEFAULT 'Y',
+  PRIMARY KEY (`id`),
+  KEY `site_id_idx` (`site_id`),
+  CONSTRAINT `site_id` FOREIGN KEY (`site_id`) REFERENCES `site_data` (`site_id`)
+);
+INSERT INTO `site_calculation` VALUES (7,'A123',1,'Water','0.2','2019-09-20 17:42:33','2019-09-20 17:42:33','Y'),(8,'A123',2,'Water','0.4','2019-09-20 17:42:38','2019-09-20 17:42:38','Y'),(9,'A123',1,'Soil','0.6','2019-09-20 17:42:39','2019-09-20 17:42:39','Y'),(10,'A123',2,'Soil','0.8','2019-09-20 17:42:39','2019-09-20 17:42:39','Y');
+
+--------------------------------------------------------------------------------------------------
+
+CREATE TABLE `site_calculation_data` (
+  `site_id` varchar(20) NOT NULL,
+  `tier1_water_val` decimal(10,2) DEFAULT NULL,
+  `tier1_soil_val` decimal(10,2) DEFAULT NULL,
+  `tier2_cr_val` decimal(10,2) DEFAULT NULL,
+  `tier2_ncr_val` decimal(10,2) DEFAULT NULL,
+  `tier3_cr_val` decimal(10,2) DEFAULT NULL,
+  `tier3_ncr_val` decimal(10,2) DEFAULT NULL, 
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`site_id`),
+  CONSTRAINT `site_id_data` FOREIGN KEY (`site_id`) REFERENCES `site_data` (`site_id`)
+) ;
+INSERT INTO `site_calculation_data` VALUES ('A123',12.00,34.00,22.00,23.00,32.00,54.00,'2019-09-20 10:33:49','2019-09-20 17:42:28');
+
+--------------------------------------------------------------------------------------------------

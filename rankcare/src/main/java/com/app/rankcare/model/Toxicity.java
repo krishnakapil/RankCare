@@ -44,9 +44,12 @@ public class Toxicity extends DateAudit {
 	
 	@Column(name="reference")
 	private String reference;
-	
+
 	@Column(name="cancer_slope_factor")
 	private String cancerSlopeFactor;
+	
+	@Column(name="cancer_slope_ref")
+	private String cancerSlopeRef;
 
 	public Long getId() {
 		return id;
@@ -126,6 +129,14 @@ public class Toxicity extends DateAudit {
 
 	public void setCancerSlopeFactor(String cancerSlopeFactor) {
 		this.cancerSlopeFactor = cancerSlopeFactor;
+	}
+
+	public String getCancerSlopeRef() {
+		return cancerSlopeRef;
+	}
+
+	public void setCancerSlopeRef(String cancerSlopeRef) {
+		this.cancerSlopeRef = cancerSlopeRef;
 	}
 	
 		

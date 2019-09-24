@@ -19,8 +19,10 @@ public class ToxicityRequest {
 	private String dosageRef;
 	
 	private String reference;
-	
+
 	private String cancerSlopeFactor;
+	
+	private String cancerSlopeRef;
 
 	public Long getId() {
 		return id;
@@ -100,6 +102,14 @@ public class ToxicityRequest {
 
 	public void setCancerSlopeFactor(String cancerSlopeFactor) {
 		this.cancerSlopeFactor = cancerSlopeFactor;
+	}
+
+	public String getCancerSlopeRef() {
+		return cancerSlopeRef;
+	}
+
+	public void setCancerSlopeRef(String cancerSlopeRef) {
+		this.cancerSlopeRef = cancerSlopeRef;
 	}
 	
 	

@@ -55,10 +55,6 @@ class App extends Component {
           isLoading: false,
           isAuthenticated: false
         });
-        notification.error({
-          message: 'rankCare',
-          description: error.message || 'Sorry! Something went wrong. Please try again!'
-        });
       });
   }
 

@@ -80,3 +80,18 @@
   ]
 }
 ------------
+get id:chemicalnames for dropdown 
+
+/api/admin/getToxicityChemicals
+
+------------------------------
+get pagination/sorted data for toxicity table
+configurable data: 
+pageNo- start from 0
+pageSize-total records per page
+sortBy- Column name in db
+
+/api/admin/getToxicityPagination?pageNo=0&pageSize=2&sortBy=chemicalName
+
+-----------------------------------------
+

@@ -67,7 +67,6 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity<Object>(new ApiResponse(false, "Username is already taken!"),

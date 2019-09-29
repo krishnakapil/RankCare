@@ -1,0 +1,17 @@
+.user-home-container {
+    max-width: 800px;
+    margin-top: 40px;
+    padding-bottom: 20px;
+}
+
+.user-list-page-title {
+    margin-bottom: 20px;
+}
+
+.user-list-name-link {
+    text-decoration: underline;
+}
+
+.user-list-delete-link {
+    color: red;
+}

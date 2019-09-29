@@ -1,7 +1,7 @@
 package com.app.rankcare.controller;
 
 import java.util.Optional;
-
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +52,7 @@ public class UserController {
         Boolean isAvailable = !userRepository.existsByEmail(email);
         return new UserIdentityAvailability(isAvailable);
     }
+    
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) throws Exception {
         Optional<User> userOpt = userRepository.findById(id.longValue());        
@@ -61,6 +62,12 @@ public class UserController {
         return new ResponseEntity<User>(userOpt.get(), HttpStatus.OK);
     }
     
+    @GetMapping("/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<User>> getAllUsers() throws Exception {
+        List<User> users = userRepository.findAll();
+        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+    }
 
     @PostMapping("/user/update")
     @PreAuthorize("hasRole('ADMIN')")

@@ -71,3 +71,10 @@ export function getUserProfile(username) {
         method: 'GET'
     });
 }
+
+export function getAllUsers() {
+    return request({
+        url: API_BASE_URL + "/users",
+        method: 'GET'
+    });
+}

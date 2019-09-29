@@ -16,6 +16,7 @@ import Login from '../user/login/Login';
 import AppHeader from '../common/AppHeader';
 import NotFound from '../common/NotFound';
 import LoadingIndicator from '../common/LoadingIndicator';
+import UserList from '../home/UserList';
 
 import { Layout, notification } from 'antd';
 const { Content, Footer } = Layout;
@@ -98,21 +99,26 @@ class App extends Component {
           onLogout={this.handleLogout} />
 
         <Content className="app-content">
-          <div className="container">
+          <div className="test-container">
             <Switch>
               <Route exact path="/"
                 render={(props) => this.state.isAuthenticated ? <Home isAuthenticated={this.state.isAuthenticated}
-                  currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} /> :
+                  currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/login" />}>
               </Route>
               <Route path="/login"
                 render={(props) => <Login onLogin={this.handleLogin} {...props} />}></Route>
               {/* <Route path="/signup" component={Signup}></Route> */}
+              <Route exact path="/manage-users"
+                render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ? 
+                <UserList currentUser={this.state.currentUser} {...props} /> :
+                  <Redirect to="/" />}>
+              </Route>
               <Route component={NotFound}></Route>
             </Switch>
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>rankCare ©2019 CRC CARE Pty Ltd. All Rights Reserved</Footer>
+        <Footer style={{ textAlign: 'center' }}>rankCare ©2019 CRC CARE Ptv Ltd. All Rights Reserved</Footer>
       </Layout>
     );
   }

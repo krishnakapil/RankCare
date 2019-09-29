@@ -1,4 +1,9 @@
 .app-content {
   margin-top: 64px; 
-  background-color: white;  
+  background-color: white;
+}
+
+.test-container {
+  width: 800px;
+  margin: 0 auto;
 }

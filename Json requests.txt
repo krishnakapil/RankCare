@@ -106,5 +106,20 @@ sortBy- Column name in db
   "sortBy":"chemicalName"
 }
 
+--------------------
+/api/admin/updateToxicity
+{
+"id":2,
+"chemicalName":"Arsenic",
+"chemicalFormula":null,
+"soilGuideline":"10",
+"soilRef":"NEPM",
+"waterGuideline":"20",
+"waterRef":"NEPM",
+"dosageRef":"30",
+"reference":"IRIS",
+"cancerSlopeFactor":"40",
+"cancerSlopeRef":"IRIS"
+}
 
 

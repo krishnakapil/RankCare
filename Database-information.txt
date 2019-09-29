@@ -126,3 +126,6 @@ CREATE TABLE `site_calculation_data` (
 INSERT INTO `site_calculation_data` VALUES ('A123',12.00,34.00,22.00,23.00,32.00,54.00,'2019-09-20 10:33:49','2019-09-20 17:42:28');
 
 --------------------------------------------------------------------------------------------------
+
+ALTER TABLE `rank_care`.`toxicity_data` 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;

@@ -11,14 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-            "username"
-        }),
-        @UniqueConstraint(columnNames = {
-            "email"
-        })
-})
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
+        @UniqueConstraint(columnNames = { "email" }) })
 public class User extends DateAudit {
     private static final long serialVersionUID = 1L;
 
@@ -43,7 +37,7 @@ public class User extends DateAudit {
     @NotBlank
     @Size(max = 100)
     private String password;
-    
+
     @Size(max = 15)
     private String phoneNumber;
 
@@ -54,9 +48,7 @@ public class User extends DateAudit {
     private String designation;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     public User() {
@@ -149,8 +141,8 @@ public class User extends DateAudit {
     }
 
     public Boolean isAdmin() {
-        for(Role role : roles) {
-            if(role.getName() == RoleName.ROLE_ADMIN) {
+        for (Role role : roles) {
+            if (role.getName() == RoleName.ROLE_ADMIN) {
                 return true;
             }
         }

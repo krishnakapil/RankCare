@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { PageHeader, Table, Tag, Button, Popconfirm, Icon, Modal } from 'antd';
+import { PageHeader, Table, Tag, Button, Popconfirm, Icon, Form, notification } from 'antd';
 import './UserList.css';
-import { getAllUsers } from '../util/APIUtils';
+import { getAllUsers, deleteUser } from '../util/APIUtils';
 import { ACCESS_TOKEN } from '../constants';
-import NewUser from '../user/signup/NewUser'
+import NewUser from '../user/signup/NewUser';
 
 class UserList extends Component {
     constructor(props) {
@@ -13,13 +13,14 @@ class UserList extends Component {
             isAuthenticated: localStorage.getItem(ACCESS_TOKEN) != null,
             isLoading: false,
             userModalVisible: false,
+            selectedUser: null,
             users: [],
             columns: [
                 {
                     title: 'Name',
                     dataIndex: 'name',
                     key: 'name',
-                    render: (text, record) => <a className="user-list-name-link" onClick={this.handleUserClicked(record.id)}>{text}</a>,
+                    render: (text, record) => <a className="user-list-name-link" onClick={() => this.handleUserClicked(record)}>{text}</a>,
                     sorter: (a, b) => a.name.length - b.name.length,
                     sortDirections: ['descend', 'ascend'],
                 },
@@ -86,6 +87,7 @@ class UserList extends Component {
         this.handleDelete = this.handleDelete.bind(this)
         this.handleAddUserSubmit = this.handleAddUserSubmit.bind(this)
         this.handleAddUserCancel = this.handleAddUserCancel.bind(this)
+        this.handleUserClicked = this.handleUserClicked.bind(this)
     }
 
     componentDidMount() {
@@ -110,28 +112,69 @@ class UserList extends Component {
             });
     }
 
+    saveFormRef = formRef => {
+        this.formRef = formRef;
+    };
+
     render() {
+        const selectedUser = this.state.selectedUser
+
+        const CollectionCreateForm = Form.create(
+            {
+                name: 'form_in_modal',
+                mapPropsToFields(props) {
+                    if (selectedUser) {
+                        return {
+                            name: Form.createFormField({
+                                ...props.name,
+                                value: selectedUser.name
+                            }),
+                            username: Form.createFormField({
+                                ...props.username,
+                                value: selectedUser.username
+                            }),
+                            email: Form.createFormField({
+                                ...props.email,
+                                value: selectedUser.email
+                            }),
+                            phoneNumber: Form.createFormField({
+                                ...props.phoneNumber,
+                                value: selectedUser.phoneNumber
+                            }),
+                            organization: Form.createFormField({
+                                ...props.organization,
+                                value: selectedUser.organization
+                            }),
+                            designation: Form.createFormField({
+                                ...props.designation,
+                                value: selectedUser.designation
+                            }),
+                            isAdmin: Form.createFormField({
+                                ...props.isAdmin,
+                                value: selectedUser.admin
+                            }),
+                        };
+                    } else {
+                        return {};
+                    }
+                },
+            }
+        )(NewUser)
+
         return (
             <div>
                 <div className="user-home-container">
-                    <PageHeader className="user-list-page-title" title="Users List" onBack={this.handleManagerUsersClick} extra={this.renderNavigationButtons()} />
-                    <Table columns={this.state.columns} dataSource={this.state.users} />
+                    <PageHeader className="user-list-page-title" title="Manage Users" onBack={this.handleManagerUsersClick} extra={this.renderNavigationButtons()} />
+                    <Table rowKey={record => record.id} columns={this.state.columns} dataSource={this.state.users} />
                 </div>
-                <Modal
-                    title="Add new user"
+                <CollectionCreateForm
+                    wrappedComponentRef={this.saveFormRef}
                     visible={this.state.userModalVisible}
-                    onOk={this.handleAddUserSubmit}
                     onCancel={this.handleAddUserCancel}
-                    footer={[
-                        <Button key="back" onClick={this.handleAddUserCancel}>
-                          Cancel
-                        </Button>,
-                        <Button key="submit" type="primary" loading={this.state.isLoading} onClick={this.handleAddUserSubmit}>
-                          Submit
-                        </Button>,
-                    ]}>
-                    <NewUser />
-                </Modal>
+                    onCreate={this.handleAddUserSubmit}
+                    isEdit={this.state.selectedUser != null}
+                    id={this.state.selectedUser ? this.state.selectedUser.id : null}
+                />
             </div>
         );
     }
@@ -145,16 +188,37 @@ class UserList extends Component {
     }
 
     handleDelete(id) {
+        this.setState({
+            isLoading: true
+        });
 
+        deleteUser(id)
+            .then(response => {
+                notification.success({
+                    message: 'rankCare',
+                    description: "User deleted successfully!",
+                });
+                this.loadAllUsers();
+            }).catch(error => {
+                this.setState({ isLoading: false });
+                notification.error({
+                    message: 'rankCare',
+                    description: error.message || 'Sorry! Something went wrong. Please try again!'
+                });
+            });
     }
 
-    handleUserClicked(id) {
-
+    handleUserClicked(user) {
+        this.setState({
+            userModalVisible: true,
+            selectedUser: user
+        });
     }
 
     handleAddNewUserClick() {
         this.setState({
             userModalVisible: true,
+            selectedUser: null
         });
     }
 
@@ -165,12 +229,16 @@ class UserList extends Component {
     handleAddUserSubmit() {
         this.setState({
             userModalVisible: false,
+            selectedUser: null
         });
+
+        this.loadAllUsers()
     }
 
     handleAddUserCancel() {
         this.setState({
             userModalVisible: false,
+            selectedUser: null
         });
     }
 }

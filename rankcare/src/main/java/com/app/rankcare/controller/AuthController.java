@@ -67,6 +67,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity<Object>(new ApiResponse(false, "Username is already taken!"),
@@ -85,7 +86,7 @@ public class AuthController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_CLIENT)
+        Role userRole = roleRepository.findByName(signUpRequest.isAdmin() != null && signUpRequest.isAdmin() ? RoleName.ROLE_ADMIN : RoleName.ROLE_CLIENT)
                 .orElseThrow(() -> new AppException("User Role not set."));
 
         user.setRoles(Collections.singleton(userRole));

@@ -24,6 +24,8 @@ public class SignUpRequest {
     @Size(min = 6, max = 15)
     private String phoneNumber;
 
+    private Boolean isAdmin;
+
     private String organization;
 
     private String designation;
@@ -31,6 +33,7 @@ public class SignUpRequest {
     private String modifyFlg;
     
     private Long id;
+
     public String getName() {
         return name;
     }
@@ -101,5 +104,13 @@ public class SignUpRequest {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
+    }
+    
+    public Boolean isAdmin() {
+        return this.isAdmin;
+    }
+    
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
 }

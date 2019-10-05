@@ -78,3 +78,18 @@ export function getAllUsers() {
         method: 'GET'
     });
 }
+
+export function deleteUser(id) {
+    return request({
+        url: API_BASE_URL + "/users/" + id,
+        method: 'DELETE'
+    });
+}
+
+export function udpateUser(signupRequest) {
+    return request({
+        url: API_BASE_URL + "/user/update",
+        method: 'POST',
+        body: JSON.stringify(signupRequest)
+    });
+}

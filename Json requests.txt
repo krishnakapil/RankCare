@@ -80,3 +80,62 @@
   ]
 }
 ------------
+get id:chemicalnames for dropdown 
+
+/api/admin/getToxicityChemicals
+
+------------------------------
+//can ignore this
+get pagination/sorted data for toxicity table
+configurable data: 
+pageNo- start from 0
+pageSize-total records per page
+sortBy- Column name in db
+
+/api/admin/getToxicityPagination?pageNo=0&pageSize=2&sortBy=chemicalName
+
+-----------------------------------------
+
+/api/admin/getToxicityPaginationSearch
+
+{
+  "pageNo":1,
+  "pageSize":2,
+  "searchBy":{"chemicalName":"c","soilGuideline":"10"},
+  "orderBy":"DESC",
+  "sortBy":"chemicalName"
+}
+
+--------------------
+/api/admin/updateToxicity
+{
+"id":2,
+"chemicalName":"Arsenic",
+"chemicalFormula":null,
+"soilGuideline":"10",
+"soilRef":"NEPM",
+"waterGuideline":"20",
+"waterRef":"NEPM",
+"dosageRef":"30",
+"reference":"IRIS",
+"cancerSlopeFactor":"40",
+"cancerSlopeRef":"IRIS"
+}
+
+--------------------
+/api/admin/insertToxicity
+{ 
+"chemicalName":"Arsenic",
+"chemicalFormula":null,
+"soilGuideline":"10",
+"soilRef":"NEPM",
+"waterGuideline":"20",
+"waterRef":"NEPM",
+"dosageRef":"30",
+"reference":"IRIS",
+"cancerSlopeFactor":"40",
+"cancerSlopeRef":"IRIS"
+}
+---------------
+
+

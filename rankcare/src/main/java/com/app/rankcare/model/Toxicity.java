@@ -51,6 +51,42 @@ public class Toxicity extends DateAudit {
 	@Column(name="cancer_slope_ref")
 	private String cancerSlopeRef;
 
+	public Toxicity() {
+		
+	}
+	
+	public Toxicity(Long id, String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
+			String waterGuideline, String waterRef, String dosageRef, String reference, String cancerSlopeFactor,
+			String cancerSlopeRef) { 
+		this.id = id;
+		this.chemicalName = chemicalName;
+		this.chemicalFormula = chemicalFormula;
+		this.soilGuideline = soilGuideline;
+		this.soilRef = soilRef;
+		this.waterGuideline = waterGuideline;
+		this.waterRef = waterRef;
+		this.dosageRef = dosageRef;
+		this.reference = reference;
+		this.cancerSlopeFactor = cancerSlopeFactor;
+		this.cancerSlopeRef = cancerSlopeRef;
+	}
+	
+
+	public Toxicity(String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
+			String waterGuideline, String waterRef, String dosageRef, String reference, String cancerSlopeFactor,
+			String cancerSlopeRef) { 
+		this.chemicalName = chemicalName;
+		this.chemicalFormula = chemicalFormula;
+		this.soilGuideline = soilGuideline;
+		this.soilRef = soilRef;
+		this.waterGuideline = waterGuideline;
+		this.waterRef = waterRef;
+		this.dosageRef = dosageRef;
+		this.reference = reference;
+		this.cancerSlopeFactor = cancerSlopeFactor;
+		this.cancerSlopeRef = cancerSlopeRef;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -137,6 +173,14 @@ public class Toxicity extends DateAudit {
 
 	public void setCancerSlopeRef(String cancerSlopeRef) {
 		this.cancerSlopeRef = cancerSlopeRef;
+	}
+
+	@Override
+	public String toString() {
+		return "Toxicity [id=" + id + ", chemicalName=" + chemicalName + ", chemicalFormula=" + chemicalFormula
+				+ ", soilGuideline=" + soilGuideline + ", soilRef=" + soilRef + ", waterGuideline=" + waterGuideline
+				+ ", waterRef=" + waterRef + ", dosageRef=" + dosageRef + ", reference=" + reference
+				+ ", cancerSlopeFactor=" + cancerSlopeFactor + ", cancerSlopeRef=" + cancerSlopeRef + "]";
 	}
 	
 		

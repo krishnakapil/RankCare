@@ -1,5 +1,7 @@
 package com.app.rankcare.payload;
 
+import java.util.Map;
+
 public class ToxicityRequest {
 
     private Long id;
@@ -23,6 +25,16 @@ public class ToxicityRequest {
 	private String cancerSlopeFactor;
 	
 	private String cancerSlopeRef;
+	
+	private Integer pageNo=0;
+	
+	private Integer pageSize=10;
+	
+	private String sortBy="id";
+	
+	private String orderBy="ASC";
+	
+	private Map<String,String> searchBy;
 
 	public Long getId() {
 		return id;
@@ -110,6 +122,46 @@ public class ToxicityRequest {
 
 	public void setCancerSlopeRef(String cancerSlopeRef) {
 		this.cancerSlopeRef = cancerSlopeRef;
+	}
+
+	public Integer getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(Integer pageNo) {
+		this.pageNo = pageNo;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public String getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+
+	public Map<String, String> getSearchBy() {
+		return searchBy;
+	}
+
+	public void setSearchBy(Map<String, String> searchBy) {
+		this.searchBy = searchBy;
 	}
 	
 	

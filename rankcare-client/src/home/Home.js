@@ -8,6 +8,7 @@ class Home extends Component {
         super(props);
         this.renderTitle = this.renderTitle.bind(this)
         this.handleManagerUsersClick = this.handleManagerUsersClick.bind(this)
+        this.handleToxicityClick = this.handleToxicityClick.bind(this);
     }
 
     render() {
@@ -53,7 +54,7 @@ class Home extends Component {
                         </Col>
                         <Col className="gutter-row" span={6}>
                             <div className="gutter-box">
-                                <Button icon="database" className="gutter-button">Toxicity Data</Button>
+                                <Button icon="database" className="gutter-button" onClick={this.handleToxicityClick}>Toxicity Data</Button>
                             </div>
                         </Col>
                     </Row>
@@ -93,6 +94,10 @@ class Home extends Component {
 
     handleManagerUsersClick() {
         this.props.history.push("/manage-users")
+    }
+
+    handleToxicityClick() {
+        this.props.history.push("/toxicity")
     }
 }
 

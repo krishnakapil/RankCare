@@ -54,7 +54,7 @@ class LoginForm extends Component {
                                 description: error.message || 'Sorry! Something went wrong. Please try again!'
                             });
                         }
-                    });
+                });
             }
         });
     }

@@ -7,11 +7,12 @@ import {
     Button,
     Modal,
     Switch,
-    notification
+    notification,
+    InputNumber
 } from 'antd';
-import { signup, udpateUser } from '../../util/APIUtils';
+import { createToxicity, updateToxicity } from '../util/APIUtils';
 
-class NewUser extends Component {
+class NewToxicity extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,11 +35,11 @@ class NewUser extends Component {
                 isLoading: true
             });
 
-            const signUpRequest = Object.assign({}, values);
-            signUpRequest.id = this.props.id
+            const toxicityRequest = Object.assign({}, values);
+            toxicityRequest.id = this.props.id
 
             if (isEdit) {
-                udpateUser(signUpRequest)
+                updateToxicity(toxicityRequest)
                     .then(response => {
                         this.setState({
                             confirmLoading: false,
@@ -54,7 +55,7 @@ class NewUser extends Component {
                         });
                     });
             } else {
-                signup(signUpRequest)
+                createToxicity(toxicityRequest)
                     .then(response => {
                         this.setState({
                             confirmLoading: false,
@@ -90,7 +91,8 @@ class NewUser extends Component {
 
         return (
             <Modal
-                title={this.props.isEdit ? "Edit User" : "Add New User"}
+                width="600px"
+                title={this.props.isEdit ? "Edit Toxicity Data" : "Add Toxicity Data"}
                 visible={visible}
                 onOk={this.handleOkClick}
                 onCancel={onCancel}
@@ -105,95 +107,75 @@ class NewUser extends Component {
                 ]}>
                 <Form {...formItemLayout}>
                     <Form.Item
-                        label="Name">
-                        {getFieldDecorator('name', {
+                        label="Chemical Name">
+                        {getFieldDecorator('chemicalName', {
                             rules: [
-                                { required: true, message: 'Please input name!' },
-                                {
-                                    min: 4,
-                                    max: 40,
-                                },
+                                { required: true, message: 'Please input chemical name!' },
                             ],
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item
-                        label={
-                            <span>
-                                Username&nbsp;
-                                <Tooltip title="This is used for login">
-                                    <Icon type="question-circle-o" />
-                                </Tooltip>
-                            </span>
-                        }
-                    >
-                        {getFieldDecorator('username', {
+                        label="Chemical Formula">
+                        {getFieldDecorator('chemicalFormula', {
                             rules: [
-                                { required: true, message: 'Please input username!' },
-                                {
-                                    min: 3,
-                                    max: 15,
-                                },
+                                { required: true, message: 'Please input Chemical Formula!' },
                             ],
-                        })(<Input disabled={this.props.isEdit} />)}
+                        })(<Input />)}
                     </Form.Item>
-                    <Form.Item label="Password" hasFeedback>
-                        {getFieldDecorator('password', {
+                    <Form.Item
+                        label="Soil Guideline">
+                        {getFieldDecorator('soilGuideline', {
                             rules: [
-                                {
-                                    required: !this.props.isEdit,
-                                    message: 'Please input password!',
-                                },
-                                {
-                                    min: 6,
-                                    max: 20,
-                                },
+                                { required: true, message: 'Please input Soil Guideline!' },
                             ],
-                        })(<Input.Password />)}
+                        })(<InputNumber />)}
                     </Form.Item>
-                    <Form.Item label="E-mail">
-                        {getFieldDecorator('email', {
+                    <Form.Item
+                        label="Soil Reference">
+                        {getFieldDecorator('soilRef', {
                             rules: [
-                                {
-                                    type: 'email',
-                                    message: 'The input is not valid E-mail!',
-                                },
-                                {
-                                    required: true,
-                                    message: 'Please input E-mail!',
-                                },
-                                {
-                                    max: 40,
-                                },
+                                { required: true, message: 'Please input Soil Reference!' },
                             ],
-                        })(<Input disabled={this.props.isEdit} />)}
+                        })(<Input />)}
                     </Form.Item>
-                    <Form.Item label="Phone Number">
-                        {getFieldDecorator('phoneNumber', {
+                    <Form.Item label="Water Guideline">
+                        {getFieldDecorator('waterGuideline', {
                             rules: [
-                                { required: true, message: 'Please input phone number!' },
-                                { regexp: '^[0-9]*$' },
-                                {
-                                    min: 6,
-                                    max: 15,
-                                },
+                                { required: true, message: 'Please input Water Guideline!' },
                             ]
-                        })(<Input style={{ width: '100%' }} />)}
+                        })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item
-                        label="Organization">
-                        {getFieldDecorator('organization', {
-                            rules: [{ required: true, message: 'Please input organization!' }],
+                        label="Water Reference">
+                        {getFieldDecorator('waterRef', {
+                            rules: [{ required: true, message: 'Please input Water Reference!' }],
                         })(<Input />)}
                     </Form.Item>
-                    <Form.Item
-                        label="Designation">
-                        {getFieldDecorator('designation', {
-                            rules: [{ required: true, message: 'Please input designation!' }],
-                        })(<Input />)}
+                    <Form.Item label="Dosage Reference">
+                        {getFieldDecorator('dosageRef', {
+                            rules: [
+                                { required: true, message: 'Please input Dosage Reference!' },
+                            ]
+                        })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item
-                        label="Is Admin">
-                        {getFieldDecorator('isAdmin', { valuePropName: 'checked' })(<Switch disabled={this.props.isEdit}/>)}
+                        label="Reference">
+                        {getFieldDecorator('reference', {
+                            rules: [{ required: true, message: 'Please input Reference!' }],
+                        })(<Input />)}
+                    </Form.Item>
+                    <Form.Item label="Cancer Slope Factor">
+                        {getFieldDecorator('cancerSlopeFactor', {
+                            rules: [
+                                { required: true, message: 'Please input Cancer Slope Factor!' },
+                            ]
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item
+                        label="Cancer Slope Reference">
+                        {getFieldDecorator('cancerSlopeRef', {
+                            rules: [{ required: true, message: 'Please input Cancer Slope Reference!' }],
+                        })(<Input />)}
                     </Form.Item>
                 </Form>
             </Modal>
@@ -201,4 +183,4 @@ class NewUser extends Component {
     }
 }
 
-export default NewUser;
+export default NewToxicity;

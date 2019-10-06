@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { PageHeader, Table, Tag, Button, Popconfirm, Icon, Form, notification } from 'antd';
 import './UserList.css';
 import { getAllUsers, deleteUser } from '../util/APIUtils';
-import { ACCESS_TOKEN } from '../constants';
 import NewUser from '../user/signup/NewUser';
 
 class UserList extends Component {
@@ -10,7 +9,6 @@ class UserList extends Component {
         super(props);
         this.state = {
             currentUser: props.currentUser,
-            isAuthenticated: localStorage.getItem(ACCESS_TOKEN) != null,
             isLoading: false,
             userModalVisible: false,
             selectedUser: null,

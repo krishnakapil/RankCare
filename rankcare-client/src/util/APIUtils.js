@@ -93,3 +93,33 @@ export function udpateUser(signupRequest) {
         body: JSON.stringify(signupRequest)
     });
 }
+
+export function getToxicityData(page, count) {
+    return request({
+        url: API_BASE_URL + "/toxicity?page=" + page + "&count=" + count,
+        method: 'GET'
+    });
+}
+
+export function deleteToxicity(id) {
+    return request({
+        url: API_BASE_URL + "/toxicity/" + id,
+        method: 'DELETE'
+    });
+}
+
+export function createToxicity(toxicityRequest) {
+    return request({
+        url: API_BASE_URL + "/toxicity/insert",
+        method: 'POST',
+        body: JSON.stringify(toxicityRequest)
+    });
+}
+
+export function updateToxicity(toxicityRequest) {
+    return request({
+        url: API_BASE_URL + "/toxicity/update",
+        method: 'POST',
+        body: JSON.stringify(toxicityRequest)
+    });
+}

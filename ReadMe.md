@@ -95,4 +95,55 @@ CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
 
 ALTER TABLE `rank_care`.`consumption_data` 
 CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ;
+------
+delete from `rank_care`.`site_calculation`;
 
+delete from `rank_care`.`site_calculation_data`;
+
+delete from `rank_care`.`site_data`;
+
+ALTER TABLE `rank_care`.`site_calculation` 
+DROP FOREIGN KEY `site_id`;
+
+ALTER TABLE `rank_care`.`site_calculation_data` 
+DROP FOREIGN KEY `site_id_data`;
+
+ALTER TABLE `rank_care`.`site_calculation` 
+CHANGE COLUMN `site_id` `site_id` INT(11) NOT NULL ,
+DROP INDEX `site_id_idx` ;
+
+
+ALTER TABLE `rank_care`.`site_calculation_data` 
+CHANGE COLUMN `site_id` `site_id` INT(11) NOT NULL ,
+DROP PRIMARY KEY;
+
+
+ALTER TABLE `rank_care`.`site_data` 
+ADD COLUMN `id` INT(11) NOT NULL AUTO_INCREMENT FIRST,
+CHANGE COLUMN `site_id` `site_id` VARCHAR(20) NULL ,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`id`);
+;
+
+ALTER TABLE `rank_care`.`site_calculation` 
+ADD INDEX `site_id_calc_table_idx` (`site_id` ASC) VISIBLE;
+;
+ALTER TABLE `rank_care`.`site_calculation` 
+ADD CONSTRAINT `site_id_calc_table`
+  FOREIGN KEY (`site_id`)
+  REFERENCES `rank_care`.`site_data` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+  
+ALTER TABLE `rank_care`.`site_calculation_data` 
+ADD PRIMARY KEY (`site_id`);
+;
+ALTER TABLE `rank_care`.`site_calculation_data` 
+ADD CONSTRAINT `site_id_calc_data`
+  FOREIGN KEY (`site_id`)
+  REFERENCES `rank_care`.`site_data` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+  
+---------
+  

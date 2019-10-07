@@ -31,11 +31,12 @@
 ----------------------------------------------------------------
 /api/site/getSiteData
 {
-  "siteId":"A123"
+  "id":"1"
   }
 -------------
 /api/site/updateRegistration
 {
+  "id":2,
   "siteName":"testSite",
   "siteLocation":"location",
   "state":"state",
@@ -137,5 +138,44 @@ sortBy- Column name in db
 "cancerSlopeRef":"IRIS"
 }
 ---------------
+*************FOR UPDATING/INSERTING SINGLE CONTAMINANT DATA*************
+/api/site/saveSiteContaminant
+
+****UPD****
+{
+  "id":2, 
+  "siteContaminant":[
+    {"id":11,
+     "chemicalId":"1",
+	 "contaminationType":"Water-1",
+	 "contaminationValue":"0.2",
+     "activeYN":"Y"
+	} 
+  ]
+}
+*****INSERT*****
+{
+  "id":2, 
+  "siteContaminant":[
+    {
+     "chemicalId":"1",
+	 "contaminationType":"Water-123",
+	 "contaminationValue":"0.2",
+     "activeYN":"Y"
+	} 
+  ]
+}
+------------------------
+*************FOR UPDATING Only Site DATA*************
+/api/site/updateSiteRegistration
+{
+  "id":2, 
+  "siteName":"testSite",
+  "siteLocation":"location",
+  "state":"state",
+  "siteId":"A123",
+  "orgName":"test-upd"
+}
+------------------------
 
 

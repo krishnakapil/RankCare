@@ -6,7 +6,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class SiteRegisterRequest {
-	  
+	private Long id;
+	
     @NotBlank
     @Size(min = 4, max = 40)
     private String siteName;
@@ -29,6 +30,15 @@ public class SiteRegisterRequest {
     
     
     private List<SiteContaminantData> siteContaminant;
+
+    
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getSiteName() {
 		return siteName;

@@ -10,7 +10,7 @@ import com.app.rankcare.model.SiteCalculation;
 @Repository
 public interface SiteCalculationRepository extends JpaRepository<SiteCalculation, Long> {
 
-	public List<SiteCalculation> findBySiteId(String siteId);
+	public List<SiteCalculation> findBySiteId(Long siteId);
    
   
     

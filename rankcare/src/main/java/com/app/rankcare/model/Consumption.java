@@ -116,6 +116,12 @@ public class Consumption extends DateAudit {
 	public void setCiData2(String ciData2) {
 		this.ciData2 = ciData2;
 	}
+
+	@Override
+	public String toString() {
+		return "Consumption [id=" + id + ", ageGrp=" + ageGrp + ", bodyWtAvg=" + bodyWtAvg + ", ciData1=" + ciData1
+				+ ", soilInvAvg=" + soilInvAvg + ", waterConsAvg=" + waterConsAvg + ", ciData2=" + ciData2 + "]";
+	}
  
 	
 		

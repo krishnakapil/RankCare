@@ -25,7 +25,7 @@ public class SiteCalculation extends DateAudit{
     private Long id;
 
 	@Column(name="site_id")
-	private String siteId; 	
+	private Long siteId; 	
 	
 	 
 	@Column(name="chemical_id")
@@ -46,7 +46,7 @@ public class SiteCalculation extends DateAudit{
 		
 	}
 
-	public SiteCalculation(String siteId, Long chemicalId, String contaminationType,
+	public SiteCalculation(Long siteId, Long chemicalId, String contaminationType,
 			String contaminationValue,String activeYN) {
 		super();
 		this.siteId = siteId;
@@ -55,7 +55,7 @@ public class SiteCalculation extends DateAudit{
 		this.contaminationValue = contaminationValue;
 		this.activeYN=activeYN;
 	}
-	public SiteCalculation(Long id,String siteId, Long chemicalId, String contaminationType,
+	public SiteCalculation(Long id,Long siteId, Long chemicalId, String contaminationType,
 			String contaminationValue,String activeYN) {
 		super();
 		this.id = id;
@@ -74,11 +74,11 @@ public class SiteCalculation extends DateAudit{
 		this.id = id;
 	}
 
-	public String getSiteId() {
+	public Long getSiteId() {
 		return siteId;
 	}
 
-	public void setSiteId(String siteId) {
+	public void setSiteId(Long siteId) {
 		this.siteId = siteId;
 	}
 

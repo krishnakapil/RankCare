@@ -2,6 +2,8 @@ package com.app.rankcare.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,6 +16,9 @@ public class Site extends DateAudit{
 	private static final long serialVersionUID = 7280440263317772534L;
 
 	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+	
 	@Column(name="site_id")
 	private String siteId;
 
@@ -35,12 +40,29 @@ public class Site extends DateAudit{
 		
 	}
 
+	public Site(Long id,String siteId, String siteName, String siteLocation, String state, String orgName) {
+		this.id=id;
+		this.siteId=siteId;
+		this.siteName=siteName;
+		this.siteLocation=siteLocation;
+		this.siteState=state;
+		this.siteOrg=orgName;
+	}
 	public Site(String siteId, String siteName, String siteLocation, String state, String orgName) {
 		this.siteId=siteId;
 		this.siteName=siteName;
 		this.siteLocation=siteLocation;
 		this.siteState=state;
 		this.siteOrg=orgName;
+	}
+	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getSiteId() {
@@ -83,12 +105,14 @@ public class Site extends DateAudit{
 		this.siteOrg = siteOrg;
 	}
 
-	
 	@Override
 	public String toString() {
-		return "Site [siteId=" + siteId + ", siteName=" + siteName + ", siteLocation=" + siteLocation + ", siteState="
-				+ siteState + ", siteOrg=" + siteOrg + "]";
+		return "Site [id=" + id + ", siteId=" + siteId + ", siteName=" + siteName + ", siteLocation=" + siteLocation
+				+ ", siteState=" + siteState + ", siteOrg=" + siteOrg + "]";
 	}
+
+	
+	
 	
 	
 	

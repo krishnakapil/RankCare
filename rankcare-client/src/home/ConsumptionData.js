@@ -31,12 +31,12 @@ class ConsumptionData extends Component {
                     key: 'bodyWtAvg',
                 },
                 {
-                    title: 'CI Data 1',
+                    title: 'Confidence Limit 95% of soil',
                     dataIndex: 'ciData1',
                     key: 'ciData1',
                 },
                 {
-                    title: 'CI Data 2',
+                    title: 'Confidence Limit 95% of water',
                     dataIndex: 'ciData2',
                     key: 'ciData2',
                 },

@@ -137,7 +137,7 @@ class NewConsumption extends Component {
                         })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item
-                        label="CI Data 1">
+                        label="Confidence Limit 95% of soil">
                         {getFieldDecorator('ciData1', {
                             rules: [
                                 { required: true, message: 'Please input CI Data 1!' },
@@ -145,7 +145,7 @@ class NewConsumption extends Component {
                             ],
                         })(<InputNumber />)}
                     </Form.Item>
-                    <Form.Item label="CI Data 2">
+                    <Form.Item label="Confidence Limit 95% of water">
                         {getFieldDecorator('ciData2', {
                             rules: [
                                 { required: true, message: 'Please input CI Data 2!' },

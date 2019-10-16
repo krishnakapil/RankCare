@@ -33,6 +33,10 @@ public class Consumption extends DateAudit {
 	@Column(name="ci_data_2")
 	private String ciData2;
 
+	private Integer ageFrom;
+
+	private Integer ageTo;
+
 	public Consumption() {
 		
 	}
@@ -115,6 +119,22 @@ public class Consumption extends DateAudit {
 
 	public void setCiData2(String ciData2) {
 		this.ciData2 = ciData2;
+	}
+
+	public Integer getAgeFrom() {
+		return ageFrom;
+	}
+
+	public void setAgeFrom(Integer ageFrom) {
+		this.ageFrom = ageFrom;
+	}
+
+	public Integer getAgeTo() {
+		return ageTo;
+	}
+
+	public void setAgeTo(Integer ageTo) {
+		this.ageTo = ageTo;
 	}
 
 	@Override

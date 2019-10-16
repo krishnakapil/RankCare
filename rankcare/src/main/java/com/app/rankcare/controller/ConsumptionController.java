@@ -57,7 +57,7 @@ public class ConsumptionController {
         return null;
     }
 
-   
+
     @GetMapping("/consumption")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
     public Map<String, Object> getConsumptionPagination(
@@ -70,9 +70,27 @@ public class ConsumptionController {
         resMap.put("pageCnt", 0);
         resMap.put("data", new ArrayList<Consumption>());
         Page<Consumption> pgLst = consumptionRepository.findAll(pagination);
+        List<Consumption> res = pgLst.getContent();
+
         if (pgLst.hasContent()) {
             resMap.put("pageCnt", pgLst.getTotalPages());
-            resMap.put("data", pgLst.getContent());
+
+            for (Consumption c : res) {
+                String ageGrp = c.getAgeGrp();
+
+                if (ageGrp != null && ageGrp.contains("-")) {
+                    String[] ageGrpSplit = ageGrp.split("-");
+                    if (ageGrpSplit.length == 2) {
+                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
+                    } else if (ageGrpSplit.length == 1) {
+                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+                        c.setAgeTo(null);
+                    }
+                }
+            }
+
+            resMap.put("data", res);
         }
         return resMap;
     }
@@ -121,7 +139,22 @@ public class ConsumptionController {
                 }
                 resMap.put("pageCnt", d);
             }
-            resMap.put("data", query.getResultList());
+
+            for (Consumption c : res) {
+                String ageGrp = c.getAgeGrp();
+
+                if (ageGrp != null && ageGrp.contains("-")) {
+                    String[] ageGrpSplit = ageGrp.split("-");
+                    if (ageGrpSplit.length == 2) {
+                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
+                    } else if (ageGrpSplit.length == 1) {
+                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+                        c.setAgeTo(null);
+                    }
+                }
+            }
+            resMap.put("data", res);
         }
 
         return resMap;
@@ -130,8 +163,14 @@ public class ConsumptionController {
     @PostMapping("/consumption/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateConsumption(@Valid @RequestBody ConsumptionRequest consumptionRequest) {
-        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getId(), consumptionRequest.getAgeGrp(),consumptionRequest.getBodyWtAvg(),consumptionRequest.getCiData1(),
-        		consumptionRequest.getSoilInvAvg(),consumptionRequest.getWaterConsAvg(),consumptionRequest.getCiData2()));
+        String ageGrp = consumptionRequest.getAgeFrom() + "-";
+
+        if(consumptionRequest.getAgeTo() != null) {
+            ageGrp += consumptionRequest.getAgeTo();
+        }
+
+        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getId(), ageGrp, consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
+                consumptionRequest.getSoilInvAvg(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2()));
 
         logger.info("Saved Data Result::" + result.toString());
         return new ResponseEntity<Object>(new ApiResponse(true, "Consumption data updated successfully"), HttpStatus.OK);
@@ -140,8 +179,14 @@ public class ConsumptionController {
     @PostMapping("/consumption/insert")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> insertConsumption(@Valid @RequestBody ConsumptionRequest consumptionRequest) {
-        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getAgeGrp(),consumptionRequest.getBodyWtAvg(),consumptionRequest.getCiData1(),
-        		consumptionRequest.getSoilInvAvg(),consumptionRequest.getWaterConsAvg(),consumptionRequest.getCiData2()));
+        String ageGrp = consumptionRequest.getAgeFrom() + "-";
+
+        if(consumptionRequest.getAgeTo() != null) {
+            ageGrp += consumptionRequest.getAgeTo();
+        }
+
+        Consumption result = consumptionRepository.save(new Consumption(ageGrp, consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
+                consumptionRequest.getSoilInvAvg(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2()));
 
         logger.info("Saved Data Result::" + result.toString());
         return new ResponseEntity<Object>(new ApiResponse(true, "Consumption data saved successfully"), HttpStatus.OK);
@@ -150,7 +195,7 @@ public class ConsumptionController {
     @DeleteMapping("/consumption/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> deleteById(@PathVariable("id") Integer id) throws Exception {
-    	consumptionRepository.deleteById(id.longValue());
+        consumptionRepository.deleteById(id.longValue());
         return new ResponseEntity<Object>(new ApiResponse(true, "Consumption data deleted successfully!"), HttpStatus.OK);
     }
 }

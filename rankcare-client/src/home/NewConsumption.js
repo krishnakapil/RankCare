@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import {
     Form,
-    Input,
     Button,
     Modal,
     notification,
     InputNumber
 } from 'antd';
-import { createToxicity, updateToxicity } from '../util/APIUtils';
+import { createConsumption, updateConsumtion } from '../util/APIUtils';
 
-class NewToxicity extends Component {
+class NewConsumption extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,11 +31,11 @@ class NewToxicity extends Component {
                 isLoading: true
             });
 
-            const toxicityRequest = Object.assign({}, values);
-            toxicityRequest.id = this.props.id
+            const consumptionRequest = Object.assign({}, values);
+            consumptionRequest.id = this.props.id
 
             if (isEdit) {
-                updateToxicity(toxicityRequest)
+                updateConsumtion(consumptionRequest)
                     .then(response => {
                         this.setState({
                             confirmLoading: false,
@@ -52,7 +51,7 @@ class NewToxicity extends Component {
                         });
                     });
             } else {
-                createToxicity(toxicityRequest)
+                createConsumption(consumptionRequest)
                     .then(response => {
                         this.setState({
                             confirmLoading: false,
@@ -72,8 +71,7 @@ class NewToxicity extends Component {
     }
 
     checkNumber = (rule, value, callback) => {
-        console.log("Value " + value)
-        if (value > 0) {
+        if ((rule.field == "ageTo" && value == null) || value > 0) {
           callback();
           return;
         }
@@ -98,7 +96,7 @@ class NewToxicity extends Component {
         return (
             <Modal
                 width="600px"
-                title={this.props.isEdit ? "Edit Toxicity Data" : "Add Toxicity Data"}
+                title={this.props.isEdit ? "Edit Consumption Data" : "Add Consumption Data"}
                 visible={visible}
                 onOk={this.handleOkClick}
                 onCancel={onCancel}
@@ -113,79 +111,64 @@ class NewToxicity extends Component {
                 ]}>
                 <Form {...formItemLayout}>
                     <Form.Item
-                        label="Chemical Name">
-                        {getFieldDecorator('chemicalName', {
+                        label="Age Group From">
+                        {getFieldDecorator('ageFrom', {
                             rules: [
-                                { required: true, message: 'Please input chemical name!' },
-                            ],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item
-                        label="Chemical Formula">
-                        {getFieldDecorator('chemicalFormula', {
-                            rules: [
-                                { required: true, message: 'Please input Chemical Formula!' },
-                            ],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item
-                        label="Soil Guideline">
-                        {getFieldDecorator('soilGuideline', {
-                            rules: [
-                                { required: true, message: 'Please input Soil Guideline!' },
+                                { required: true, message: 'Please input age group from!' },
                                 { validator: this.checkNumber },
                             ],
                         })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item
-                        label="Soil Reference">
-                        {getFieldDecorator('soilRef', {
+                        label="Age Group To">
+                        {getFieldDecorator('ageTo', {
                             rules: [
-                                { required: true, message: 'Please input Soil Reference!' },
-                            ],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="Water Guideline">
-                        {getFieldDecorator('waterGuideline', {
-                            rules: [
-                                { required: true, message: 'Please input Water Guideline!' },
                                 { validator: this.checkNumber },
-                            ]
+                            ],
                         })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item
-                        label="Water Reference">
-                        {getFieldDecorator('waterRef', {
-                            rules: [{ required: true, message: 'Please input Water Reference!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="Dosage Reference">
-                        {getFieldDecorator('dosageRef', {
+                        label="Body Weight Avg">
+                        {getFieldDecorator('bodyWtAvg', {
                             rules: [
-                                { required: true, message: 'Please input Dosage Reference!' },
+                                { required: true, message: 'Please input Bodu Weight Average!' },
+                                { validator: this.checkNumber },
+                            ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item
+                        label="CI Data 1">
+                        {getFieldDecorator('ciData1', {
+                            rules: [
+                                { required: true, message: 'Please input CI Data 1!' },
+                                { validator: this.checkNumber },
+                            ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item label="CI Data 2">
+                        {getFieldDecorator('ciData2', {
+                            rules: [
+                                { required: true, message: 'Please input CI Data 2!' },
                                 { validator: this.checkNumber },
                             ]
                         })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item
-                        label="Reference">
-                        {getFieldDecorator('reference', {
-                            rules: [{ required: true, message: 'Please input Reference!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="Cancer Slope Factor">
-                        {getFieldDecorator('cancerSlopeFactor', {
+                        label="Soil In Avg">
+                        {getFieldDecorator('soilInvAvg', {
                             rules: [
-                                { required: true, message: 'Please input Cancer Slope Factor!' },
+                                { required: true, message: 'Please input Soil In Avg!' },
+                                { validator: this.checkNumber },
+                            ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item label="Water Consumption Avg">
+                        {getFieldDecorator('waterConsAvg', {
+                            rules: [
+                                { required: true, message: 'Please input Water Consumption Avg!' },
                                 { validator: this.checkNumber },
                             ]
                         })(<InputNumber />)}
-                    </Form.Item>
-                    <Form.Item
-                        label="Cancer Slope Reference">
-                        {getFieldDecorator('cancerSlopeRef', {
-                            rules: [{ required: true, message: 'Please input Cancer Slope Reference!' }],
-                        })(<Input />)}
                     </Form.Item>
                 </Form>
             </Modal>
@@ -193,4 +176,4 @@ class NewToxicity extends Component {
     }
 }
 
-export default NewToxicity;
+export default NewConsumption;

@@ -123,3 +123,33 @@ export function updateToxicity(toxicityRequest) {
         body: JSON.stringify(toxicityRequest)
     });
 }
+
+export function getConsumptionData(page, count) {
+    return request({
+        url: API_BASE_URL + "/consumption?page=" + page + "&count=" + count,
+        method: 'GET'
+    });
+}
+
+export function deleteConsumption(id) {
+    return request({
+        url: API_BASE_URL + "/consumption/" + id,
+        method: 'DELETE'
+    });
+}
+
+export function createConsumption(consumptionRequest) {
+    return request({
+        url: API_BASE_URL + "/consumption/insert",
+        method: 'POST',
+        body: JSON.stringify(consumptionRequest)
+    });
+}
+
+export function updateConsumtion(consumptionRequest) {
+    return request({
+        url: API_BASE_URL + "/consumption/update",
+        method: 'POST',
+        body: JSON.stringify(consumptionRequest)
+    });
+}

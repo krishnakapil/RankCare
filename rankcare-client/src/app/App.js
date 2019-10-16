@@ -17,7 +17,8 @@ import AppHeader from '../common/AppHeader';
 import NotFound from '../common/NotFound';
 import LoadingIndicator from '../common/LoadingIndicator';
 import UserList from '../home/UserList';
-import ToxicityData from '../home/ToxicityData'
+import ToxicityData from '../home/ToxicityData';
+import ConsumptionData from '../home/ConsumptionData';
 
 import { Layout, notification } from 'antd';
 const { Content, Footer } = Layout;
@@ -118,6 +119,11 @@ class App extends Component {
               <Route exact path="/toxicity"
                 render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ? 
                 <ToxicityData currentUser={this.state.currentUser} {...props} /> :
+                  <Redirect to="/" />}>
+              </Route>
+              <Route exact path="/consumption"
+                render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ? 
+                <ConsumptionData currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>
               </Route>
               <Route component={NotFound}></Route>

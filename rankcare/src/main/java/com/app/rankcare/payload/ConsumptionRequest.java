@@ -28,6 +28,10 @@ public class ConsumptionRequest {
 	
 	private Map<String,String> searchBy;
 
+	private Integer ageFrom;
+
+	private Integer ageTo;
+
 	public Long getId() {
 		return id;
 	}
@@ -35,7 +39,6 @@ public class ConsumptionRequest {
 	public void setId(Long id) {
 		this.id = id;
 	}
- 
 	
 	public String getAgeGrp() {
 		return ageGrp;
@@ -124,6 +127,20 @@ public class ConsumptionRequest {
 	public void setSearchBy(Map<String, String> searchBy) {
 		this.searchBy = searchBy;
 	}
-	
-	
+
+	public Integer getAgeFrom() {
+		return ageFrom;
+	}
+
+	public void setAgeFrom(Integer ageFrom) {
+		this.ageFrom = ageFrom;
+	}
+
+	public Integer getAgeTo() {
+		return ageTo;
+	}
+
+	public void setAgeTo(Integer ageTo) {
+		this.ageTo = ageTo;
+	}
 }

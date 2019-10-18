@@ -153,3 +153,17 @@ export function updateConsumtion(consumptionRequest) {
         body: JSON.stringify(consumptionRequest)
     });
 }
+
+export function getAllChemicals() {
+    return request({
+        url: API_BASE_URL + "/chemicals",
+        method: 'GET'
+    });
+}
+
+export function getSites(page, count) {
+    return request({
+        url: API_BASE_URL + "/sites?page=" + page + "&count=" + count,
+        method: 'GET'
+    });
+}

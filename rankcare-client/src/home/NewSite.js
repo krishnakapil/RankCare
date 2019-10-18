@@ -4,11 +4,15 @@ import {
     Button,
     Modal,
     notification,
-    InputNumber
+    InputNumber,
+    Input,
+    Icon
 } from 'antd';
 import { createConsumption, updateConsumtion } from '../util/APIUtils';
 
-class NewConsumption extends Component {
+let id = 0;
+
+class NewSite extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,17 +75,41 @@ class NewConsumption extends Component {
     }
 
     checkNumber = (rule, value, callback) => {
-        if ((rule.field == "ageTo" && value == null) || value > 0) {
-          callback();
-          return;
+        if (value == null || value > 0) {
+            callback();
+            return;
         }
         callback('This field should be number!');
     };
 
-    render() {
-        const { visible, onCancel, form } = this.props;
-        const { getFieldDecorator } = form;
+    remove = k => {
+        const { form } = this.props;
+        // can use data-binding to get
+        const keys = form.getFieldValue('keys');
+        // We need at least one passenger
+        if (keys.length === 1) {
+          return;
+        }
+    
+        // can use data-binding to set
+        form.setFieldsValue({
+          keys: keys.filter(key => key !== k),
+        });
+    };
 
+    add = () => {
+        const { form } = this.props;
+        // can use data-binding to get
+        const keys = form.getFieldValue('keys');
+        const nextKeys = keys.concat(id++);
+        // can use data-binding to set
+        // important! notify form to detect changes
+        form.setFieldsValue({
+          keys: nextKeys,
+        });
+    };
+
+    render() {
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -93,10 +121,48 @@ class NewConsumption extends Component {
             },
         };
 
+        const formItemLayoutWithOutLabel = {
+            wrapperCol: {
+                xs: { span: 24, offset: 0 },
+                sm: { span: 20, offset: 4 },
+            },
+        };
+
+        const { visible, onCancel, form } = this.props;
+        const { getFieldDecorator, getFieldValue } = form;
+        getFieldDecorator('keys', { initialValue: [] });
+        const keys = getFieldValue('keys');
+        const formItems = keys.map((k, index) => (
+            <Form.Item
+                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                label={index === 0 ? 'Passengers' : ''}
+                required={false}
+                key={k}
+            >
+                {getFieldDecorator(`names[${k}]`, {
+                    validateTrigger: ['onChange', 'onBlur'],
+                    rules: [
+                        {
+                            required: true,
+                            whitespace: true,
+                            message: "Please input passenger's name or delete this field.",
+                        },
+                    ],
+                })(<Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} />)}
+                {keys.length > 1 ? (
+                    <Icon
+                        className="dynamic-delete-button"
+                        type="minus-circle-o"
+                        onClick={() => this.remove(k)}
+                    />
+                ) : null}
+            </Form.Item>
+        ));
+
         return (
             <Modal
                 width="600px"
-                title={this.props.isEdit ? "Edit Consumption Data" : "Add Consumption Data"}
+                title={this.props.isEdit ? "Edit Site Data" : "Add Site Data"}
                 visible={visible}
                 onOk={this.handleOkClick}
                 onCancel={onCancel}
@@ -111,64 +177,42 @@ class NewConsumption extends Component {
                 ]}>
                 <Form {...formItemLayout}>
                     <Form.Item
-                        label="Age Group From">
-                        {getFieldDecorator('ageFrom', {
+                        label="Site Name">
+                        {getFieldDecorator('site_name', {
                             rules: [
-                                { required: true, message: 'Please input age group from!' },
+                                { required: true, message: 'Please input site name!' },
                                 { validator: this.checkNumber },
                             ],
-                        })(<InputNumber />)}
+                        })(<Input />)}
                     </Form.Item>
                     <Form.Item
-                        label="Age Group To">
-                        {getFieldDecorator('ageTo', {
+                        label="Site Location">
+                        {getFieldDecorator('site_location', {
                             rules: [
-                                { validator: this.checkNumber },
+                                { required: true, message: 'Please input Site Location!' },
                             ],
-                        })(<InputNumber />)}
+                        })(<Input />)}
                     </Form.Item>
                     <Form.Item
-                        label="Body Weight Avg">
-                        {getFieldDecorator('bodyWtAvg', {
+                        label="Site State">
+                        {getFieldDecorator('site_state', {
                             rules: [
-                                { required: true, message: 'Please input Body Weight Average!' },
-                                { validator: this.checkNumber },
+                                { required: true, message: 'Please input Site State!' },
                             ],
-                        })(<InputNumber />)}
+                        })(<Input />)}
                     </Form.Item>
-                    <Form.Item
-                        label="Confidence Limit 95% of soil">
-                        {getFieldDecorator('ciData1', {
+                    <Form.Item label="Site Org">
+                        {getFieldDecorator('site_org', {
                             rules: [
-                                { required: true, message: 'Please input CI Data 1!' },
-                                { validator: this.checkNumber },
-                            ],
-                        })(<InputNumber />)}
-                    </Form.Item>
-                    <Form.Item label="Confidence Limit 95% of water">
-                        {getFieldDecorator('ciData2', {
-                            rules: [
-                                { required: true, message: 'Please input CI Data 2!' },
-                                { validator: this.checkNumber },
+                                { required: true, message: 'Please input Site Org!' },
                             ]
-                        })(<InputNumber />)}
+                        })(<Input />)}
                     </Form.Item>
-                    <Form.Item
-                        label="Soil In Avg">
-                        {getFieldDecorator('soilInvAvg', {
-                            rules: [
-                                { required: true, message: 'Please input Soil In Avg!' },
-                                { validator: this.checkNumber },
-                            ],
-                        })(<InputNumber />)}
-                    </Form.Item>
-                    <Form.Item label="Water Consumption Avg">
-                        {getFieldDecorator('waterConsAvg', {
-                            rules: [
-                                { required: true, message: 'Please input Water Consumption Avg!' },
-                                { validator: this.checkNumber },
-                            ]
-                        })(<InputNumber />)}
+                    {formItems}
+                    <Form.Item label="Site Chemicals">
+                        <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+                            <Icon type="plus" /> Add Chemical
+                        </Button>
                     </Form.Item>
                 </Form>
             </Modal>
@@ -176,4 +220,4 @@ class NewConsumption extends Component {
     }
 }
 
-export default NewConsumption;
+export default NewSite;

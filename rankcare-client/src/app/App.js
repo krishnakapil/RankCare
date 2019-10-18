@@ -19,6 +19,7 @@ import LoadingIndicator from '../common/LoadingIndicator';
 import UserList from '../home/UserList';
 import ToxicityData from '../home/ToxicityData';
 import ConsumptionData from '../home/ConsumptionData';
+import SiteData from '../home/SiteData'
 
 import { Layout, notification } from 'antd';
 const { Content, Footer } = Layout;
@@ -125,6 +126,11 @@ class App extends Component {
                 render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ? 
                 <ConsumptionData currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>
+              </Route>
+              <Route exact path="/sites"
+                render={(props) => this.state.isAuthenticated && this.state.currentUser? 
+                <SiteData currentUser={this.state.currentUser} {...props} /> :
+                <Redirect to="/" />}>
               </Route>
               <Route component={NotFound}></Route>
             </Switch>

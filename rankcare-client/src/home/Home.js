@@ -10,6 +10,7 @@ class Home extends Component {
         this.handleManagerUsersClick = this.handleManagerUsersClick.bind(this)
         this.handleToxicityClick = this.handleToxicityClick.bind(this);
         this.handleConsumptionClick = this.handleConsumptionClick.bind(this);
+        this.handleSitesClicked = this.handleSitesClicked.bind(this);
     }
 
     render() {
@@ -45,7 +46,7 @@ class Home extends Component {
                         </Col>
                         <Col className="gutter-row" span={6}>
                             <div className="gutter-box">
-                                <Button icon="table" className="gutter-button">Sites List</Button>
+                                <Button icon="table" className="gutter-button" onClick={this.handleSitesClicked}>Sites List</Button>
                             </div>
                         </Col>
                         <Col className="gutter-row" span={6}>
@@ -103,6 +104,10 @@ class Home extends Component {
 
     handleConsumptionClick() {
         this.props.history.push("/consumption")
+    }
+
+    handleSitesClicked() {
+        this.props.history.push("/sites")
     }
 }
 

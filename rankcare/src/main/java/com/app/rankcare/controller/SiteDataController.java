@@ -34,6 +34,8 @@ public class SiteDataController {
 
     @Autowired
     private SiteCalculationRepository siteCalculationRepository;
+    @Autowired
+    private ChemicalController chemicalController;
 
     private static final Logger logger = LoggerFactory.getLogger(SiteDataController.class);
 
@@ -161,6 +163,42 @@ public class SiteDataController {
         }
         siteRegisterRequest.setSiteContaminant(contaLst);
         return new ResponseEntity<SiteRegisterRequest>(siteRegisterRequest, HttpStatus.OK);
+    }
+    
+
+    @PostMapping("/getSitesT1")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
+    public Map<Long, Map<String,Long>> siteCalculationT1(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
+    	Map<Long, Map<String,Long>> resMap=new HashMap<Long, Map<String,Long>>();
+    	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
+		List<SiteCalculation> siteContamiData = null;
+		if(siteRegisterRequest.getSiteIds()!=null && !siteRegisterRequest.getSiteIds().isEmpty()) {
+			Map<String,Long> siteT1Vals=null;
+			for(Long id:siteRegisterRequest.getSiteIds()) {
+				Long tw=0L;
+				Long ts=0L;
+		    	siteContamiData = siteCalculationRepository.findBySiteId(id);
+		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
+		        	Toxicity t=null;
+		            for (SiteCalculation siteCalc : siteContamiData) {
+		            	t=chemicalData.get(siteCalc.getChemicalId());
+		            	if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
+		            		tw+=Long.valueOf(siteCalc.getContaminationValue())/Long.valueOf(t.getWaterGuideline());
+		            	}
+		            	else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
+		            		ts+=Long.valueOf(siteCalc.getContaminationValue())/Long.valueOf(t.getSoilGuideline());
+		            	}
+		            }
+		        }
+		    	siteT1Vals=new HashMap<String,Long>();
+		    	siteT1Vals.put("Water",tw);
+		    	siteT1Vals.put("Soil",ts);
+		    	resMap.put(id, siteT1Vals);
+			}
+		}
+    	
+		return resMap;
+		
     }
 
 }

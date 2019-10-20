@@ -206,6 +206,7 @@ public class SiteDataController {
 
         return siteT1Vals;
     }
+    
     public Map<String, Map<String, Double>> siteCalculationT2(Integer id) throws Exception {
         Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
         Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();

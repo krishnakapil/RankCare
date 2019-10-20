@@ -95,4 +95,15 @@ public class ChemicalController {
 
         return resMap;
     }
+    public Map<Long, Toxicity> getChemicalsData() {
+        Map<Long, Toxicity> chemicalMap = new HashMap<Long, Toxicity>();
+        List<Toxicity> toxicData = toxicityRepository.findAll();
+        if (toxicData != null && !toxicData.isEmpty()) {
+            for (Toxicity t : toxicData) {
+                chemicalMap.put(t.getId(), t);
+            }
+        }
+        return chemicalMap;
+    }
+    
 }

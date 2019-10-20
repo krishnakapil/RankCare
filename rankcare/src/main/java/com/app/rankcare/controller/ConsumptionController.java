@@ -198,4 +198,19 @@ public class ConsumptionController {
         consumptionRepository.deleteById(id.longValue());
         return new ResponseEntity<Object>(new ApiResponse(true, "Consumption data deleted successfully!"), HttpStatus.OK);
     }
+    
+    public Map<String,Consumption> getConsumptionAgeGrpData() {
+    	Map<String,Consumption> resMap=new HashMap<String,Consumption>();
+        try {
+            List<Consumption> consLst=getAllConsumptionData();
+            if(consLst!=null && !consLst.isEmpty()) {
+            	for(Consumption cons:consLst) {
+            		resMap.put(cons.getAgeGrp(), cons);
+            	}
+            }
+        } catch (Exception e) {
+            logger.error("Fetching of getConsumptionAgeGrpData error:" + e.getMessage());
+        }
+        return resMap;
+    }
 }

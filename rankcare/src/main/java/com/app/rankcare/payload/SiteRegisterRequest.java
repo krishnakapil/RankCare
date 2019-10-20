@@ -31,6 +31,7 @@ public class SiteRegisterRequest {
     
     private List<SiteContaminantData> siteContaminant;
 
+    private List<Long> siteIds;
     
 	public Long getId() {
 		return id;
@@ -86,6 +87,14 @@ public class SiteRegisterRequest {
 
 	public void setSiteContaminant(List<SiteContaminantData> siteContaminant) {
 		this.siteContaminant = siteContaminant;
+	}
+
+	public List<Long> getSiteIds() {
+		return siteIds;
+	}
+
+	public void setSiteIds(List<Long> siteIds) {
+		this.siteIds = siteIds;
 	}
  
 }

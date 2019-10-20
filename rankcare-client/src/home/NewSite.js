@@ -3,13 +3,12 @@ import {
     Form,
     Button,
     Modal,
-    notification,
-    InputNumber,
     Input,
-    Icon
+    Icon,
+    notification
 } from 'antd';
 import ChemicalInput from './ChemicalInput';
-import { createConsumption, updateConsumtion } from '../util/APIUtils';
+import { createSite, updateSite } from '../util/APIUtils';
 
 let id = 0;
 
@@ -31,54 +30,67 @@ class NewSite extends Component {
                 return;
             }
 
-            console.log("Form values " + JSON.stringify(values));
+            this.setState({
+                confirmLoading: true,
+                isLoading: true
+            });
 
-            // this.setState({
-            //     confirmLoading: true,
-            //     isLoading: true
-            // });
+            const nonNullChemicals = values.chemicals.filter(function (chemical) {
+                return chemical
+            });
+
+            const siteRequest = {
+                "id": this.props.id,
+                "siteName": values.siteName,
+                "siteLocation": values.siteLocation,
+                "state": values.siteState,
+                "orgName": values.siteOrg,
+                "siteContaminant": nonNullChemicals
+            }
+
+            console.log("Form values " + JSON.stringify(siteRequest));
 
             // const consumptionRequest = Object.assign({}, values);
             // consumptionRequest.id = this.props.id
 
-            // if (isEdit) {
-            //     updateConsumtion(consumptionRequest)
-            //         .then(response => {
-            //             this.setState({
-            //                 confirmLoading: false,
-            //                 isLoading: false
-            //             });
-            //             this.props.form.resetFields();
-            //             this.props.onCreate();
-            //         }).catch(error => {
-            //             this.setState({ isLoading: false });
-            //             notification.error({
-            //                 message: 'rankCare',
-            //                 description: error.message || 'Sorry! Something went wrong. Please try again!'
-            //             });
-            //         });
-            // } else {
-            //     createConsumption(consumptionRequest)
-            //         .then(response => {
-            //             this.setState({
-            //                 confirmLoading: false,
-            //                 isLoading: false
-            //             });
-            //             this.props.form.resetFields();
-            //             this.props.onCreate();
-            //         }).catch(error => {
-            //             this.setState({ isLoading: false });
-            //             notification.error({
-            //                 message: 'rankCare',
-            //                 description: error.message || 'Sorry! Something went wrong. Please try again!'
-            //             });
-            //         });
-            // }
+            if (isEdit) {
+                // updateSite(consumptionRequest)
+                //     .then(response => {
+                //         this.setState({
+                //             confirmLoading: false,
+                //             isLoading: false
+                //         });
+                //         this.props.form.resetFields();
+                //         this.props.onCreate();
+                //     }).catch(error => {
+                //         this.setState({ isLoading: false });
+                //         notification.error({
+                //             message: 'rankCare',
+                //             description: error.message || 'Sorry! Something went wrong. Please try again!'
+                //         });
+                //     });
+            } else {
+                createSite(siteRequest)
+                    .then(response => {
+                        this.setState({
+                            confirmLoading: false,
+                            isLoading: false
+                        });
+                        this.props.form.resetFields();
+                        this.props.onCreate();
+                    }).catch(error => {
+                        this.setState({ isLoading: false });
+                        notification.error({
+                            message: 'rankCare',
+                            description: error.message || 'Sorry! Something went wrong. Please try again!'
+                        });
+                    });
+            }
         });
     }
 
     checkNumber = (rule, value, callback) => {
-        if (value == null || value.contamination_value || value.contamination_value > 0) {
+        if (value == null || value.contaminationValue || value.contaminationValue > 0) {
             callback();
             return;
         }
@@ -183,7 +195,7 @@ class NewSite extends Component {
                 <Form {...formItemLayout}>
                     <Form.Item
                         label="Site Name">
-                        {getFieldDecorator('site_name', {
+                        {getFieldDecorator('siteName', {
                             rules: [
                                 { required: true, message: 'Please input site name!' },
                             ],
@@ -191,7 +203,7 @@ class NewSite extends Component {
                     </Form.Item>
                     <Form.Item
                         label="Site Location">
-                        {getFieldDecorator('site_location', {
+                        {getFieldDecorator('siteLocation', {
                             rules: [
                                 { required: true, message: 'Please input Site Location!' },
                             ],
@@ -199,14 +211,14 @@ class NewSite extends Component {
                     </Form.Item>
                     <Form.Item
                         label="Site State">
-                        {getFieldDecorator('site_state', {
+                        {getFieldDecorator('siteState', {
                             rules: [
                                 { required: true, message: 'Please input Site State!' },
                             ],
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item label="Site Org">
-                        {getFieldDecorator('site_org', {
+                        {getFieldDecorator('siteOrg', {
                             rules: [
                                 { required: true, message: 'Please input Site Org!' },
                             ]

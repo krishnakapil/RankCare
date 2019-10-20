@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PageHeader, Table, Button, Popconfirm, Icon, Form, notification } from 'antd';
-import { getSites, deleteToxicity, getAllChemicals } from '../util/APIUtils';
+import { getSites, deleteSite, getAllChemicals } from '../util/APIUtils';
 import NewSite from './NewSite';
 
 class SiteData extends Component {
@@ -20,31 +20,26 @@ class SiteData extends Component {
             columns: [
                 {
                     title: 'Site Name',
-                    dataIndex: 'site_name',
-                    key: 'site_name',
+                    dataIndex: 'siteName',
+                    key: 'siteName',
                     render: (text, record) => <a className="user-list-name-link" onClick={() => this.handleSiteClick(record)}>{text}</a>,
-                    sorter: (a, b) => a.site_name.length - b.site_name.length,
+                    sorter: (a, b) => a.siteName.length - b.siteName.length,
                     sortDirections: ['descend', 'ascend'],
                 },
                 {
-                    title: 'Site Id',
-                    dataIndex: 'site_id',
-                    key: 'site_id',
-                },
-                {
                     title: 'Site Location',
-                    dataIndex: 'site_location',
-                    key: 'site_location',
+                    dataIndex: 'siteLocation',
+                    key: 'siteLocation',
                 },
                 {
                     title: 'Site State',
-                    dataIndex: 'site_state',
-                    key: 'site_state',
+                    dataIndex: 'siteState',
+                    key: 'siteState',
                 },
                 {
                     title: 'Site Org',
-                    dataIndex: 'site_org',
-                    key: 'site_org',
+                    dataIndex: 'siteOrg',
+                    key: 'siteOrg',
                 },
                 {
                     title: 'Action',
@@ -127,21 +122,21 @@ class SiteData extends Component {
                 mapPropsToFields(props) {
                     if (selectedSite) {
                         return {
-                            site_name: Form.createFormField({
-                                ...props.site_name,
-                                value: selectedSite.site_name
+                            siteName: Form.createFormField({
+                                ...props.siteName,
+                                value: selectedSite.siteName
                             }),
-                            site_location: Form.createFormField({
-                                ...props.site_location,
-                                value: selectedSite.site_location
+                            siteLocation: Form.createFormField({
+                                ...props.siteLocation,
+                                value: selectedSite.siteLocation
                             }),
-                            site_state: Form.createFormField({
-                                ...props.site_state,
-                                value: selectedSite.site_state
+                            siteState: Form.createFormField({
+                                ...props.siteState,
+                                value: selectedSite.siteState
                             }),
-                            site_org: Form.createFormField({
-                                ...props.site_org,
-                                value: selectedSite.site_org
+                            siteOrg: Form.createFormField({
+                                ...props.siteOrg,
+                                value: selectedSite.siteOrg
                             }),
                         };
                     } else {
@@ -189,11 +184,11 @@ class SiteData extends Component {
             isLoading: true
         });
 
-        deleteToxicity(id)
+        deleteSite(id)
             .then(response => {
                 notification.success({
                     message: 'rankCare',
-                    description: "Toxicity deleted successfully!",
+                    description: "Site deleted successfully!",
                 });
                 this.loadData(this.state.currentPage);
             }).catch(error => {

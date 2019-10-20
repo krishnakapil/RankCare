@@ -24,45 +24,45 @@ class ChemicalInput extends React.Component {
     );
     this.state = {
       chemicalOptions: checmicalOptions,
-      chemical_id: chemicals[0].id || 0,
-      chemical_name : chemicals[0].chemicalName || "",
-      contamination_value: value.contamination_value || 0,
-      contamination_type: value.contamination_type || 'soil',
+      chemicalId: chemicals[0].id || 0,
+      chemicalName : chemicals[0].chemicalName || "",
+      contaminationValue: value.contaminationValue || 0,
+      contaminationType: value.contaminationType || 'soil',
     };
   }
 
   handleNumberChange = e => {
-    const contamination_value = parseFloat(e || 0, 10);
-    if (isNaN(contamination_value)) {
+    const contaminationValue = parseFloat(e || 0, 10);
+    if (isNaN(contaminationValue)) {
       return;
     }
     if (!('value' in this.props)) {
-      this.setState({ contamination_value });
+      this.setState({ contaminationValue });
     }
-    this.triggerChange({ contamination_value });
+    this.triggerChange({ contaminationValue });
   };
 
-  handleContaminationTypeChange = contamination_type => {
+  handleContaminationTypeChange = contaminationType => {
     if (!('value' in this.props)) {
-      this.setState({ contamination_type });
+      this.setState({ contaminationType });
     }
-    this.triggerChange({ contamination_type });
+    this.triggerChange({ contaminationType });
   };
 
   handleChemicalChange = chemical_id => {
     const chemicalName = this.props.chemicals.find((chemical) => {
       return chemical.id === chemical_id;
     }).chemicalName
-    console.log("chemical name " + chemical_id + "  " + chemicalName)
+    
     if (!('value' in this.props)) {
       this.setState({ 
-        chemical_id : chemical_id,
-        chemical_name : chemicalName
+        chemicalId : chemical_id,
+        chemicalName : chemicalName
       });
     }
     this.triggerChange({ 
-      chemical_id : chemical_id,
-      chemical_name : chemicalName
+      chemicalId : chemical_id,
+      chemicalName : chemicalName
     });
   };
 
@@ -79,11 +79,11 @@ class ChemicalInput extends React.Component {
 
   render() {
     const { size } = this.props;
-    const { chemicalOptions, chemical_id, contamination_type, contamination_value } = this.state;
+    const { chemicalOptions, chemicalId, contaminationType, contaminationValue } = this.state;
     return (
       <span>
         <Select
-          value={contamination_type}
+          value={contaminationType}
           size={size}
           style={{ width: '22%', marginRight: '3%' }}
           onChange={this.handleContaminationTypeChange}
@@ -92,7 +92,7 @@ class ChemicalInput extends React.Component {
           <Option value="water">Water</Option>
         </Select>
         <Select
-          value={chemical_id}
+          value={chemicalId}
           size={size}
           style={{ width: '42%', marginRight: '3%' }}
           onChange={this.handleChemicalChange}
@@ -102,7 +102,7 @@ class ChemicalInput extends React.Component {
         <InputNumber
           type="text"
           size={size}
-          value={contamination_value}
+          value={contaminationValue}
           onChange={this.handleNumberChange}
           style={{ width: this.props.showRemove ? '20%' : '30%', marginRight : this.props.showRemove ? '5%' : '0' }}
         />

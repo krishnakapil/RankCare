@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.app.rankcare.payload.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.app.rankcare.model.Consumption;
 import com.app.rankcare.model.Site;
@@ -54,7 +50,7 @@ public class SiteDataController {
 
     @PostMapping("/site/add")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public String registerSite(@Valid @RequestBody SiteRegisterRequest siteRegisterRequest) {
+    public ResponseEntity<Object> registerSite(@Valid @RequestBody SiteRegisterRequest siteRegisterRequest) {
 
         Site result = siteDataRepository.save(new Site(siteRegisterRequest.getSiteId(),
                 siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(),
@@ -67,7 +63,7 @@ public class SiteDataController {
             }
         }
         logger.info("Saved Data Result::" + result.toString());
-        return "Site registered successfully";
+        return new ResponseEntity<Object>(new ApiResponse(true, "Site registered successfully"), HttpStatus.OK);
     }
 
     @PostMapping("/site/update")
@@ -92,6 +88,13 @@ public class SiteDataController {
         }
         logger.info("Saved Data Result::" + result.toString());
         return new ResponseEntity<String>("Site data updated successfully", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/site/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> deleteById(@PathVariable("id") Integer id) throws Exception {
+        siteDataRepository.deleteById(id.longValue());
+        return new ResponseEntity<Object>(new ApiResponse(true, "Site deleted successfully!"), HttpStatus.OK);
     }
 
     @GetMapping("/sites")

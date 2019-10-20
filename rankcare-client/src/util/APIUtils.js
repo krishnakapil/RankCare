@@ -167,3 +167,26 @@ export function getSites(page, count) {
         method: 'GET'
     });
 }
+
+export function createSite(siteRequest) {
+    return request({
+        url: API_BASE_URL + "/site/add",
+        method: 'POST',
+        body: JSON.stringify(siteRequest)
+    });
+}
+
+export function updateSite(siteRequest) {
+    return request({
+        url: API_BASE_URL + "/site/update",
+        method: 'POST',
+        body: JSON.stringify(siteRequest)
+    });
+}
+
+export function deleteSite(id) {
+    return request({
+        url: API_BASE_URL + "/site/" + id,
+        method: 'DELETE'
+    });
+}

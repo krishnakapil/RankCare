@@ -20,7 +20,6 @@ public class SiteRegisterRequest {
     @Size(max = 40) 
     private String state;
 
-    @NotBlank
     @Size(min = 2, max = 15)
     private String siteId;
     

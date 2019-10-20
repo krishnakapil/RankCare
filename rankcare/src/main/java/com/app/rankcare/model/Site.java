@@ -18,7 +18,7 @@ public class Site extends DateAudit{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
+
 	@Column(name="site_id")
 	private String siteId;
 

@@ -25,7 +25,7 @@ public class SiteCalculation extends DateAudit{
     private Long id;
 
 	@Column(name="site_id")
-	private Long siteId; 	
+	private Long siteId;
 	
 	 
 	@Column(name="chemical_id")

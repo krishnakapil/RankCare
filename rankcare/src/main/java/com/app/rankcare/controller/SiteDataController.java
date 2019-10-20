@@ -1,24 +1,33 @@
 package com.app.rankcare.controller;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.app.rankcare.model.Toxicity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.app.rankcare.model.Consumption;
 import com.app.rankcare.model.Site;
 import com.app.rankcare.model.SiteCalculation;
+import com.app.rankcare.model.Toxicity;
 import com.app.rankcare.payload.SiteContaminantData;
 import com.app.rankcare.payload.SiteRegisterRequest;
 import com.app.rankcare.repository.SiteCalculationRepository;
@@ -36,6 +45,10 @@ public class SiteDataController {
     private SiteCalculationRepository siteCalculationRepository;
     @Autowired
     private ChemicalController chemicalController;
+    @Autowired
+    private ConsumptionController consumptionController;
+    
+    
 
     private static final Logger logger = LoggerFactory.getLogger(SiteDataController.class);
 
@@ -168,29 +181,29 @@ public class SiteDataController {
 
     @PostMapping("/getSitesT1")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map<Long, Map<String,Long>> siteCalculationT1(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
-    	Map<Long, Map<String,Long>> resMap=new HashMap<Long, Map<String,Long>>();
+    public Map<Long, Map<String,Double>> siteCalculationT1(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
+    	Map<Long, Map<String,Double>> resMap=new HashMap<Long, Map<String,Double>>();
     	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
 		List<SiteCalculation> siteContamiData = null;
 		if(siteRegisterRequest.getSiteIds()!=null && !siteRegisterRequest.getSiteIds().isEmpty()) {
-			Map<String,Long> siteT1Vals=null;
+			Map<String,Double> siteT1Vals=null;
 			for(Long id:siteRegisterRequest.getSiteIds()) {
-				Long tw=0L;
-				Long ts=0L;
+				Double tw=0d;
+				Double ts=0d;
 		    	siteContamiData = siteCalculationRepository.findBySiteId(id);
 		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
 		        	Toxicity t=null;
 		            for (SiteCalculation siteCalc : siteContamiData) {
 		            	t=chemicalData.get(siteCalc.getChemicalId());
 		            	if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
-		            		tw+=Long.valueOf(siteCalc.getContaminationValue())/Long.valueOf(t.getWaterGuideline());
+		            		tw+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getWaterGuideline());
 		            	}
 		            	else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
-		            		ts+=Long.valueOf(siteCalc.getContaminationValue())/Long.valueOf(t.getSoilGuideline());
+		            		ts+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getSoilGuideline());
 		            	}
 		            }
 		        }
-		    	siteT1Vals=new HashMap<String,Long>();
+		    	siteT1Vals=new HashMap<String,Double>();
 		    	siteT1Vals.put("Water",tw);
 		    	siteT1Vals.put("Soil",ts);
 		    	resMap.put(id, siteT1Vals);
@@ -198,7 +211,47 @@ public class SiteDataController {
 		}
     	
 		return resMap;
-		
     }
+    @PostMapping("/getSitesT2")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
+    public Map<Long, Map<String,Double>> siteCalculationT2(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
+    	Map<Long, Map<String,Double>> resMap=new HashMap<Long, Map<String,Double>>();
+    	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
+    	Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();
+		List<SiteCalculation> siteContamiData = null;
+		if(siteRegisterRequest.getSiteIds()!=null && !siteRegisterRequest.getSiteIds().isEmpty()) {
+			Map<String,Double> siteT2Vals=null;
+			for(Long id:siteRegisterRequest.getSiteIds()) {
+		    	siteContamiData = siteCalculationRepository.findBySiteId(id);
+		    	siteT2Vals=new HashMap<String,Double>();
+		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
+		    		for(String c:consumptionData.keySet()) {
+			        	Toxicity t=null;
+			        	Double val;
+						Double ncr=0d;
+						Double cr=0d;
+			            for (SiteCalculation siteCalc : siteContamiData) {
+			            	val=0d;
+			            	t=chemicalData.get(siteCalc.getChemicalId());
+			            	if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
+			            		val=Double.valueOf(siteCalc.getContaminationValue())*Double.valueOf(consumptionData.get(c).getWaterConsAvg());
+			            	}
+			            	else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
+				            	val =Double.valueOf(siteCalc.getContaminationValue())*Double.valueOf(consumptionData.get(c).getSoilInvAvg()); 
+			            	}
+		            		ncr+=val/Double.valueOf(t.getDosageRef());
+		            		cr+=val*Double.valueOf(t.getCancerSlopeFactor());
+			            }
 
+				    	
+				    	siteT2Vals.put(c+"~NCR",ncr);
+				    	siteT2Vals.put(c+"~CR",cr);
+		    		}
+			    	resMap.put(id, siteT2Vals);
+		        }
+			}
+		}
+    	
+		return resMap;
+    }
 }

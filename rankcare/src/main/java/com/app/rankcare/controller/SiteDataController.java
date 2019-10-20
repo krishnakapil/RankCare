@@ -2,6 +2,7 @@ package com.app.rankcare.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -207,15 +208,18 @@ public class SiteDataController {
     	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
     	Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();
 		List<SiteCalculation> siteContamiData = null;
-		Map<String, Double> siteT2Vals = new HashMap<String,Double>();
+		Map<String, Double> siteT2Vals = null;
 		Map<String,Map<String,Double>> res = new HashMap<String,Map<String,Double>>();
 		    	siteContamiData = siteCalculationRepository.findBySiteId(Long.valueOf(id));
 		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
 		    		for(String c:consumptionData.keySet()) {
+		    			siteT2Vals= new HashMap<String,Double>();
 			        	Toxicity t=null;
 			        	Double val;
 						Double ncr=0d;
 						Double cr=0d;
+						String valCRStr="";
+						String valNCRStr="";
 			            for (SiteCalculation siteCalc : siteContamiData) {
 			            	val=0d;
 			            	t=chemicalData.get(siteCalc.getChemicalId());
@@ -225,11 +229,19 @@ public class SiteDataController {
 			            	else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
 				            	val =Double.valueOf(siteCalc.getContaminationValue())*Double.valueOf(consumptionData.get(c).getSoilInvAvg()); 
 			            	}
+			            	valNCRStr+=val/Double.valueOf(t.getDosageRef())+"~";
+			            	valCRStr+=val*Double.valueOf(t.getCancerSlopeFactor())+"~";
 		            		ncr+=val/Double.valueOf(t.getDosageRef());
 		            		cr+=val*Double.valueOf(t.getCancerSlopeFactor());
 			            }
+			            int contaSize=siteContamiData.size();
 				    	siteT2Vals.put("NCR",ncr);
 				    	siteT2Vals.put("CR",cr);
+				    	siteT2Vals.put("MeanCR",cr/contaSize);
+				    	siteT2Vals.put("MeanNCR",ncr/contaSize);
+				    	siteT2Vals.put("NCR#"+valNCRStr,0d);
+				    	siteT2Vals.put("CR#"+valCRStr,0d);
+				    	siteT2Vals.put("SAMPLESIZE",Double.valueOf(contaSize));
 				    	res.put(c,siteT2Vals);
 		    		}
 		        }
@@ -240,7 +252,78 @@ public class SiteDataController {
     public Map<String, Object> getSiteCalculations(@PathVariable("id") Integer id) throws Exception {
     	Map<String,Object> resMap =  new HashMap<String,Object>();
     	resMap.put("T1",siteCalculationT1(id));
-    	resMap.put("T2",siteCalculationT2(id));
+    	Map<String, Map<String, Double>> t2=siteCalculationT2(id);
+    	Map<String, Map<String, Double>> t3inf=siteCalculationT3(id,t2);
+		Map<String,Double> inMap=null;
+    	for(String s:t2.keySet()) {
+    		inMap=t2.get(s);
+    		Iterator itr = inMap.entrySet().iterator(); 
+    		while(itr.hasNext()) {
+    			 Map.Entry mapElement = (Map.Entry)itr.next(); 
+    			 String key = (String)mapElement.getKey(); 
+                 if(key.contains("#")) {
+                	 itr.remove(); 
+                 }
+    		} 
+    		inMap.remove("MeanCR");
+    		inMap.remove("MeanNCR");
+    		inMap.remove("SAMPLESIZE");
+    	}
+    	resMap.put("T2",t2);
 		return resMap;
     }
+
+	private Map<String, Map<String, Double>> siteCalculationT3(Integer id, Map<String, Map<String, Double>> t2) {
+		Map<String,Double> inMap=null;
+    	for(String s:t2.keySet()) {
+    		inMap=t2.get(s);
+    		String tmpNCR=null;
+    		String tmpCR=null;
+    		Iterator itr = inMap.entrySet().iterator(); 
+    		while(itr.hasNext()) {
+    			 Map.Entry mapElement = (Map.Entry)itr.next(); 
+    			 String key = (String)mapElement.getKey(); 
+                 if(key.contains("NCR#")) {
+                	 tmpNCR=key.substring(0,key.lastIndexOf("~")).replace("NCR#","");
+                 }
+                 else if(key.contains("CR#")) {
+                	 tmpCR=key.substring(0,key.lastIndexOf("~")).replace("CR#","");
+                 }
+    		} 
+    		Double ncrMean=inMap.get("MeanNCR");
+    		Double crMean=inMap.get("MeanCR");
+    		Double sampleSize=inMap.get("SAMPLESIZE");
+    		String[] tmpNCRArr=tmpNCR.split("~");
+    		String[] tmpCRArr=tmpCR.split("~");
+    		
+    		Double ncrVar=calculateVariance(tmpNCRArr,ncrMean,sampleSize);
+    		Double ncrMU= calculateMU(ncrMean,ncrVar);
+    		Double ncrSigma= calculateSigma(ncrMean,ncrVar);
+    		
+    		System.out.println("NCR>>ncrVar::"+ncrVar+"::ncrMU::"+ncrMU+"::ncrSigma::"+ncrSigma);
+    		Double crVar=calculateVariance(tmpCRArr,crMean,sampleSize);
+    		Double crMU= calculateMU(crMean,crVar);
+    		Double crSigma= calculateSigma(crMean,crVar);
+    		System.out.println("CR>>crVar::"+crVar+"::crMU::"+crMU+"::crSigma::"+crSigma);
+    	}
+		return null;
+	}
+
+	private Double calculateVariance(String[] indvArr, Double mean, Double sampleSize) {
+		Double d=0d;
+		for(String s:indvArr) {
+			d+=(Math.pow((Double.valueOf(s)-mean), 2d));
+		}
+		return d/sampleSize;
+	}
+	private Double calculateMU(Double mean,Double variance) {
+		//mu = log((m^2)/sqrt(v+m^2))
+		Double meanSq=Math.pow(mean,2);
+		return Math.log(meanSq/(Math.sqrt(variance+meanSq)));
+	}
+	private Double calculateSigma(Double mean,Double variance) {
+		//sigma = sqrt(log(v/(m^2)+1))
+		Double meanSq=Math.pow(mean,2);
+		return Math.sqrt(Math.log(variance/(meanSq+1)));
+	}
 }

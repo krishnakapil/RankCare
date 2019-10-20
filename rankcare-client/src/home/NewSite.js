@@ -8,6 +8,7 @@ import {
     Input,
     Icon
 } from 'antd';
+import ChemicalInput from './ChemicalInput';
 import { createConsumption, updateConsumtion } from '../util/APIUtils';
 
 let id = 0;
@@ -148,7 +149,7 @@ class NewSite extends Component {
                             message: "Please input passenger's name or delete this field.",
                         },
                     ],
-                })(<Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} />)}
+                })(<ChemicalInput style={{ width: '60%', marginRight: 8 }} />)}
                 {keys.length > 1 ? (
                     <Icon
                         className="dynamic-delete-button"
@@ -207,6 +208,13 @@ class NewSite extends Component {
                                 { required: true, message: 'Please input Site Org!' },
                             ]
                         })(<Input />)}
+                    </Form.Item>
+                    <Form.Item label="Site Chemicals">
+                        {getFieldDecorator('chemicals', {
+                            rules: [
+                                { required: true, message: 'Please input Site Org!' },
+                            ]
+                        })(<ChemicalInput />)}
                     </Form.Item>
                     {formItems}
                     <Form.Item label="Site Chemicals">

@@ -179,11 +179,12 @@ public class SiteDataController {
         return new ResponseEntity<SiteRegisterRequest>(siteRegisterRequest, HttpStatus.OK);
     }
     
-    public Map<String, Double> siteCalculationT1(int id, Map<String, Double> siteT1Vals) throws Exception {
+    public Map<String, Double> siteCalculationT1(int id) throws Exception {
     	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
 		List<SiteCalculation> siteContamiData = null;
 				Double tw=0d;
 				Double ts=0d;
+				Map<String, Double> siteT1Vals = new HashMap<String, Double>();
 		    	siteContamiData = siteCalculationRepository.findBySiteId(Long.valueOf(id));
 		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
 		        	Toxicity t=null;
@@ -197,15 +198,17 @@ public class SiteDataController {
 		            	}
 		            }
 		        }
-		    	siteT1Vals.put("T1~Water",tw);
-		    	siteT1Vals.put("T1~Soil",ts);
+		    	siteT1Vals.put("Water",tw);
+		    	siteT1Vals.put("Soil",ts);
 		   	
 		return siteT1Vals;
     }
-    public Map<String, Double> siteCalculationT2(Integer id, Map<String, Double> siteT2Vals) throws Exception {
+    public Map<String, Map<String, Double>> siteCalculationT2(Integer id) throws Exception {
     	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
     	Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();
 		List<SiteCalculation> siteContamiData = null;
+		Map<String, Double> siteT2Vals = new HashMap<String,Double>();
+		Map<String,Map<String,Double>> res = new HashMap<String,Map<String,Double>>();
 		    	siteContamiData = siteCalculationRepository.findBySiteId(Long.valueOf(id));
 		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
 		    		for(String c:consumptionData.keySet()) {
@@ -225,18 +228,19 @@ public class SiteDataController {
 		            		ncr+=val/Double.valueOf(t.getDosageRef());
 		            		cr+=val*Double.valueOf(t.getCancerSlopeFactor());
 			            }
-				    	siteT2Vals.put(c+"~NCR",ncr);
-				    	siteT2Vals.put(c+"~CR",cr);
+				    	siteT2Vals.put("NCR",ncr);
+				    	siteT2Vals.put("CR",cr);
+				    	res.put(c,siteT2Vals);
 		    		}
 		        }
-		return siteT2Vals;
+		return res;
     }
-    @GetMapping("/siteCalculations")
+    @GetMapping("/siteCalculations/{id}")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map getSiteCalculations(@PathVariable("id") Integer id) throws Exception {
-    	Map<String,Double> resMap =  new HashMap<String,Double>();
-    	siteCalculationT1(id,resMap);
-    	siteCalculationT2(id,resMap);
+    public Map<String, Object> getSiteCalculations(@PathVariable("id") Integer id) throws Exception {
+    	Map<String,Object> resMap =  new HashMap<String,Object>();
+    	resMap.put("T1",siteCalculationT1(id));
+    	resMap.put("T2",siteCalculationT2(id));
 		return resMap;
     }
 }

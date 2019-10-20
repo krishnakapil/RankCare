@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.apache.commons.math3.distribution.LogNormalDistribution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,7 +254,7 @@ public class SiteDataController {
     	Map<String,Object> resMap =  new HashMap<String,Object>();
     	resMap.put("T1",siteCalculationT1(id));
     	Map<String, Map<String, Double>> t2=siteCalculationT2(id);
-    	Map<String, Map<String, Double>> t3inf=siteCalculationT3(id,t2);
+    	resMap.put("T3",siteCalculationT3(id,t2));
 		Map<String,Double> inMap=null;
     	for(String s:t2.keySet()) {
     		inMap=t2.get(s);
@@ -274,7 +275,9 @@ public class SiteDataController {
     }
 
 	private Map<String, Map<String, Double>> siteCalculationT3(Integer id, Map<String, Map<String, Double>> t2) {
+		Map<String, Map<String, Double>> resMap = new HashMap<String, Map<String, Double>>();
 		Map<String,Double> inMap=null;
+		Map<String,Double> calcMap=null;
     	for(String s:t2.keySet()) {
     		inMap=t2.get(s);
     		String tmpNCR=null;
@@ -298,15 +301,23 @@ public class SiteDataController {
     		
     		Double ncrVar=calculateVariance(tmpNCRArr,ncrMean,sampleSize);
     		Double ncrMU= calculateMU(ncrMean,ncrVar);
-    		Double ncrSigma= calculateSigma(ncrMean,ncrVar);
+    		Double ncrSigma= calculateSigma(ncrMean,ncrVar);    
+    		LogNormalDistribution logNormalDistribution = new LogNormalDistribution(ncrMU, ncrSigma,1);
+    		double randomValue = logNormalDistribution.sample();		
+    		System.out.println("NCR>>ncrVar::"+ncrVar+"::ncrMU::"+ncrMU+"::ncrSigma::"+ncrSigma+"::ncrLogNrm::"+randomValue);
     		
-    		System.out.println("NCR>>ncrVar::"+ncrVar+"::ncrMU::"+ncrMU+"::ncrSigma::"+ncrSigma);
     		Double crVar=calculateVariance(tmpCRArr,crMean,sampleSize);
     		Double crMU= calculateMU(crMean,crVar);
     		Double crSigma= calculateSigma(crMean,crVar);
-    		System.out.println("CR>>crVar::"+crVar+"::crMU::"+crMU+"::crSigma::"+crSigma);
+    		logNormalDistribution = new LogNormalDistribution(crMU, crSigma,1);
+    		double crRandomValue = logNormalDistribution.sample();
+    		System.out.println("CR>>crVar::"+crVar+"::crMU::"+crMU+"::crSigma::"+crSigma+"::crLogNrm::"+crRandomValue);
+    		calcMap = new HashMap<String,Double>();
+    		calcMap.put("NCR",randomValue);
+    		calcMap.put("CR",crRandomValue);
+        	resMap.put(s, calcMap);
     	}
-		return null;
+		return resMap;
 	}
 
 	private Double calculateVariance(String[] indvArr, Double mean, Double sampleSize) {

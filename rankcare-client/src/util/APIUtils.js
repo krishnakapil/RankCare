@@ -190,3 +190,10 @@ export function deleteSite(id) {
         method: 'DELETE'
     });
 }
+
+export function getSite(id) {
+    return request({
+        url: API_BASE_URL + "/site/" + id,
+        method: 'GET'
+    });
+}

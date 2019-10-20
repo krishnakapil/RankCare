@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PageHeader, Table, Button, Popconfirm, Icon, Form, notification } from 'antd';
-import { getSites, deleteSite, getAllChemicals } from '../util/APIUtils';
+import { getSites, deleteSite, getAllChemicals, getSite } from '../util/APIUtils';
 import NewSite from './NewSite';
 
 class SiteData extends Component {
@@ -105,6 +105,19 @@ class SiteData extends Component {
         });
     }
 
+    loadSite(id) {
+        getSite(id)
+        .then(response => {
+            // this.setState({
+            //     chemicals : response
+            // });
+        }).catch(error => {
+            // this.setState({
+            //     chemicals : []
+            // });
+        });
+    }
+
     saveFormRef = formRef => {
         this.formRef = formRef;
     };
@@ -200,11 +213,12 @@ class SiteData extends Component {
             });
     }
 
-    handleSiteClick(user) {
-        this.setState({
-            modalVisible: true,
-            selectedSite: user
-        });
+    handleSiteClick(site) {
+        this.loadSite(site.id);
+        // this.setState({
+        //     modalVisible: true,
+        //     selectedSite: site
+        // });
     }
 
     handleAddNewDataClick() {

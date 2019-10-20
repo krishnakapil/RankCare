@@ -147,22 +147,24 @@ public class SiteDataController {
 //        return new ResponseEntity<String>("Site Contaminant data updated successfully", HttpStatus.OK);
 //    }
 
-    @PostMapping("/getSiteData")
+    @GetMapping("/site/{id}")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public ResponseEntity<SiteRegisterRequest> getSiteData(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
+    public ResponseEntity<SiteRegisterRequest> getSiteData(@PathVariable("id") Long id) throws Exception {
 
         //Site result = siteDataRepository.findBySiteId(siteRegisterRequest.getSiteId());
-        Optional<Site> siteDtl = siteDataRepository.findById(siteRegisterRequest.getId());
+        Optional<Site> siteDtl = siteDataRepository.findById(id);
         if (!siteDtl.isPresent()) {
             throw new Exception("Site Data Not Available");
         }
         Site result = siteDtl.get();
+        SiteRegisterRequest siteRegisterRequest = new SiteRegisterRequest();
+        siteRegisterRequest.setId(id);
         siteRegisterRequest.setOrgName(result.getSiteOrg());
         siteRegisterRequest.setSiteLocation(result.getSiteLocation());
         siteRegisterRequest.setSiteName(result.getSiteName());
         siteRegisterRequest.setState(result.getSiteState());
 
-        List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(siteRegisterRequest.getId());
+        List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
 
         List<SiteContaminantData> contaLst = new ArrayList<SiteContaminantData>();
         SiteContaminantData e = null;
@@ -178,11 +180,13 @@ public class SiteDataController {
             }
         }
         siteRegisterRequest.setSiteContaminant(contaLst);
+        siteRegisterRequest.setT1(siteCalculationT1(id));
+        siteRegisterRequest.setT2(siteCalculationT2(id));
         return new ResponseEntity<SiteRegisterRequest>(siteRegisterRequest, HttpStatus.OK);
     }
 
 
-    public Map<String, Double> siteCalculationT1(int id) throws Exception {
+    public Map<String, Double> siteCalculationT1(Long id) throws Exception {
         Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
         List<SiteCalculation> siteContamiData = null;
         Double tw=0d;
@@ -193,21 +197,21 @@ public class SiteDataController {
             Toxicity t=null;
             for (SiteCalculation siteCalc : siteContamiData) {
                 t=chemicalData.get(siteCalc.getChemicalId());
-                if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
+                if("water".equalsIgnoreCase(siteCalc.getContaminationType())){
                     tw+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getWaterGuideline());
                 }
-                else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
+                else if("soil".equalsIgnoreCase(siteCalc.getContaminationType())){
                     ts+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getSoilGuideline());
                 }
             }
         }
-        siteT1Vals.put("Water",tw);
-        siteT1Vals.put("Soil",ts);
+        siteT1Vals.put("water",tw);
+        siteT1Vals.put("soil",ts);
 
         return siteT1Vals;
     }
-    
-    public Map<String, Map<String, Double>> siteCalculationT2(Integer id) throws Exception {
+
+    public Map<String, Map<String, Double>> siteCalculationT2(Long id) throws Exception {
         Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
         Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();
         List<SiteCalculation> siteContamiData = null;
@@ -241,7 +245,7 @@ public class SiteDataController {
     }
     @GetMapping("/siteCalculations/{id}")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map<String, Object> getSiteCalculations(@PathVariable("id") Integer id) throws Exception {
+    public Map<String, Object> getSiteCalculations(@PathVariable("id") Long id) throws Exception {
         Map<String,Object> resMap =  new HashMap<String,Object>();
         resMap.put("T1",siteCalculationT1(id));
         resMap.put("T2",siteCalculationT2(id));

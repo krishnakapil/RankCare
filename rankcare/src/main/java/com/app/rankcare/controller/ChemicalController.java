@@ -1,6 +1,7 @@
 package com.app.rankcare.controller;
 
 import com.app.rankcare.model.Toxicity;
+import com.app.rankcare.payload.ChemicalsResponse;
 import com.app.rankcare.payload.ToxicityRequest;
 import com.app.rankcare.repository.ToxicityRepository;
 import org.slf4j.Logger;
@@ -34,15 +35,15 @@ public class ChemicalController {
 
     @GetMapping("/chemicals")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map<Long, String> getToxicityChemicals() {
-        Map<Long, String> chemicalMap = new HashMap<Long, String>();
+    public List<ChemicalsResponse> getToxicityChemicals() {
+        List<ChemicalsResponse> chemicals = new ArrayList<>();
         List<Toxicity> toxicData = toxicityRepository.findAll();
         if (toxicData != null && !toxicData.isEmpty()) {
             for (Toxicity t : toxicData) {
-                chemicalMap.put(t.getId(), t.getChemicalName());
+                chemicals.add(new ChemicalsResponse(t.getId(), t.getChemicalName()));
             }
         }
-        return chemicalMap;
+        return chemicals;
     }
 
     @PostMapping("/chemicals/search")

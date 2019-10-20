@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PageHeader, Table, Button, Popconfirm, Icon, Form, notification } from 'antd';
-import { getSites, deleteToxicity } from '../util/APIUtils';
+import { getSites, deleteToxicity, getAllChemicals } from '../util/APIUtils';
 import NewSite from './NewSite';
 
 class SiteData extends Component {
@@ -12,6 +12,7 @@ class SiteData extends Component {
             modalVisible: false,
             selectedSite: null,
             sitesResponse: null,
+            chemicals : [],
             sitesData: [],
             currentPage: 0,
             pageSize : 20,
@@ -70,6 +71,7 @@ class SiteData extends Component {
 
     componentDidMount() {
         this.loadData(0);
+        this.loadAllChemicals()
     }
 
     loadData(page) {
@@ -93,6 +95,19 @@ class SiteData extends Component {
                     sitesData: []
                 });
             });
+    }
+
+    loadAllChemicals() {
+        getAllChemicals()
+        .then(response => {
+            this.setState({
+                chemicals : response
+            });
+        }).catch(error => {
+            this.setState({
+                chemicals : []
+            });
+        });
     }
 
     saveFormRef = formRef => {
@@ -154,6 +169,7 @@ class SiteData extends Component {
                     onCancel={this.handleAddUserCancel}
                     onCreate={this.handleAddUserSubmit}
                     isEdit={this.state.selectedSite != null}
+                    chemicals={this.state.chemicals}
                     id={this.state.selectedSite ? this.state.selectedSite.id : null}
                 />
             </div>

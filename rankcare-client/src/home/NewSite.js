@@ -31,70 +31,74 @@ class NewSite extends Component {
                 return;
             }
 
-            this.setState({
-                confirmLoading: true,
-                isLoading: true
-            });
+            console.log("Form values " + JSON.stringify(values));
 
-            const consumptionRequest = Object.assign({}, values);
-            consumptionRequest.id = this.props.id
+            // this.setState({
+            //     confirmLoading: true,
+            //     isLoading: true
+            // });
 
-            if (isEdit) {
-                updateConsumtion(consumptionRequest)
-                    .then(response => {
-                        this.setState({
-                            confirmLoading: false,
-                            isLoading: false
-                        });
-                        this.props.form.resetFields();
-                        this.props.onCreate();
-                    }).catch(error => {
-                        this.setState({ isLoading: false });
-                        notification.error({
-                            message: 'rankCare',
-                            description: error.message || 'Sorry! Something went wrong. Please try again!'
-                        });
-                    });
-            } else {
-                createConsumption(consumptionRequest)
-                    .then(response => {
-                        this.setState({
-                            confirmLoading: false,
-                            isLoading: false
-                        });
-                        this.props.form.resetFields();
-                        this.props.onCreate();
-                    }).catch(error => {
-                        this.setState({ isLoading: false });
-                        notification.error({
-                            message: 'rankCare',
-                            description: error.message || 'Sorry! Something went wrong. Please try again!'
-                        });
-                    });
-            }
+            // const consumptionRequest = Object.assign({}, values);
+            // consumptionRequest.id = this.props.id
+
+            // if (isEdit) {
+            //     updateConsumtion(consumptionRequest)
+            //         .then(response => {
+            //             this.setState({
+            //                 confirmLoading: false,
+            //                 isLoading: false
+            //             });
+            //             this.props.form.resetFields();
+            //             this.props.onCreate();
+            //         }).catch(error => {
+            //             this.setState({ isLoading: false });
+            //             notification.error({
+            //                 message: 'rankCare',
+            //                 description: error.message || 'Sorry! Something went wrong. Please try again!'
+            //             });
+            //         });
+            // } else {
+            //     createConsumption(consumptionRequest)
+            //         .then(response => {
+            //             this.setState({
+            //                 confirmLoading: false,
+            //                 isLoading: false
+            //             });
+            //             this.props.form.resetFields();
+            //             this.props.onCreate();
+            //         }).catch(error => {
+            //             this.setState({ isLoading: false });
+            //             notification.error({
+            //                 message: 'rankCare',
+            //                 description: error.message || 'Sorry! Something went wrong. Please try again!'
+            //             });
+            //         });
+            // }
         });
     }
 
     checkNumber = (rule, value, callback) => {
-        if (value == null || value > 0) {
+        if (value == null || value.contamination_value || value.contamination_value > 0) {
             callback();
             return;
         }
         callback('This field should be number!');
     };
 
+    componentDidMount() {
+        const keys = this.props.form.getFieldValue('keys');
+        if (keys.length === 0) {
+            this.add();
+        }
+    }
+
     remove = k => {
         const { form } = this.props;
-        // can use data-binding to get
         const keys = form.getFieldValue('keys');
-        // We need at least one passenger
-        if (keys.length === 1) {
-          return;
-        }
-    
+
         // can use data-binding to set
         form.setFieldsValue({
-          keys: keys.filter(key => key !== k),
+            keys: keys.filter(key => key !== k),
         });
     };
 
@@ -106,7 +110,7 @@ class NewSite extends Component {
         // can use data-binding to set
         // important! notify form to detect changes
         form.setFieldsValue({
-          keys: nextKeys,
+            keys: nextKeys,
         });
     };
 
@@ -135,28 +139,28 @@ class NewSite extends Component {
         const keys = getFieldValue('keys');
         const formItems = keys.map((k, index) => (
             <Form.Item
-                {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                label={index === 0 ? 'Passengers' : ''}
+                {...formItemLayout}
+                label={'Chemical ' + (index + 1)}
                 required={false}
                 key={k}
             >
-                {getFieldDecorator(`names[${k}]`, {
+                {getFieldDecorator(`chemicals[${k}]`, {
                     validateTrigger: ['onChange', 'onBlur'],
                     rules: [
                         {
                             required: true,
-                            whitespace: true,
-                            message: "Please input passenger's name or delete this field.",
+                            message: index == 0 ? "Please input chemical contamination value" : "Please input chemical contamination value or delete the field",
                         },
+                        { validator: this.checkNumber },
                     ],
-                })(<ChemicalInput style={{ width: '60%', marginRight: 8 }} />)}
-                {keys.length > 1 ? (
-                    <Icon
+                })(<ChemicalInput showRemove={index > 0} chemicals={this.props.chemicals} style={{ width: '60%', marginRight: 8 }} />)}
+                {
+                    index > 0 ? <Icon
                         className="dynamic-delete-button"
                         type="minus-circle-o"
                         onClick={() => this.remove(k)}
-                    />
-                ) : null}
+                    /> : null
+                }
             </Form.Item>
         ));
 
@@ -182,7 +186,6 @@ class NewSite extends Component {
                         {getFieldDecorator('site_name', {
                             rules: [
                                 { required: true, message: 'Please input site name!' },
-                                { validator: this.checkNumber },
                             ],
                         })(<Input />)}
                     </Form.Item>
@@ -209,15 +212,8 @@ class NewSite extends Component {
                             ]
                         })(<Input />)}
                     </Form.Item>
-                    <Form.Item label="Site Chemicals">
-                        {getFieldDecorator('chemicals', {
-                            rules: [
-                                { required: true, message: 'Please input Site Org!' },
-                            ]
-                        })(<ChemicalInput />)}
-                    </Form.Item>
                     {formItems}
-                    <Form.Item label="Site Chemicals">
+                    <Form.Item {...formItemLayoutWithOutLabel}>
                         <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
                             <Icon type="plus" /> Add Chemical
                         </Button>

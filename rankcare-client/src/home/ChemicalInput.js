@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Select } from 'antd';
+import { InputNumber, Select } from 'antd';
 
 const { Option } = Select;
 
@@ -18,28 +18,52 @@ class ChemicalInput extends React.Component {
     super(props);
 
     const value = props.value || {};
+    const chemicals = props.chemicals || [];
+    const checmicalOptions = chemicals.map((chemical) =>
+      <Option key={chemical.id} value={chemical.id}>{chemical.chemicalName}</Option>
+    );
     this.state = {
-      number: value.number || 0,
-      currency: value.currency || 'rmb',
+      chemicalOptions: checmicalOptions,
+      chemical_id: chemicals[0].id || 0,
+      chemical_name : chemicals[0].chemicalName || "",
+      contamination_value: value.contamination_value || 0,
+      contamination_type: value.contamination_type || 'soil',
     };
   }
 
   handleNumberChange = e => {
-    const number = parseInt(e.target.value || 0, 10);
-    if (isNaN(number)) {
+    const contamination_value = parseFloat(e || 0, 10);
+    if (isNaN(contamination_value)) {
       return;
     }
     if (!('value' in this.props)) {
-      this.setState({ number });
+      this.setState({ contamination_value });
     }
-    this.triggerChange({ number });
+    this.triggerChange({ contamination_value });
   };
 
-  handleCurrencyChange = currency => {
+  handleContaminationTypeChange = contamination_type => {
     if (!('value' in this.props)) {
-      this.setState({ currency });
+      this.setState({ contamination_type });
     }
-    this.triggerChange({ currency });
+    this.triggerChange({ contamination_type });
+  };
+
+  handleChemicalChange = chemical_id => {
+    const chemicalName = this.props.chemicals.find((chemical) => {
+      return chemical.id === chemical_id;
+    }).chemicalName
+    console.log("chemical name " + chemical_id + "  " + chemicalName)
+    if (!('value' in this.props)) {
+      this.setState({ 
+        chemical_id : chemical_id,
+        chemical_name : chemicalName
+      });
+    }
+    this.triggerChange({ 
+      chemical_id : chemical_id,
+      chemical_name : chemicalName
+    });
   };
 
   triggerChange = changedValue => {
@@ -55,25 +79,33 @@ class ChemicalInput extends React.Component {
 
   render() {
     const { size } = this.props;
-    const { currency, number } = this.state;
+    const { chemicalOptions, chemical_id, contamination_type, contamination_value } = this.state;
     return (
       <span>
-        <Input
+        <Select
+          value={contamination_type}
+          size={size}
+          style={{ width: '22%', marginRight: '3%' }}
+          onChange={this.handleContaminationTypeChange}
+        >
+          <Option value="soil">Soil</Option>
+          <Option value="water">Water</Option>
+        </Select>
+        <Select
+          value={chemical_id}
+          size={size}
+          style={{ width: '42%', marginRight: '3%' }}
+          onChange={this.handleChemicalChange}
+        >
+          {chemicalOptions}
+        </Select>
+        <InputNumber
           type="text"
           size={size}
-          value={number}
+          value={contamination_value}
           onChange={this.handleNumberChange}
-          style={{ width: '65%', marginRight: '3%' }}
+          style={{ width: this.props.showRemove ? '20%' : '30%', marginRight : this.props.showRemove ? '5%' : '0' }}
         />
-        <Select
-          value={currency}
-          size={size}
-          style={{ width: '32%' }}
-          onChange={this.handleCurrencyChange}
-        >
-          <Option value="rmb">RMB</Option>
-          <Option value="dollar">Dollar</Option>
-        </Select>
       </span>
     );
   }

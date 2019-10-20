@@ -180,81 +180,70 @@ public class SiteDataController {
         siteRegisterRequest.setSiteContaminant(contaLst);
         return new ResponseEntity<SiteRegisterRequest>(siteRegisterRequest, HttpStatus.OK);
     }
-    
 
-    @PostMapping("/getSitesT1")
-    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map<Long, Map<String,Double>> siteCalculationT1(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
-    	Map<Long, Map<String,Double>> resMap=new HashMap<Long, Map<String,Double>>();
-    	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
-		List<SiteCalculation> siteContamiData = null;
-		if(siteRegisterRequest.getSiteIds()!=null && !siteRegisterRequest.getSiteIds().isEmpty()) {
-			Map<String,Double> siteT1Vals=null;
-			for(Long id:siteRegisterRequest.getSiteIds()) {
-				Double tw=0d;
-				Double ts=0d;
-		    	siteContamiData = siteCalculationRepository.findBySiteId(id);
-		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
-		        	Toxicity t=null;
-		            for (SiteCalculation siteCalc : siteContamiData) {
-		            	t=chemicalData.get(siteCalc.getChemicalId());
-		            	if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
-		            		tw+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getWaterGuideline());
-		            	}
-		            	else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
-		            		ts+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getSoilGuideline());
-		            	}
-		            }
-		        }
-		    	siteT1Vals=new HashMap<String,Double>();
-		    	siteT1Vals.put("Water",tw);
-		    	siteT1Vals.put("Soil",ts);
-		    	resMap.put(id, siteT1Vals);
-			}
-		}
-    	
-		return resMap;
+
+    public Map<String, Double> siteCalculationT1(int id) throws Exception {
+        Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
+        List<SiteCalculation> siteContamiData = null;
+        Double tw=0d;
+        Double ts=0d;
+        Map<String, Double> siteT1Vals = new HashMap<String, Double>();
+        siteContamiData = siteCalculationRepository.findBySiteId(Long.valueOf(id));
+        if (siteContamiData != null && !siteContamiData.isEmpty()) {
+            Toxicity t=null;
+            for (SiteCalculation siteCalc : siteContamiData) {
+                t=chemicalData.get(siteCalc.getChemicalId());
+                if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
+                    tw+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getWaterGuideline());
+                }
+                else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
+                    ts+=Double.valueOf(siteCalc.getContaminationValue())/Double.valueOf(t.getSoilGuideline());
+                }
+            }
+        }
+        siteT1Vals.put("Water",tw);
+        siteT1Vals.put("Soil",ts);
+
+        return siteT1Vals;
     }
-    @PostMapping("/getSitesT2")
+    public Map<String, Map<String, Double>> siteCalculationT2(Integer id) throws Exception {
+        Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
+        Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();
+        List<SiteCalculation> siteContamiData = null;
+        Map<String, Double> siteT2Vals = new HashMap<String,Double>();
+        Map<String,Map<String,Double>> res = new HashMap<String,Map<String,Double>>();
+        siteContamiData = siteCalculationRepository.findBySiteId(Long.valueOf(id));
+        if (siteContamiData != null && !siteContamiData.isEmpty()) {
+            for(String c:consumptionData.keySet()) {
+                Toxicity t=null;
+                Double val;
+                Double ncr=0d;
+                Double cr=0d;
+                for (SiteCalculation siteCalc : siteContamiData) {
+                    val=0d;
+                    t=chemicalData.get(siteCalc.getChemicalId());
+                    if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
+                        val=Double.valueOf(siteCalc.getContaminationValue())*Double.valueOf(consumptionData.get(c).getWaterConsAvg());
+                    }
+                    else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
+                        val =Double.valueOf(siteCalc.getContaminationValue())*Double.valueOf(consumptionData.get(c).getSoilInvAvg());
+                    }
+                    ncr+=val/Double.valueOf(t.getDosageRef());
+                    cr+=val*Double.valueOf(t.getCancerSlopeFactor());
+                }
+                siteT2Vals.put("NCR",ncr);
+                siteT2Vals.put("CR",cr);
+                res.put(c,siteT2Vals);
+            }
+        }
+        return res;
+    }
+    @GetMapping("/siteCalculations/{id}")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map<Long, Map<String,Double>> siteCalculationT2(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
-    	Map<Long, Map<String,Double>> resMap=new HashMap<Long, Map<String,Double>>();
-    	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
-    	Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();
-		List<SiteCalculation> siteContamiData = null;
-		if(siteRegisterRequest.getSiteIds()!=null && !siteRegisterRequest.getSiteIds().isEmpty()) {
-			Map<String,Double> siteT2Vals=null;
-			for(Long id:siteRegisterRequest.getSiteIds()) {
-		    	siteContamiData = siteCalculationRepository.findBySiteId(id);
-		    	siteT2Vals=new HashMap<String,Double>();
-		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
-		    		for(String c:consumptionData.keySet()) {
-			        	Toxicity t=null;
-			        	Double val;
-						Double ncr=0d;
-						Double cr=0d;
-			            for (SiteCalculation siteCalc : siteContamiData) {
-			            	val=0d;
-			            	t=chemicalData.get(siteCalc.getChemicalId());
-			            	if("Water".equalsIgnoreCase(siteCalc.getContaminationType())){
-			            		val=Double.valueOf(siteCalc.getContaminationValue())*Double.valueOf(consumptionData.get(c).getWaterConsAvg());
-			            	}
-			            	else if("Soil".equalsIgnoreCase(siteCalc.getContaminationType())){
-				            	val =Double.valueOf(siteCalc.getContaminationValue())*Double.valueOf(consumptionData.get(c).getSoilInvAvg()); 
-			            	}
-		            		ncr+=val/Double.valueOf(t.getDosageRef());
-		            		cr+=val*Double.valueOf(t.getCancerSlopeFactor());
-			            }
-
-				    	
-				    	siteT2Vals.put(c+"~NCR",ncr);
-				    	siteT2Vals.put(c+"~CR",cr);
-		    		}
-			    	resMap.put(id, siteT2Vals);
-		        }
-			}
-		}
-    	
-		return resMap;
+    public Map<String, Object> getSiteCalculations(@PathVariable("id") Integer id) throws Exception {
+        Map<String,Object> resMap =  new HashMap<String,Object>();
+        resMap.put("T1",siteCalculationT1(id));
+        resMap.put("T2",siteCalculationT2(id));
+        return resMap;
     }
 }

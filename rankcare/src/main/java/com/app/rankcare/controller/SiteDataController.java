@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -178,19 +179,12 @@ public class SiteDataController {
         return new ResponseEntity<SiteRegisterRequest>(siteRegisterRequest, HttpStatus.OK);
     }
     
-
-    @PostMapping("/getSitesT1")
-    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map<Long, Map<String,Double>> siteCalculationT1(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
-    	Map<Long, Map<String,Double>> resMap=new HashMap<Long, Map<String,Double>>();
+    public Map<String, Double> siteCalculationT1(int id, Map<String, Double> siteT1Vals) throws Exception {
     	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
 		List<SiteCalculation> siteContamiData = null;
-		if(siteRegisterRequest.getSiteIds()!=null && !siteRegisterRequest.getSiteIds().isEmpty()) {
-			Map<String,Double> siteT1Vals=null;
-			for(Long id:siteRegisterRequest.getSiteIds()) {
 				Double tw=0d;
 				Double ts=0d;
-		    	siteContamiData = siteCalculationRepository.findBySiteId(id);
+		    	siteContamiData = siteCalculationRepository.findBySiteId(Long.valueOf(id));
 		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
 		        	Toxicity t=null;
 		            for (SiteCalculation siteCalc : siteContamiData) {
@@ -203,27 +197,16 @@ public class SiteDataController {
 		            	}
 		            }
 		        }
-		    	siteT1Vals=new HashMap<String,Double>();
-		    	siteT1Vals.put("Water",tw);
-		    	siteT1Vals.put("Soil",ts);
-		    	resMap.put(id, siteT1Vals);
-			}
-		}
-    	
-		return resMap;
+		    	siteT1Vals.put("T1~Water",tw);
+		    	siteT1Vals.put("T1~Soil",ts);
+		   	
+		return siteT1Vals;
     }
-    @PostMapping("/getSitesT2")
-    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public Map<Long, Map<String,Double>> siteCalculationT2(@RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
-    	Map<Long, Map<String,Double>> resMap=new HashMap<Long, Map<String,Double>>();
+    public Map<String, Double> siteCalculationT2(Integer id, Map<String, Double> siteT2Vals) throws Exception {
     	Map<Long,Toxicity> chemicalData=chemicalController.getChemicalsData();
     	Map<String,Consumption> consumptionData=consumptionController.getConsumptionAgeGrpData();
 		List<SiteCalculation> siteContamiData = null;
-		if(siteRegisterRequest.getSiteIds()!=null && !siteRegisterRequest.getSiteIds().isEmpty()) {
-			Map<String,Double> siteT2Vals=null;
-			for(Long id:siteRegisterRequest.getSiteIds()) {
-		    	siteContamiData = siteCalculationRepository.findBySiteId(id);
-		    	siteT2Vals=new HashMap<String,Double>();
+		    	siteContamiData = siteCalculationRepository.findBySiteId(Long.valueOf(id));
 		    	if (siteContamiData != null && !siteContamiData.isEmpty()) {
 		    		for(String c:consumptionData.keySet()) {
 			        	Toxicity t=null;
@@ -242,16 +225,18 @@ public class SiteDataController {
 		            		ncr+=val/Double.valueOf(t.getDosageRef());
 		            		cr+=val*Double.valueOf(t.getCancerSlopeFactor());
 			            }
-
-				    	
 				    	siteT2Vals.put(c+"~NCR",ncr);
 				    	siteT2Vals.put(c+"~CR",cr);
 		    		}
-			    	resMap.put(id, siteT2Vals);
 		        }
-			}
-		}
-    	
+		return siteT2Vals;
+    }
+    @GetMapping("/siteCalculations")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
+    public Map getSiteCalculations(@PathVariable("id") Integer id) throws Exception {
+    	Map<String,Double> resMap =  new HashMap<String,Double>();
+    	siteCalculationT1(id,resMap);
+    	siteCalculationT2(id,resMap);
 		return resMap;
     }
 }

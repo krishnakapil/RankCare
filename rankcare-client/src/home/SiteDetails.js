@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Home.css';
 import { PageHeader, Table, Button, Popconfirm, Icon, Descriptions } from 'antd';
 import { getSitesWithData } from '../util/APIUtils';
-import NewSite from './NewSite';
+import TierOneChart from './TierOneChart';
 
 class SiteDetails extends Component {
     constructor(props) {
@@ -75,8 +75,19 @@ class SiteDetails extends Component {
                 {
                     this.renderSiteDetails()
                 }
+                <h3 style={{ marginBottom: '32px', marginTop: '32px' }}><b>Tier 1 Values</b></h3>
+                {this.renderTierOneChart()}
             </div>
         );
+    }
+
+    renderTierOneChart() {
+        const sitesData = this.state.sitesData;
+        if (sitesData && sitesData.length > 0) {
+            return(
+                <TierOneChart sitesData={sitesData} />
+            )
+        }
     }
 
     renderSiteDetails() {

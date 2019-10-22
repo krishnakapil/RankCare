@@ -20,6 +20,7 @@ import UserList from '../home/UserList';
 import ToxicityData from '../home/ToxicityData';
 import ConsumptionData from '../home/ConsumptionData';
 import SiteData from '../home/SiteData'
+import SiteDetails from '../home/SiteDetails'
 
 import { Layout, notification } from 'antd';
 const { Content, Footer } = Layout;
@@ -35,6 +36,7 @@ class App extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.loadCurrentUser = this.loadCurrentUser.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleDetails = this.handleDetails.bind(this);
 
     notification.config({
       placement: 'topRight',
@@ -91,6 +93,10 @@ class App extends Component {
     this.props.history.push("/");
   }
 
+  handleDetails(sites) {
+
+  }
+
   render() {
     if (this.state.isLoading) {
       return <LoadingIndicator />
@@ -113,24 +119,29 @@ class App extends Component {
                 render={(props) => <Login onLogin={this.handleLogin} {...props} />}></Route>
               {/* <Route path="/signup" component={Signup}></Route> */}
               <Route exact path="/manage-users"
-                render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ? 
-                <UserList currentUser={this.state.currentUser} {...props} /> :
+                render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ?
+                  <UserList currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>
               </Route>
               <Route exact path="/toxicity"
-                render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ? 
-                <ToxicityData currentUser={this.state.currentUser} {...props} /> :
+                render={(props) => this.state.isAuthenticated && this.state.currentUser ?
+                  <ToxicityData currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>
               </Route>
               <Route exact path="/consumption"
-                render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ? 
-                <ConsumptionData currentUser={this.state.currentUser} {...props} /> :
+                render={(props) => this.state.isAuthenticated && this.state.currentUser ?
+                  <ConsumptionData currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>
               </Route>
               <Route exact path="/sites"
-                render={(props) => this.state.isAuthenticated && this.state.currentUser? 
-                <SiteData currentUser={this.state.currentUser} {...props} /> :
-                <Redirect to="/" />}>
+                render={(props) => this.state.isAuthenticated && this.state.currentUser ?
+                  <SiteData onDetails={this.handleDetails} currentUser={this.state.currentUser} {...props} /> :
+                  <Redirect to="/" />}>
+              </Route>
+              <Route exact path="/site-details"
+                render={(props) => this.state.isAuthenticated && this.state.currentUser ?
+                  <SiteDetails currentUser={this.state.currentUser} {...props} /> :
+                  <Redirect to="/" />}>
               </Route>
               <Route component={NotFound}></Route>
             </Switch>

@@ -71,7 +71,7 @@ class NewConsumption extends Component {
     }
 
     checkNumber = (rule, value, callback) => {
-        if ((rule.field == "ageTo" && value == null) || value > 0) {
+        if ((rule.field === "ageTo" && value === null) || value > 0) {
           callback();
           return;
         }

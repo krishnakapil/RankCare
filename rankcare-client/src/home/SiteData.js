@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PageHeader, Table, Button, Popconfirm, Icon, Form, notification } from 'antd';
-import { getSites, deleteSite, getAllChemicals, getSite } from '../util/APIUtils';
+import { getSites, deleteSite, getAllChemicals } from '../util/APIUtils';
 import NewSite from './NewSite';
 
 class SiteData extends Component {
@@ -12,11 +12,11 @@ class SiteData extends Component {
             modalVisible: false,
             selectedSite: null,
             sitesResponse: null,
-            chemicals : [],
+            chemicals: [],
             sitesData: [],
             currentPage: 0,
-            pageSize : 20,
-            totalRecords : 0,
+            pageSize: 20,
+            totalRecords: 0,
             columns: [
                 {
                     title: 'Site Name',
@@ -94,28 +94,15 @@ class SiteData extends Component {
 
     loadAllChemicals() {
         getAllChemicals()
-        .then(response => {
-            this.setState({
-                chemicals : response
+            .then(response => {
+                this.setState({
+                    chemicals: response
+                });
+            }).catch(error => {
+                this.setState({
+                    chemicals: []
+                });
             });
-        }).catch(error => {
-            this.setState({
-                chemicals : []
-            });
-        });
-    }
-
-    loadSite(id) {
-        getSite(id)
-        .then(response => {
-            // this.setState({
-            //     chemicals : response
-            // });
-        }).catch(error => {
-            // this.setState({
-            //     chemicals : []
-            // });
-        });
     }
 
     saveFormRef = formRef => {
@@ -168,7 +155,7 @@ class SiteData extends Component {
                         columns={this.state.columns}
                         dataSource={this.state.sitesData}
                         onChange={this.onPageChanged}
-                        pagination={{total: this.state.totalRecords, defaultPageSize: this.state.pageSize, current: this.state.currentPage}}
+                        pagination={{ total: this.state.totalRecords, defaultPageSize: this.state.pageSize, current: this.state.currentPage }}
                     />
                 </div>
                 <CollectionCreateForm
@@ -214,11 +201,7 @@ class SiteData extends Component {
     }
 
     handleSiteClick(site) {
-        this.loadSite(site.id);
-        // this.setState({
-        //     modalVisible: true,
-        //     selectedSite: site
-        // });
+        this.props.history.push("/site-details?sites=" + [site.id])
     }
 
     handleAddNewDataClick() {

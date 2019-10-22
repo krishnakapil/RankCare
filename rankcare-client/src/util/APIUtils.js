@@ -191,9 +191,10 @@ export function deleteSite(id) {
     });
 }
 
-export function getSite(id) {
+export function getSitesWithData(ids) {
     return request({
-        url: API_BASE_URL + "/site/" + id,
-        method: 'GET'
+        url: API_BASE_URL + "/sites/data",
+        method: 'POST',
+        body: JSON.stringify(ids)
     });
 }

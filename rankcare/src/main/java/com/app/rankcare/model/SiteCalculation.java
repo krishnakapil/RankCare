@@ -9,110 +9,123 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "site_calculation")
-public class SiteCalculation extends DateAudit{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5252055900338280679L;
+public class SiteCalculation extends DateAudit {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5252055900338280679L;
 
-	/**
-	 * 
-	 */
-	
+    /**
+     *
+     */
 
-	@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@Column(name="site_id")
-	private Long siteId;
-	
-	 
-	@Column(name="chemical_id")
-	private Long chemicalId;
-
-	 
-	@Column(name="contamination_type")
-	private String contaminationType;
+    @Column(name = "site_id")
+    private Long siteId;
 
 
-	@Column(name="contamination_value")
-	private String contaminationValue;
-	
-	@Column(name="active_yn")
-	private String activeYN;
-	
-	public SiteCalculation() {
-		
-	}
+    @Column(name = "chemical_id")
+    private Long chemicalId;
 
-	public SiteCalculation(Long siteId, Long chemicalId, String contaminationType,
-			String contaminationValue,String activeYN) {
-		super();
-		this.siteId = siteId;
-		this.chemicalId = chemicalId;
-		this.contaminationType = contaminationType;
-		this.contaminationValue = contaminationValue;
-		this.activeYN=activeYN;
-	}
-	public SiteCalculation(Long id,Long siteId, Long chemicalId, String contaminationType,
-			String contaminationValue,String activeYN) {
-		super();
-		this.id = id;
-		this.siteId = siteId;
-		this.chemicalId = chemicalId;
-		this.contaminationType = contaminationType;
-		this.contaminationValue = contaminationValue;
-		this.activeYN=activeYN;
-	}
+    @Column(name = "chemical_name")
+    private String chemicalName;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getSiteId() {
-		return siteId;
-	}
-
-	public void setSiteId(Long siteId) {
-		this.siteId = siteId;
-	}
+    @Column(name = "contamination_type")
+    private String contaminationType;
 
 
-	public Long getChemicalId() {
-		return chemicalId;
-	}
+    @Column(name = "contamination_value")
+    private String contaminationValue;
 
-	public void setChemicalId(Long chemicalId) {
-		this.chemicalId = chemicalId;
-	}
+    @Column(name = "active_yn")
+    private String activeYN;
 
-	public String getContaminationType() {
-		return contaminationType;
-	}
+    public SiteCalculation() {
 
-	public void setContaminationType(String contaminationType) {
-		this.contaminationType = contaminationType;
-	}
+    }
 
-	public String getContaminationValue() {
-		return contaminationValue;
-	}
+    public SiteCalculation(Long siteId, Long chemicalId, String chemicalName, String contaminationType,
+                           String contaminationValue, String activeYN) {
+        super();
+        this.siteId = siteId;
+        this.chemicalId = chemicalId;
+        this.chemicalName = chemicalName;
+        this.contaminationType = contaminationType;
+        this.contaminationValue = contaminationValue;
+        this.activeYN = activeYN;
+    }
 
-	public void setContaminationValue(String contaminationValue) {
-		this.contaminationValue = contaminationValue;
-	}
+    public SiteCalculation(Long id, Long siteId, Long chemicalId, String chemicalName, String contaminationType,
+                           String contaminationValue, String activeYN) {
+        super();
+        this.id = id;
+        this.siteId = siteId;
+        this.chemicalId = chemicalId;
+        this.chemicalName = chemicalName;
+        this.contaminationType = contaminationType;
+        this.contaminationValue = contaminationValue;
+        this.activeYN = activeYN;
+    }
 
-	public String getActiveYN() {
-		return activeYN;
-	}
+    public String getChemicalName() {
+        return chemicalName;
+    }
 
-	public void setActiveYN(String activeYN) {
-		this.activeYN = activeYN;
-	}
-	
+    public void setChemicalName(String chemicalName) {
+        this.chemicalName = chemicalName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
+    }
+
+
+    public Long getChemicalId() {
+        return chemicalId;
+    }
+
+    public void setChemicalId(Long chemicalId) {
+        this.chemicalId = chemicalId;
+    }
+
+    public String getContaminationType() {
+        return contaminationType;
+    }
+
+    public void setContaminationType(String contaminationType) {
+        this.contaminationType = contaminationType;
+    }
+
+    public String getContaminationValue() {
+        return contaminationValue;
+    }
+
+    public void setContaminationValue(String contaminationValue) {
+        this.contaminationValue = contaminationValue;
+    }
+
+    public String getActiveYN() {
+        return activeYN;
+    }
+
+    public void setActiveYN(String activeYN) {
+        this.activeYN = activeYN;
+    }
+
 }

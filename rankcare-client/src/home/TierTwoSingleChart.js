@@ -8,24 +8,24 @@ import {
 } from "bizcharts";
 import DataSet from "@antv/data-set";
 
-class TierOneChart extends Component {
+class TierTwoSingleChart extends Component {
   constructor(props) {
     super(props);
-    const sitesData = props.sitesData
-    const fields = sitesData.map((site) => site.siteName);
-    const types = ["Water","Soil"];
+    const t2Data = props.sitesData[0].t2;
+    const fields = Object.keys(t2Data);
+    const types = ["CR","NCR"]
     const data = [];
 
     for(const [index, type] of types.entries()) {
-      var typeData = {}
-      typeData.name = type
-
-      // For Each site
-      for(const [index, site] of sitesData.entries()) {
-        typeData[site.siteName] = site.t1[type]
-      }
-
-      data.push(typeData)
+        var typeData = {}
+        typeData.name = type
+  
+        // For Each site
+        for(const [index, ageGroup] of fields.entries()) {
+          typeData[ageGroup] = t2Data[ageGroup][type];
+        }
+  
+        data.push(typeData)
     }
 
     this.state = {
@@ -35,16 +35,16 @@ class TierOneChart extends Component {
   }
 
   // Sample data
-  // const data = [
-    //   {
-    //     name: "Water",
-    //     "New Site": 180.9
-    //   },
-    //   {
-    //     name: "Soil",
-    //     "New Site": 12.4
-    //   }
-    // ];
+//   const data = [
+//     {
+//       name: "NCR",
+//       "0-3": 180.9
+//     },
+//     {
+//       name: "CR",
+//       "0-3": 18.9
+//     }
+//   ];
 
   render() {
     const data = this.state.data;
@@ -54,14 +54,15 @@ class TierOneChart extends Component {
     dv.transform({
       type: "fold",
       fields: this.state.fields,
-      key: "Site Name",
+      key: "Age Group",
       value: "Tier Value"
     });
+
     return (
       <div>
-        <Chart width={1000} height={400} data={dv} forceFit>
-          <Axis name="Site Name" />
-          <Axis name="Tier 1 Value" />
+        <Chart width={1000} height={500} data={dv} forceFit>
+          <Axis name="Age Group" />
+          <Axis name="Tier 2 Value" />
           <Legend />
           <Tooltip
             crosshairs={{
@@ -70,7 +71,7 @@ class TierOneChart extends Component {
           />
           <Geom
             type="interval"
-            position="Site Name*Tier Value"
+            position="Age Group*Tier Value"
             color={"name"}
             adjust={[
               {
@@ -85,4 +86,4 @@ class TierOneChart extends Component {
   }
 }
 
-export default TierOneChart;
+export default TierTwoSingleChart;

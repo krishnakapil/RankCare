@@ -4,9 +4,13 @@ import {
     Button,
     Modal,
     notification,
-    InputNumber
+    InputNumber,
+    Select
 } from 'antd';
+
 import { createConsumption, updateConsumtion } from '../util/APIUtils';
+
+const { Option } = Select;
 
 class NewConsumption extends Component {
     constructor(props) {
@@ -72,15 +76,15 @@ class NewConsumption extends Component {
 
     checkNumber = (rule, value, callback) => {
         if ((rule.field === "ageTo" && value === null) || value > 0) {
-          callback();
-          return;
+            callback();
+            return;
         }
         callback('This field should be number!');
     };
 
     render() {
         const { visible, onCancel, form } = this.props;
-        const { getFieldDecorator } = form;
+        const { getFieldDecorator, getFieldValue } = form;
 
         const formItemLayout = {
             labelCol: {
@@ -95,7 +99,7 @@ class NewConsumption extends Component {
 
         return (
             <Modal
-                width="600px"
+                width="800px"
                 title={this.props.isEdit ? "Edit Consumption Data" : "Add Consumption Data"}
                 visible={visible}
                 onOk={this.handleOkClick}
@@ -112,20 +116,22 @@ class NewConsumption extends Component {
                 <Form {...formItemLayout}>
                     <Form.Item
                         label="Age Group From">
-                        {getFieldDecorator('ageFrom', {
+                        {getFieldDecorator('ageGrp', {
                             rules: [
-                                { required: true, message: 'Please input age group from!' },
-                                { validator: this.checkNumber },
+                                { required: true, message: 'Please input age group!' },
                             ],
-                        })(<InputNumber />)}
-                    </Form.Item>
-                    <Form.Item
-                        label="Age Group To">
-                        {getFieldDecorator('ageTo', {
-                            rules: [
-                                { validator: this.checkNumber },
-                            ],
-                        })(<InputNumber />)}
+                        })(
+                            <Select
+                                value={getFieldValue('ageGrp')}
+                                style={{ width: '25%' }}
+                            >
+                                <Option value="0-3">0-3</Option>
+                                <Option value="3-6">3-6</Option>
+                                <Option value="6-10">6-10</Option>
+                                <Option value="10-18">10-18</Option>
+                                <Option value="18+">18+</Option>
+                            </Select>
+                        )}
                     </Form.Item>
                     <Form.Item
                         label="Body Weight Avg">

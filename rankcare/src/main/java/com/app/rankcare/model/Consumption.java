@@ -33,10 +33,6 @@ public class Consumption extends DateAudit {
 	@Column(name="ci_data_2")
 	private String ciData2;
 
-	private Integer ageFrom;
-
-	private Integer ageTo;
-
 	public Consumption() {
 		
 	}
@@ -121,28 +117,9 @@ public class Consumption extends DateAudit {
 		this.ciData2 = ciData2;
 	}
 
-	public Integer getAgeFrom() {
-		return ageFrom;
-	}
-
-	public void setAgeFrom(Integer ageFrom) {
-		this.ageFrom = ageFrom;
-	}
-
-	public Integer getAgeTo() {
-		return ageTo;
-	}
-
-	public void setAgeTo(Integer ageTo) {
-		this.ageTo = ageTo;
-	}
-
 	@Override
 	public String toString() {
 		return "Consumption [id=" + id + ", ageGrp=" + ageGrp + ", bodyWtAvg=" + bodyWtAvg + ", ciData1=" + ciData1
 				+ ", soilInvAvg=" + soilInvAvg + ", waterConsAvg=" + waterConsAvg + ", ciData2=" + ciData2 + "]";
 	}
- 
-	
-		
 }

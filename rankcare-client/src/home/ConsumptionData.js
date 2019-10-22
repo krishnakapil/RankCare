@@ -117,13 +117,9 @@ class ConsumptionData extends Component {
                 mapPropsToFields(props) {
                     if (selectedConsumption) {
                         return {
-                            ageFrom: Form.createFormField({
-                                ...props.ageFrom,
-                                value: selectedConsumption.ageFrom
-                            }),
-                            ageTo: Form.createFormField({
-                                ...props.ageTo,
-                                value: selectedConsumption.ageTo
+                            ageGrp: Form.createFormField({
+                                ...props.ageGrp,
+                                value: selectedConsumption.ageGrp
                             }),
                             bodyWtAvg: Form.createFormField({
                                 ...props.bodyWtAvg,

@@ -3,6 +3,7 @@ import './Home.css';
 import { PageHeader, Table, Button, Popconfirm, Icon, Descriptions } from 'antd';
 import { getSitesWithData } from '../util/APIUtils';
 import TierOneChart from './TierOneChart';
+import TierTwoSingleChart from './TierTwoSingleChart';
 
 class SiteDetails extends Component {
     constructor(props) {
@@ -71,12 +72,14 @@ class SiteDetails extends Component {
     render() {
         return (
             <div className="user-home-container">
-                <PageHeader className="user-list-page-title" title="Site Details" onBack={this.handleBackClick} />
+                <PageHeader className="user-list-page-title" title={this.state.isSingleSite ? "Site Details" : "Compare Sites"} onBack={this.handleBackClick} />
                 {
                     this.renderSiteDetails()
                 }
-                <h3 style={{ marginBottom: '32px', marginTop: '32px' }}><b>Tier 1 Values</b></h3>
+                <h3 style={{ marginBottom: '32px', marginTop: '48px' }}><b>Tier 1 Values</b></h3>
                 {this.renderTierOneChart()}
+                <h3 style={{ marginBottom: '32px', marginTop: '48px' }}><b>Tier 2 Values</b></h3>
+                {this.renderTierTwoChart()}
             </div>
         );
     }
@@ -87,6 +90,17 @@ class SiteDetails extends Component {
             return(
                 <TierOneChart sitesData={sitesData} />
             )
+        }
+    }
+
+    renderTierTwoChart() {
+        const sitesData = this.state.sitesData;
+        if (sitesData && sitesData.length === 1) {
+            return(
+                <TierTwoSingleChart sitesData={sitesData} />
+            )
+        } else if(sitesData && sitesData.length > 1) {
+            
         }
     }
 

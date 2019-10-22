@@ -75,20 +75,20 @@ public class ConsumptionController {
         if (pgLst.hasContent()) {
             resMap.put("pageCnt", pgLst.getTotalPages());
 
-            for (Consumption c : res) {
-                String ageGrp = c.getAgeGrp();
-
-                if (ageGrp != null && ageGrp.contains("-")) {
-                    String[] ageGrpSplit = ageGrp.split("-");
-                    if (ageGrpSplit.length == 2) {
-                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
-                    } else if (ageGrpSplit.length == 1) {
-                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-                        c.setAgeTo(null);
-                    }
-                }
-            }
+//            for (Consumption c : res) {
+//                String ageGrp = c.getAgeGrp();
+//
+//                if (ageGrp != null && ageGrp.contains("-")) {
+//                    String[] ageGrpSplit = ageGrp.split("-");
+//                    if (ageGrpSplit.length == 2) {
+//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+//                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
+//                    } else if (ageGrpSplit.length == 1) {
+//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+//                        c.setAgeTo(null);
+//                    }
+//                }
+//            }
 
             resMap.put("data", res);
         }
@@ -140,20 +140,20 @@ public class ConsumptionController {
                 resMap.put("pageCnt", d);
             }
 
-            for (Consumption c : res) {
-                String ageGrp = c.getAgeGrp();
-
-                if (ageGrp != null && ageGrp.contains("-")) {
-                    String[] ageGrpSplit = ageGrp.split("-");
-                    if (ageGrpSplit.length == 2) {
-                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
-                    } else if (ageGrpSplit.length == 1) {
-                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-                        c.setAgeTo(null);
-                    }
-                }
-            }
+//            for (Consumption c : res) {
+//                String ageGrp = c.getAgeGrp();
+//
+//                if (ageGrp != null && ageGrp.contains("-")) {
+//                    String[] ageGrpSplit = ageGrp.split("-");
+//                    if (ageGrpSplit.length == 2) {
+//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+//                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
+//                    } else if (ageGrpSplit.length == 1) {
+//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
+//                        c.setAgeTo(null);
+//                    }
+//                }
+//            }
             resMap.put("data", res);
         }
 
@@ -163,13 +163,7 @@ public class ConsumptionController {
     @PostMapping("/consumption/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateConsumption(@Valid @RequestBody ConsumptionRequest consumptionRequest) {
-        String ageGrp = consumptionRequest.getAgeFrom() + "-";
-
-        if(consumptionRequest.getAgeTo() != null) {
-            ageGrp += consumptionRequest.getAgeTo();
-        }
-
-        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getId(), ageGrp, consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
+        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getId(), consumptionRequest.getAgeGrp(), consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
                 consumptionRequest.getSoilInvAvg(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2()));
 
         logger.info("Saved Data Result::" + result.toString());
@@ -179,13 +173,7 @@ public class ConsumptionController {
     @PostMapping("/consumption/insert")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> insertConsumption(@Valid @RequestBody ConsumptionRequest consumptionRequest) {
-        String ageGrp = consumptionRequest.getAgeFrom() + "-";
-
-        if(consumptionRequest.getAgeTo() != null) {
-            ageGrp += consumptionRequest.getAgeTo();
-        }
-
-        Consumption result = consumptionRepository.save(new Consumption(ageGrp, consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
+        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getAgeGrp(), consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
                 consumptionRequest.getSoilInvAvg(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2()));
 
         logger.info("Saved Data Result::" + result.toString());

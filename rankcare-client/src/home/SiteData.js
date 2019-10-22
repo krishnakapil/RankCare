@@ -17,6 +17,8 @@ class SiteData extends Component {
             currentPage: 0,
             pageSize: 20,
             totalRecords: 0,
+            selectedRowKeys: [],
+            selectedRows: [],
             columns: [
                 {
                     title: 'Site Name',
@@ -62,6 +64,8 @@ class SiteData extends Component {
         this.handleAddUserCancel = this.handleAddUserCancel.bind(this)
         this.handleSiteClick = this.handleSiteClick.bind(this)
         this.onPageChanged = this.onPageChanged.bind(this);
+        this.onSelectChange = this.onSelectChange.bind(this);
+        this.compareSites = this.compareSites.bind(this);
     }
 
     componentDidMount() {
@@ -80,6 +84,8 @@ class SiteData extends Component {
                     isLoading: false,
                     sitesResponse: response,
                     sitesData: response.data,
+                    selectedRowKeys: [],
+                    selectedRows: [],
                     totalRecords: (response.pageCnt * this.state.pageSize)
                 });
             }).catch(error => {
@@ -87,6 +93,8 @@ class SiteData extends Component {
                     isLoading: false,
                     sitesResponse: null,
                     totalRecords: 0,
+                    selectedRowKeys: [],
+                    selectedRows: [],
                     sitesData: []
                 });
             });
@@ -113,8 +121,19 @@ class SiteData extends Component {
         this.loadData(pagination.current - 1)
     }
 
+    onSelectChange(selectedRowKeys, selectedRows) {
+        console.log('selectedRowKeys changed: ', selectedRowKeys, JSON.stringify(selectedRows));
+        this.setState({ selectedRowKeys, selectedRows });
+    };
+
     render() {
         const selectedSite = this.state.selectedSite
+        const { loading, selectedRowKeys } = this.state;
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: this.onSelectChange,
+        };
+
 
         const CollectionCreateForm = Form.create(
             {
@@ -151,6 +170,7 @@ class SiteData extends Component {
                 <div className="user-home-container">
                     <PageHeader className="user-list-page-title" title="Sites Data" onBack={this.handleBackClick} extra={this.renderNavigationButtons()} />
                     <Table
+                        rowSelection={rowSelection}
                         rowKey={record => record.id}
                         columns={this.state.columns}
                         dataSource={this.state.sitesData}
@@ -172,8 +192,13 @@ class SiteData extends Component {
     }
 
     renderNavigationButtons() {
+        const hasSelected = this.state.selectedRowKeys.length > 0;
+
         return (
             [
+                <Button key="2" type="primary" onClick={this.compareSites} disabled={!hasSelected} loading={this.state.loading}>
+                    Compare
+                </Button>,
                 <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
             ]
         )
@@ -229,6 +254,19 @@ class SiteData extends Component {
             modalVisible: false,
             selectedSite: null
         });
+    }
+
+    compareSites() {
+        const selectedRows = this.state.selectedRows
+
+        this.setState({
+            selectedRowKeys: [],
+            selectedRows: []
+        });
+
+        const selectedIds = selectedRows.map((site) => site.id)
+
+        this.props.history.push("/site-details?sites=" + selectedIds)
     }
 }
 

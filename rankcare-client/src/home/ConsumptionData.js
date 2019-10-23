@@ -8,6 +8,7 @@ class ConsumptionData extends Component {
         super(props);
         this.state = {
             currentUser: props.currentUser,
+            isAdmin: props.currentUser.isAdmin,
             isLoading: false,
             modalVisible: false,
             selectedConsumption: null,
@@ -16,7 +17,7 @@ class ConsumptionData extends Component {
             currentPage: 0,
             pageSize : 20,
             totalRecords : 0,
-            columns: [
+            columns: props.currentUser.isAdmin ? [
                 {
                     title: 'Age Group',
                     dataIndex: 'ageGrp',
@@ -60,6 +61,40 @@ class ConsumptionData extends Component {
                                 <Icon type="delete" className="nav-icon" />
                             </a>
                         </Popconfirm>,
+                },
+            ] :
+            [
+                {
+                    title: 'Age Group',
+                    dataIndex: 'ageGrp',
+                    key: 'ageGrp',
+                    sorter: (a, b) => a.ageGrp.length - b.ageGrp.length,
+                    sortDirections: ['descend', 'ascend'],
+                },
+                {
+                    title: 'Body Weight Avg',
+                    dataIndex: 'bodyWtAvg',
+                    key: 'bodyWtAvg',
+                },
+                {
+                    title: 'Confidence Limit 95% of soil',
+                    dataIndex: 'ciData1',
+                    key: 'ciData1',
+                },
+                {
+                    title: 'Confidence Limit 95% of water',
+                    dataIndex: 'ciData2',
+                    key: 'ciData2',
+                },
+                {
+                    title: 'Soil In Avg',
+                    dataIndex: 'soilInvAvg',
+                    key: 'soilInvAvg',
+                },
+                {
+                    title: 'Water Consumption Avg',
+                    dataIndex: 'waterConsAvg',
+                    key: 'waterConsAvg',
                 },
             ]
         }
@@ -174,11 +209,13 @@ class ConsumptionData extends Component {
     }
 
     renderNavigationButtons() {
-        return (
-            [
-                <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
-            ]
-        )
+        if(this.state.isAdmin) {
+            return (
+                [
+                    <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
+                ]
+            )
+        }
     }
 
     handleDelete(id) {

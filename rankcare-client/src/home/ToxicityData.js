@@ -8,6 +8,7 @@ class ToxicityData extends Component {
         super(props);
         this.state = {
             currentUser: props.currentUser,
+            isAdmin: props.currentUser.isAdmin,
             isLoading: false,
             modalVisible: false,
             selectedToxicity: null,
@@ -16,7 +17,7 @@ class ToxicityData extends Component {
             currentPage: 0,
             pageSize : 20,
             totalRecords : 0,
-            columns: [
+            columns: props.currentUser.isAdmin? [
                 {
                     title: 'Chemical Name',
                     dataIndex: 'chemicalName',
@@ -80,6 +81,60 @@ class ToxicityData extends Component {
                                 <Icon type="delete" className="nav-icon" />
                             </a>
                         </Popconfirm>,
+                },
+            ] :
+            [
+                {
+                    title: 'Chemical Name',
+                    dataIndex: 'chemicalName',
+                    key: 'chemicalName',
+                    sorter: (a, b) => a.chemicalName.length - b.chemicalName.length,
+                    sortDirections: ['descend', 'ascend'],
+                },
+                {
+                    title: 'Formula',
+                    dataIndex: 'chemicalFormula',
+                    key: 'chemicalFormula',
+                },
+                {
+                    title: 'Soil Guideline',
+                    dataIndex: 'soilGuideline',
+                    key: 'soilGuideline',
+                },
+                {
+                    title: 'Soil Ref',
+                    dataIndex: 'soilRef',
+                    key: 'soilRef',
+                },
+                {
+                    title: 'Water Guideline',
+                    dataIndex: 'waterGuideline',
+                    key: 'waterGuideline',
+                },
+                {
+                    title: 'Water Ref',
+                    dataIndex: 'waterRef',
+                    key: 'waterRef',
+                },
+                {
+                    title: 'Dosage Ref',
+                    dataIndex: 'dosageRef',
+                    key: 'dosageRef'
+                },
+                {
+                    title: 'Reference',
+                    dataIndex: 'reference',
+                    key: 'reference'
+                },
+                {
+                    title: 'Cancer Slope Factor',
+                    dataIndex: 'cancerSlopeFactor',
+                    key: 'cancerSlopeFactor'
+                },
+                {
+                    title: 'Cancer Slope Ref',
+                    dataIndex: 'cancerSlopeRef',
+                    key: 'cancerSlopeRef'
                 },
             ]
         }
@@ -210,11 +265,13 @@ class ToxicityData extends Component {
     }
 
     renderNavigationButtons() {
-        return (
-            [
-                <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
-            ]
-        )
+        if(this.state.isAdmin) {
+            return (
+                [
+                    <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
+                ]
+            )
+        }
     }
 
     handleDelete(id) {

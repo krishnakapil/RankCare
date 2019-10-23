@@ -100,7 +100,7 @@ public class UserController {
         user.setDesignation(signUpRequest.getDesignation());
 
         if(signUpRequest.getPassword() != null && !signUpRequest.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         }
 
         userRepository.save(user);

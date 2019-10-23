@@ -8,6 +8,7 @@ class SiteData extends Component {
         super(props);
         this.state = {
             currentUser: props.currentUser,
+            isAdmin: props.currentUser.isAdmin,
             isLoading: false,
             modalVisible: false,
             selectedSite: null,
@@ -19,7 +20,7 @@ class SiteData extends Component {
             totalRecords: 0,
             selectedRowKeys: [],
             selectedRows: [],
-            columns: [
+            columns: props.currentUser.isAdmin ? [
                 {
                     title: 'Site Name',
                     dataIndex: 'siteName',
@@ -54,7 +55,32 @@ class SiteData extends Component {
                             </a>
                         </Popconfirm>,
                 },
-            ]
+            ] :
+                [
+                    {
+                        title: 'Site Name',
+                        dataIndex: 'siteName',
+                        key: 'siteName',
+                        render: (text, record) => <a className="user-list-name-link" onClick={() => this.handleSiteClick(record)}>{text}</a>,
+                        sorter: (a, b) => a.siteName.length - b.siteName.length,
+                        sortDirections: ['descend', 'ascend'],
+                    },
+                    {
+                        title: 'Site Location',
+                        dataIndex: 'siteLocation',
+                        key: 'siteLocation',
+                    },
+                    {
+                        title: 'Site State',
+                        dataIndex: 'siteState',
+                        key: 'siteState',
+                    },
+                    {
+                        title: 'Site Org',
+                        dataIndex: 'siteOrg',
+                        key: 'siteOrg',
+                    },
+                ]
         }
 
         this.handleBackClick = this.handleBackClick.bind(this)
@@ -192,15 +218,26 @@ class SiteData extends Component {
 
     renderNavigationButtons() {
         const hasSelected = this.state.selectedRowKeys.length > 0;
+        const isAdmin = this.state.isAdmin;
 
-        return (
-            [
-                <Button key="2" type="primary" onClick={this.compareSites} disabled={!hasSelected} loading={this.state.loading}>
-                    Compare
-                </Button>,
-                <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
-            ]
-        )
+        if (isAdmin) {
+            return (
+                [
+                    <Button key="2" type="primary" onClick={this.compareSites} disabled={!hasSelected} loading={this.state.loading}>
+                        Compare
+                    </Button>,
+                    <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
+                ]
+            )
+        } else {
+            return (
+                [
+                    <Button key="2" type="primary" onClick={this.compareSites} disabled={!hasSelected} loading={this.state.loading}>
+                        Compare
+                    </Button>,
+                ]
+            )
+        }
     }
 
     handleDelete(id) {

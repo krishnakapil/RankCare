@@ -63,7 +63,27 @@ class Home extends Component {
                 </div>
             )
         } else {
-
+            return (
+                <div className="gutter-container">
+                    <Row gutter={16}>
+                        <Col className="gutter-row" span={8}>
+                            <div className="gutter-box">
+                                <Button icon="table" className="gutter-button" onClick={this.handleSitesClicked}>Sites List</Button>
+                            </div>
+                        </Col>
+                        <Col className="gutter-row" span={8}>
+                            <div className="gutter-box">
+                                <Button icon="database" className="gutter-button" onClick={this.handleConsumptionClick}>Consumption Data</Button>
+                            </div>
+                        </Col>
+                        <Col className="gutter-row" span={8}>
+                            <div className="gutter-box">
+                                <Button icon="database" className="gutter-button" onClick={this.handleToxicityClick}>Toxicity Data</Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+            )
         }
     }
 
@@ -78,20 +98,9 @@ class Home extends Component {
             <PageHeader
                 className="page-title"
                 title={name}
-                subTitle={role}
-                extra={this.renderNavigationButtons(isAdmin)}>
+                subTitle={role}>
             </PageHeader>
         )
-    }
-
-    renderNavigationButtons(isAdmin) {
-        if (!isAdmin) {
-            return (
-                [
-                    <Button key="2">Add New Site</Button>,
-                ]
-            )
-        }
     }
 
     handleManagerUsersClick() {

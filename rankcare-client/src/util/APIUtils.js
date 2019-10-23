@@ -198,3 +198,10 @@ export function getSitesWithData(ids) {
         body: JSON.stringify(ids)
     });
 }
+
+export function getSite(id) {
+    return request({
+        url: API_BASE_URL + "/site/" + id,
+        method: 'GET'
+    });
+}

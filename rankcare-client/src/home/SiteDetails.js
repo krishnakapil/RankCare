@@ -1,25 +1,20 @@
 import React, { Component } from 'react';
 import './Home.css';
-import { PageHeader, Table, Button, Popconfirm, Icon, Descriptions } from 'antd';
-import { getSitesWithData } from '../util/APIUtils';
-import TierOneChart from './TierOneChart';
-import TierTwoSingleChart from './TierTwoSingleChart';
+import { PageHeader, Table, Descriptions } from 'antd';
+import { getSite } from '../util/APIUtils';
+import RankChart from './RankChart';
 
 class SiteDetails extends Component {
     constructor(props) {
         super(props);
         const queryString = require('query-string');
-        const parsedQuery = queryString.parse(props.location.search, { arrayFormat: 'comma' }).sites;
-        const idArray = typeof parsedQuery === 'string' ? [parseInt(parsedQuery, 10)] : parsedQuery.map(v => parseInt(v, 10));
+        const siteId = queryString.parse(this.props.location.search).sites
 
-        console.log("SiteDetails " + props.location.search + " Parsed to " + JSON.stringify(idArray));
         this.state = {
             currentUser: props.currentUser,
             isLoading: false,
-            siteIds: idArray,
-            isSingleSite: idArray.length === 1,
-            singleSiteData: null,
-            sitesData: [],
+            siteId: siteId,
+            siteData: {},
             columns: [
                 {
                     title: 'Contamination Type',
@@ -43,7 +38,7 @@ class SiteDetails extends Component {
             ]
         }
 
-        this.handleBackClick = this.handleBackClick.bind(this)
+        this.handleBackClick = this.handleBackClick.bind(this);
     }
 
     componentDidMount() {
@@ -51,16 +46,14 @@ class SiteDetails extends Component {
     }
 
     loadData() {
-        getSitesWithData(this.state.siteIds)
+        getSite(this.state.siteId)
             .then(response => {
                 this.setState({
-                    sitesData: response,
-                    singleSiteData: response.length === 1 ? response[0] : null
+                    siteData: response
                 });
             }).catch(error => {
                 this.setState({
-                    sitesData: [],
-                    singleSiteData: null
+                    siteData: {}
                 });
             });
     }
@@ -72,41 +65,98 @@ class SiteDetails extends Component {
     render() {
         return (
             <div className="user-home-container">
-                <PageHeader className="user-list-page-title" title={this.state.isSingleSite ? "Site Details" : "Compare Sites"} onBack={this.handleBackClick} />
+                <PageHeader className="user-list-page-title" title={"Site Details"} onBack={this.handleBackClick} />
                 {
                     this.renderSiteDetails()
                 }
                 <h3 style={{ marginBottom: '32px', marginTop: '48px' }}><b>Tier 1 Values</b></h3>
                 {this.renderTierOneChart()}
-                <h3 style={{ marginBottom: '32px', marginTop: '48px' }}><b>Tier 2 Values</b></h3>
                 {this.renderTierTwoChart()}
+                {this.renderTierThreeChart()}
+                {this.renderChecmicalContaminents()}
             </div>
         );
     }
 
     renderTierOneChart() {
-        const sitesData = this.state.sitesData;
-        if (sitesData && sitesData.length > 0) {
-            return(
-                <TierOneChart sitesData={sitesData} />
+        const siteData = this.state.siteData;
+        if (siteData && siteData.t1) {
+            const fields = siteData.siteName;
+            const types = ["Water", "Soil"];
+            const data = [];
+
+            for (const [index, type] of types.entries()) {
+                var typeData = {}
+                typeData.name = type
+                typeData[siteData.siteName] = siteData.t1[type]
+                data.push(typeData)
+            }
+
+            return (
+                <RankChart fields={fields} data={data}/>
             )
         }
     }
 
     renderTierTwoChart() {
-        const sitesData = this.state.sitesData;
-        if (sitesData && sitesData.length === 1) {
-            return(
-                <TierTwoSingleChart sitesData={sitesData} />
+        const siteData = this.state.siteData;
+        if (siteData && siteData.t2) {
+            const t2Data = siteData.t2;
+            const fields = Object.keys(t2Data);
+            const types = ["CR", "NCR"]
+            const data = [];
+
+            for (const [index, type] of types.entries()) {
+                var typeData = {}
+                typeData.name = type
+
+                for (const [index, ageGroup] of fields.entries()) {
+                    typeData[ageGroup] = t2Data[ageGroup][type];
+                }
+
+                data.push(typeData)
+            }
+
+            return (
+                <div>
+                    <h3 style={{ marginBottom: '32px', marginTop: '48px' }}><b>Tier 2 Values</b></h3>
+                    <RankChart fields={fields} data={data} />
+                </div>
             )
-        } else if(sitesData && sitesData.length > 1) {
-            
+        }
+    }
+
+    renderTierThreeChart() {
+        const siteData = this.state.siteData;
+        if (siteData && siteData.t3) {
+            const t3Data = siteData.t3;
+            const fields = Object.keys(t3Data);
+            const types = ["CR", "NCR"]
+            const data = [];
+
+            for (const [index, type] of types.entries()) {
+                var typeData = {}
+                typeData.name = type
+
+                for (const [index, ageGroup] of fields.entries()) {
+                    typeData[ageGroup] = t3Data[ageGroup][type];
+                }
+
+                data.push(typeData)
+            }
+
+            return (
+                <div>
+                    <h3 style={{ marginBottom: '32px', marginTop: '48px' }}><b>Tier 3 Values</b></h3>
+                    <RankChart fields={fields} data={data} />
+                </div>
+            )
         }
     }
 
     renderSiteDetails() {
-        const siteData = this.state.singleSiteData
-        if (siteData && this.state.isSingleSite) {
+        const siteData = this.state.siteData
+        if (siteData) {
             return (
                 <div>
                     <Descriptions bordered className="site-details-box">
@@ -117,6 +167,16 @@ class SiteDetails extends Component {
                         <Descriptions.Item label="Site State">{siteData.state}</Descriptions.Item>
                         <Descriptions.Item label="site Org">{siteData.orgName}</Descriptions.Item>
                     </Descriptions>
+                </div>
+            )
+        }
+    }
+
+    renderChecmicalContaminents() {
+        const siteData = this.state.siteData
+        if (siteData) {
+            return (
+                <div>
                     <h3 style={{ marginBottom: '32px' }}><b>Site Contaminants</b></h3>
                     <Table
                         rowKey={record => record.id}

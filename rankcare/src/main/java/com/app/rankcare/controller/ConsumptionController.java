@@ -74,22 +74,6 @@ public class ConsumptionController {
 
         if (pgLst.hasContent()) {
             resMap.put("pageCnt", pgLst.getTotalPages());
-
-//            for (Consumption c : res) {
-//                String ageGrp = c.getAgeGrp();
-//
-//                if (ageGrp != null && ageGrp.contains("-")) {
-//                    String[] ageGrpSplit = ageGrp.split("-");
-//                    if (ageGrpSplit.length == 2) {
-//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-//                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
-//                    } else if (ageGrpSplit.length == 1) {
-//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-//                        c.setAgeTo(null);
-//                    }
-//                }
-//            }
-
             resMap.put("data", res);
         }
         return resMap;
@@ -140,20 +124,6 @@ public class ConsumptionController {
                 resMap.put("pageCnt", d);
             }
 
-//            for (Consumption c : res) {
-//                String ageGrp = c.getAgeGrp();
-//
-//                if (ageGrp != null && ageGrp.contains("-")) {
-//                    String[] ageGrpSplit = ageGrp.split("-");
-//                    if (ageGrpSplit.length == 2) {
-//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-//                        c.setAgeTo(Integer.parseInt(ageGrpSplit[1]));
-//                    } else if (ageGrpSplit.length == 1) {
-//                        c.setAgeFrom(Integer.parseInt(ageGrpSplit[0]));
-//                        c.setAgeTo(null);
-//                    }
-//                }
-//            }
             resMap.put("data", res);
         }
 

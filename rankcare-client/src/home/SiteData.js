@@ -122,7 +122,6 @@ class SiteData extends Component {
     }
 
     onSelectChange(selectedRowKeys, selectedRows) {
-        console.log('selectedRowKeys changed: ', selectedRowKeys, JSON.stringify(selectedRows));
         this.setState({ selectedRowKeys, selectedRows });
     };
 
@@ -226,7 +225,7 @@ class SiteData extends Component {
     }
 
     handleSiteClick(site) {
-        this.props.history.push("/site-details?sites=" + [site.id])
+        this.props.history.push("/site-details?sites=" + site.id)
     }
 
     handleAddNewDataClick() {
@@ -259,14 +258,9 @@ class SiteData extends Component {
     compareSites() {
         const selectedRows = this.state.selectedRows
 
-        this.setState({
-            selectedRowKeys: [],
-            selectedRows: []
-        });
-
         const selectedIds = selectedRows.map((site) => site.id)
 
-        this.props.history.push("/site-details?sites=" + selectedIds)
+        this.props.history.push("/site-compare?sites=" + selectedIds)
     }
 }
 

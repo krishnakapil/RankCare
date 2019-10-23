@@ -5,6 +5,7 @@ import java.util.*;
 import javax.validation.Valid;
 
 import com.app.rankcare.payload.ApiResponse;
+import com.app.rankcare.repository.ToxicityRepository;
 import org.apache.commons.math3.distribution.LogNormalDistribution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class SiteDataController {
     @Autowired
     private SiteDataRepository siteDataRepository;
 
+    @Autowired
+    private ToxicityRepository toxicityRepository;
 
     @Autowired
     private SiteCalculationRepository siteCalculationRepository;
@@ -54,7 +57,7 @@ public class SiteDataController {
         if (siteRegisterRequest.getSiteContaminant() != null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
-                res = siteCalculationRepository.save(new SiteCalculation(result.getId(), contaminantData.getChemicalId(), contaminantData.getChemicalName(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), "Y"));
+                res = siteCalculationRepository.save(new SiteCalculation(result.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), "Y"));
                 logger.info("Data Saved>" + res);
             }
         }
@@ -75,9 +78,9 @@ public class SiteDataController {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
                 if (contaminantData.getId() != null) {
-                    res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(), siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getChemicalName(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getActiveYN()));
+                    res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(), siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getActiveYN()));
                 } else {
-                    res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getChemicalName(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), "Y"));
+                    res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), "Y"));
                 }
                 logger.info("Data Saved>" + res);
             }
@@ -111,6 +114,61 @@ public class SiteDataController {
         return resMap;
     }
 
+    @GetMapping("/site/{id}")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
+    public ResponseEntity<SiteRegisterRequest> getSitesWithdata(@PathVariable("id")  Long id) throws Exception {
+        Optional<Site> siteOptional = siteDataRepository.findById(id);
+
+        if(!siteOptional.isPresent()) {
+            return null;
+        }
+
+        Site result = siteOptional.get();
+
+        SiteRegisterRequest siteRegisterRequest = new SiteRegisterRequest();
+        siteRegisterRequest.setId(id);
+        siteRegisterRequest.setOrgName(result.getSiteOrg());
+        siteRegisterRequest.setSiteLocation(result.getSiteLocation());
+        siteRegisterRequest.setSiteName(result.getSiteName());
+        siteRegisterRequest.setState(result.getSiteState());
+
+        List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
+
+        List<SiteContaminantData> contaLst = new ArrayList<>();
+        SiteContaminantData e = null;
+        if (siteContamiData != null && !siteContamiData.isEmpty()) {
+            for (SiteCalculation siteCalc : siteContamiData) {
+                e = new SiteContaminantData();
+                e.setActiveYN(siteCalc.getActiveYN());
+                e.setId(siteCalc.getId());
+                e.setContaminationType(siteCalc.getContaminationType());
+                e.setChemicalId(siteCalc.getChemicalId());
+                e.setContaminationValue(siteCalc.getContaminationValue());
+
+                Optional<Toxicity> toxicityOptional = toxicityRepository.findById(siteCalc.getChemicalId());
+                if(toxicityOptional.isPresent()) {
+                    e.setChemicalName(toxicityOptional.get().getChemicalName());
+                }
+
+                contaLst.add(e);
+            }
+        }
+
+        Map<String, Map<String, Double>> t2 = siteCalculationT2(id);
+
+        siteRegisterRequest.setSiteContaminant(contaLst);
+        siteRegisterRequest.setT1(siteCalculationT1(id));
+        siteRegisterRequest.setT3(siteCalculationT3(id, t2));
+
+        t2.remove("MeanCR");
+        t2.remove("MeanNCR");
+        t2.remove("SAMPLESIZE");
+
+        siteRegisterRequest.setT2(t2);
+
+        return new ResponseEntity<>(siteRegisterRequest, HttpStatus.OK);
+    }
+
     @PostMapping("/sites/data")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
     public ResponseEntity<List<SiteRegisterRequest>> getSitesWithdata(@Valid @RequestBody List<Long> ids) throws Exception {
@@ -137,8 +195,13 @@ public class SiteDataController {
                     e.setId(siteCalc.getId());
                     e.setContaminationType(siteCalc.getContaminationType());
                     e.setChemicalId(siteCalc.getChemicalId());
-                    e.setChemicalName(siteCalc.getChemicalName());
                     e.setContaminationValue(siteCalc.getContaminationValue());
+
+                    Optional<Toxicity> toxicityOptional = toxicityRepository.findById(siteCalc.getChemicalId());
+                    if(toxicityOptional.isPresent()) {
+                        e.setChemicalName(toxicityOptional.get().getChemicalName());
+                    }
+
                     contaLst.add(e);
                 }
             }
@@ -147,57 +210,18 @@ public class SiteDataController {
 
             siteRegisterRequest.setSiteContaminant(contaLst);
             siteRegisterRequest.setT1(siteCalculationT1(id));
-            siteRegisterRequest.setT2(t2);
             siteRegisterRequest.setT3(siteCalculationT3(id, t2));
+
+            t2.remove("MeanCR");
+            t2.remove("MeanNCR");
+            t2.remove("SAMPLESIZE");
+
+            siteRegisterRequest.setT2(t2);
             responseList.add(siteRegisterRequest);
         }
 
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
-
-    @GetMapping("/site/{id}")
-    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public ResponseEntity<SiteRegisterRequest> getSiteData(@PathVariable("id") Long id) throws Exception {
-
-        //Site result = siteDataRepository.findBySiteId(siteRegisterRequest.getSiteId());
-        Optional<Site> siteDtl = siteDataRepository.findById(id);
-        if (!siteDtl.isPresent()) {
-            throw new Exception("Site Data Not Available");
-        }
-        Site result = siteDtl.get();
-        SiteRegisterRequest siteRegisterRequest = new SiteRegisterRequest();
-        siteRegisterRequest.setId(id);
-        siteRegisterRequest.setOrgName(result.getSiteOrg());
-        siteRegisterRequest.setSiteLocation(result.getSiteLocation());
-        siteRegisterRequest.setSiteName(result.getSiteName());
-        siteRegisterRequest.setState(result.getSiteState());
-
-        List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
-
-        List<SiteContaminantData> contaLst = new ArrayList<SiteContaminantData>();
-        SiteContaminantData e = null;
-        if (siteContamiData != null && !siteContamiData.isEmpty()) {
-            for (SiteCalculation siteCalc : siteContamiData) {
-                e = new SiteContaminantData();
-                e.setActiveYN(siteCalc.getActiveYN());
-                e.setId(siteCalc.getId());
-                e.setContaminationType(siteCalc.getContaminationType());
-                e.setChemicalId(siteCalc.getChemicalId());
-                e.setChemicalName(siteCalc.getChemicalName());
-                e.setContaminationValue(siteCalc.getContaminationValue());
-                contaLst.add(e);
-            }
-        }
-
-        Map<String, Map<String, Double>> t2 = siteCalculationT2(id);
-
-        siteRegisterRequest.setSiteContaminant(contaLst);
-        siteRegisterRequest.setT1(siteCalculationT1(id));
-        siteRegisterRequest.setT2(t2);
-        siteRegisterRequest.setT3(siteCalculationT3(id, t2));
-        return new ResponseEntity<SiteRegisterRequest>(siteRegisterRequest, HttpStatus.OK);
-    }
-
 
     public Map<String, Double> siteCalculationT1(Long id) throws Exception {
         Map<Long, Toxicity> chemicalData = chemicalController.getChemicalsData();

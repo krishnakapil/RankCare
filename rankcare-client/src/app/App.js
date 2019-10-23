@@ -21,6 +21,7 @@ import ToxicityData from '../home/ToxicityData';
 import ConsumptionData from '../home/ConsumptionData';
 import SiteData from '../home/SiteData'
 import SiteDetails from '../home/SiteDetails'
+import CompareSites from '../home/CompareSites'
 
 import { Layout, notification } from 'antd';
 const { Content, Footer } = Layout;
@@ -141,6 +142,11 @@ class App extends Component {
               <Route exact path="/site-details"
                 render={(props) => this.state.isAuthenticated && this.state.currentUser ?
                   <SiteDetails currentUser={this.state.currentUser} {...props} /> :
+                  <Redirect to="/" />}>
+              </Route>
+              <Route exact path="/site-compare"
+                render={(props) => this.state.isAuthenticated && this.state.currentUser ?
+                  <CompareSites currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>
               </Route>
               <Route component={NotFound}></Route>

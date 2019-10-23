@@ -1,9 +1,26 @@
 
+  .page-header {
+    position: fixed;
+    width: 100%;
+    box-shadow: 0 2px 8px #f0f1f2;
+    z-index: 10;
+    padding: 0;
+    height: 161px;
+    background: #00a94f url("../header_bg.png") 50% 0; 
+  }
+  
   .app-title-img{
     float: left;
     padding-left: 40px;
     max-height:50px;
     padding-top: 10px;
+    width: auto;
+  }
+
+  .crc-title-img{
+    float: left;
+    padding-left: 40px;
+    max-height:125px;
     width: auto;
   }
   
@@ -13,7 +30,23 @@
     box-shadow: 0 2px 8px #f0f1f2;
     z-index: 10;
     padding: 0;
+    margin-top: 120px;
     background-color: #ffffff;
+  }
+
+  .headertagline {
+    float: right;
+    position: relative;
+    top: 35px;
+    background: transparent;
+    color: #fff;
+    font-weight: 700;
+    font-family: "PT Sans";
+    font-style: italic;
+    width: 500px;
+    text-align: right;
+    padding-right: 100px;
+    text-shadow: 2px 2px 4px #333; 
   }
   
   .app-menu {

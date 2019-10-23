@@ -4,8 +4,8 @@ import {
     withRouter
 } from 'react-router-dom';
 import './AppHeader.css';
-import logoIcon from '../logo.svg';
 import mainLogo from '../logo.png';
+import crcLogo from '../crc_logo.png';
 import { Layout, Menu, Dropdown, Icon } from 'antd';
 const Header = Layout.Header;
 
@@ -23,18 +23,24 @@ class AppHeader extends Component {
 
     render() {
         return (
-            <Header className="app-header">
-                <div className="container">
-                    <div>
-                        <Link to="/">
-                            <img className="app-title-img" src={mainLogo} alt="rankCare"/>
-                        </Link>
-                    </div>
-                    {this.props.currentUser &&
-                        this.renderMenu()
-                    }
+            <div>
+                <div className="page-header">
+                    <img className="crc-title-img" src={crcLogo} alt="rankCare" />
+                    <div className="headertagline">CRC CARE brings together industry, government, science and engineering to prevent, assess and clean up environmental contamination</div>
                 </div>
-            </Header>
+                <Header className="app-header">
+                    <div className="container">
+                        <div>
+                            <Link to="/">
+                                <img className="app-title-img" src={mainLogo} alt="rankCare" />
+                            </Link>
+                        </div>
+                        {this.props.currentUser &&
+                            this.renderMenu()
+                        }
+                    </div>
+                </Header>
+            </div>
         );
     }
 
@@ -45,11 +51,6 @@ class AppHeader extends Component {
                 <Menu.Item key="/">
                     <Link to="/">
                         <Icon type="home" className="nav-icon" />
-                    </Link>
-                </Menu.Item>,
-                <Menu.Item key="/poll/new">
-                    <Link to="/poll/new">
-                        <img src={logoIcon} alt="poll" className="poll-icon" />
                     </Link>
                 </Menu.Item>,
                 <Menu.Item key="/profile" className="profile-menu">
@@ -84,9 +85,6 @@ function ProfileDropdownMenu(props) {
                 </div>
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="profile" className="dropdown-item">
-                <Link to={`/users/${props.currentUser.username}`}>Profile</Link>
-            </Menu.Item>
             <Menu.Item key="logout" className="dropdown-item">
                 Logout
       </Menu.Item>

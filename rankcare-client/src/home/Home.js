@@ -18,6 +18,7 @@ class Home extends Component {
             <div className="home-container">
                 {this.renderTitle()}
                 {this.renderHomeView()}
+                {this.renderAboutPoints()}
             </div>
         );
     }
@@ -32,6 +33,25 @@ class Home extends Component {
                 <h1 className="page-title">Home</h1>
             )
         }
+    }
+
+    renderAboutPoints() {
+        return (
+            <div className="about-points-box">
+                <ol>
+                    <li><strong><a href="https://www.crccare.com/our-research/program-1-policy" target="_blank">Best Practice Policy</a></strong><strong>: </strong><em>More
+                    effective, efficient and certain national policy for assessing and remediating
+contamination</em></li>
+                    <li style={{marginTop:'16px'}}><a href="https://www.crccare.com/our-research/program-2-measurement" target="_blank"><strong>Better Measurement</strong></a>: <em>More
+accurate, rapid, reliable and cost-effective measurement and assessment</em></li>
+                    <li style={{marginTop:'16px'}}><strong><a href="https://www.crccare.com/our-research/program-3-risk-assessment" target="_blank">Minimising Uncertainty in Risk Assessment</a>: </strong><em>New
+                    technology, methods and knowledge for assessing risks to human health and the
+environment</em></li>
+                    <li style={{marginTop:'16px'}}><strong><a href="https://www.crccare.com/our-research/program-4-remediation" target="_blank">Cleaning Up</a>: </strong><em>Innovative clean-up technologies and a wider
+range of effective management options</em></li>
+                </ol>
+            </div>
+        )
     }
 
     renderHomeView() {

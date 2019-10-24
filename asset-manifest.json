@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/rankcare-client/static/css/main.97b1fdfc.chunk.css",
+    "main.js": "/rankcare-client/static/js/main.9decd73a.chunk.js",
+    "main.js.map": "/rankcare-client/static/js/main.9decd73a.chunk.js.map",
+    "runtime~main.js": "/rankcare-client/static/js/runtime~main.09430ab2.js",
+    "runtime~main.js.map": "/rankcare-client/static/js/runtime~main.09430ab2.js.map",
+    "static/css/2.09496823.chunk.css": "/rankcare-client/static/css/2.09496823.chunk.css",
+    "static/js/2.cac407d6.chunk.js": "/rankcare-client/static/js/2.cac407d6.chunk.js",
+    "static/js/2.cac407d6.chunk.js.map": "/rankcare-client/static/js/2.cac407d6.chunk.js.map",
+    "index.html": "/rankcare-client/index.html",
+    "precache-manifest.63d8a8dddeb24889b7ffb7cbdc6cb516.js": "/rankcare-client/precache-manifest.63d8a8dddeb24889b7ffb7cbdc6cb516.js",
+    "service-worker.js": "/rankcare-client/service-worker.js",
+    "static/css/2.09496823.chunk.css.map": "/rankcare-client/static/css/2.09496823.chunk.css.map",
+    "static/css/main.97b1fdfc.chunk.css.map": "/rankcare-client/static/css/main.97b1fdfc.chunk.css.map",
+    "static/media/crc_logo.png": "/rankcare-client/static/media/crc_logo.f3669c91.png",
+    "static/media/AppHeader.css": "/rankcare-client/static/media/header_bg.240c7548.png",
+    "static/media/logo.png": "/rankcare-client/static/media/logo.be5ea3ab.png"
+  }
+}

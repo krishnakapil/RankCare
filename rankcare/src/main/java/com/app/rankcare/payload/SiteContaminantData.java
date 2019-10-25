@@ -13,7 +13,27 @@ public class SiteContaminantData {
 
 	private String contaminationValue;
 	
-	private String activeYN; 
+	private String activeYN;
+
+	private String measuringUnit;
+
+	private String valueWithUnit;
+
+	public String getValueWithUnit() {
+		return valueWithUnit;
+	}
+
+	public void setValueWithUnit(String valueWithUnit) {
+		this.valueWithUnit = valueWithUnit;
+	}
+
+	public String getMeasuringUnit() {
+		return measuringUnit;
+	}
+
+	public void setMeasuringUnit(String measuringUnit) {
+		this.measuringUnit = measuringUnit;
+	}
 
 	public Long getId() {
 		return id;

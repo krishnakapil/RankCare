@@ -57,7 +57,7 @@ public class SiteDataController {
         if (siteRegisterRequest.getSiteContaminant() != null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
-                res = siteCalculationRepository.save(new SiteCalculation(result.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), "Y"));
+                res = siteCalculationRepository.save(new SiteCalculation(result.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), "Y"));
                 logger.info("Data Saved>" + res);
             }
         }
@@ -78,9 +78,9 @@ public class SiteDataController {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
                 if (contaminantData.getId() != null) {
-                    res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(), siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getActiveYN()));
+                    res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(), siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), contaminantData.getActiveYN()));
                 } else {
-                    res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), "Y"));
+                    res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), "Y"));
                 }
                 logger.info("Data Saved>" + res);
             }
@@ -116,10 +116,10 @@ public class SiteDataController {
 
     @GetMapping("/site/{id}")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public ResponseEntity<SiteRegisterRequest> getSitesWithdata(@PathVariable("id")  Long id) throws Exception {
+    public ResponseEntity<SiteRegisterRequest> getSitesWithdata(@PathVariable("id") Long id) throws Exception {
         Optional<Site> siteOptional = siteDataRepository.findById(id);
 
-        if(!siteOptional.isPresent()) {
+        if (!siteOptional.isPresent()) {
             return null;
         }
 
@@ -144,9 +144,11 @@ public class SiteDataController {
                 e.setContaminationType(siteCalc.getContaminationType());
                 e.setChemicalId(siteCalc.getChemicalId());
                 e.setContaminationValue(siteCalc.getContaminationValue());
+                e.setMeasuringUnit(siteCalc.getMeasuringUnit());
+                e.setValueWithUnit(siteCalc.getContaminationValue() + " " + siteCalc.getMeasuringUnit());
 
                 Optional<Toxicity> toxicityOptional = toxicityRepository.findById(siteCalc.getChemicalId());
-                if(toxicityOptional.isPresent()) {
+                if (toxicityOptional.isPresent()) {
                     e.setChemicalName(toxicityOptional.get().getChemicalName());
                 }
 
@@ -198,7 +200,7 @@ public class SiteDataController {
                     e.setContaminationValue(siteCalc.getContaminationValue());
 
                     Optional<Toxicity> toxicityOptional = toxicityRepository.findById(siteCalc.getChemicalId());
-                    if(toxicityOptional.isPresent()) {
+                    if (toxicityOptional.isPresent()) {
                         e.setChemicalName(toxicityOptional.get().getChemicalName());
                     }
 
@@ -235,9 +237,9 @@ public class SiteDataController {
             for (SiteCalculation siteCalc : siteContamiData) {
                 t = chemicalData.get(siteCalc.getChemicalId());
                 if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                    tw += Double.valueOf(siteCalc.getContaminationValue()) / Double.valueOf(t.getWaterGuideline());
+                    tw += siteCalc.getContaminationValueInMilli() / Double.valueOf(t.getWaterGuideline());
                 } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                    ts += Double.valueOf(siteCalc.getContaminationValue()) / Double.valueOf(t.getSoilGuideline());
+                    ts += siteCalc.getContaminationValueInMilli() / Double.valueOf(t.getSoilGuideline());
                 }
             }
         }
@@ -267,9 +269,9 @@ public class SiteDataController {
                     val = 0d;
                     t = chemicalData.get(siteCalc.getChemicalId());
                     if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = Double.valueOf(siteCalc.getContaminationValue()) * Double.valueOf(consumptionData.get(c).getWaterConsAvg());
+                        val = siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getWaterConsAvg());
                     } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = Double.valueOf(siteCalc.getContaminationValue()) * Double.valueOf(consumptionData.get(c).getSoilInvAvg());
+                        val = siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg());
                     }
                     valNCRStr += val / Double.valueOf(t.getDosageRef()) + "~";
                     valCRStr += val * Double.valueOf(t.getCancerSlopeFactor()) + "~";

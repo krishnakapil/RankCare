@@ -32,8 +32,8 @@ class SiteDetails extends Component {
                 },
                 {
                     title: 'Contamination Value',
-                    dataIndex: 'contaminationValue',
-                    key: 'contaminationValue',
+                    dataIndex: 'valueWithUnit',
+                    key: 'valueWithUnit',
                 },
             ]
         }

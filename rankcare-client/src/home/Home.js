@@ -37,6 +37,8 @@ class Home extends Component {
 
     renderAboutPoints() {
         return (
+            <div>
+                <h3 className="about-title">CRC Care Innovative Research Programs</h3>
             <div className="about-points-box">
                 <ol>
                     <li><strong><a href="https://www.crccare.com/our-research/program-1-policy" target="_blank">Best Practice Policy</a></strong><strong>: </strong><em>More
@@ -50,6 +52,7 @@ environment</em></li>
                     <li style={{marginTop:'16px'}}><strong><a href="https://www.crccare.com/our-research/program-4-remediation" target="_blank">Cleaning Up</a>: </strong><em>Innovative clean-up technologies and a wider
 range of effective management options</em></li>
                 </ol>
+            </div>
             </div>
         )
     }

@@ -32,7 +32,7 @@ class ToxicityData extends Component {
                     key: 'chemicalFormula',
                 },
                 {
-                    title: 'Soil Guideline',
+                    title: 'Soil Guideline (mg/kg)',
                     dataIndex: 'soilGuideline',
                     key: 'soilGuideline',
                 },
@@ -42,7 +42,7 @@ class ToxicityData extends Component {
                     key: 'soilRef',
                 },
                 {
-                    title: 'Water Guideline',
+                    title: 'Water Guideline (mg/ltr)',
                     dataIndex: 'waterGuideline',
                     key: 'waterGuideline',
                 },
@@ -97,7 +97,7 @@ class ToxicityData extends Component {
                     key: 'chemicalFormula',
                 },
                 {
-                    title: 'Soil Guideline',
+                    title: 'Soil Guideline (mg/kg)',
                     dataIndex: 'soilGuideline',
                     key: 'soilGuideline',
                 },
@@ -107,7 +107,7 @@ class ToxicityData extends Component {
                     key: 'soilRef',
                 },
                 {
-                    title: 'Water Guideline',
+                    title: 'Water Guideline (mg/ltr)',
                     dataIndex: 'waterGuideline',
                     key: 'waterGuideline',
                 },

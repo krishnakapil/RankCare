@@ -28,6 +28,7 @@ class ChemicalInput extends React.Component {
       chemicalName : chemicals[0].chemicalName || "",
       contaminationValue: value.contaminationValue || 0,
       contaminationType: value.contaminationType || 'soil',
+      measuringUnit : value.measuringUnit || 'gm'
     };
   }
 
@@ -47,6 +48,13 @@ class ChemicalInput extends React.Component {
       this.setState({ contaminationType });
     }
     this.triggerChange({ contaminationType });
+  };
+
+  handleChemicalUnitChange = measuringUnit => {
+    if (!('value' in this.props)) {
+      this.setState({ measuringUnit });
+    }
+    this.triggerChange({ measuringUnit });
   };
 
   handleChemicalChange = chemical_id => {
@@ -79,13 +87,13 @@ class ChemicalInput extends React.Component {
 
   render() {
     const { size } = this.props;
-    const { chemicalOptions, chemicalId, contaminationType, contaminationValue } = this.state;
+    const { measuringUnit, chemicalOptions, chemicalId, contaminationType, contaminationValue } = this.state;
     return (
       <span>
         <Select
           value={contaminationType}
           size={size}
-          style={{ width: '22%', marginRight: '3%' }}
+          style={{ width: '18%', marginRight: '2%' }}
           onChange={this.handleContaminationTypeChange}
         >
           <Option value="soil">Soil</Option>
@@ -94,7 +102,7 @@ class ChemicalInput extends React.Component {
         <Select
           value={chemicalId}
           size={size}
-          style={{ width: '42%', marginRight: '3%' }}
+          style={{ width: '28%', marginRight: '2%' }}
           onChange={this.handleChemicalChange}
         >
           {chemicalOptions}
@@ -104,8 +112,18 @@ class ChemicalInput extends React.Component {
           size={size}
           value={contaminationValue}
           onChange={this.handleNumberChange}
-          style={{ width: this.props.showRemove ? '20%' : '30%', marginRight : this.props.showRemove ? '5%' : '0' }}
+          style={{ width: '20%', marginRight: '2%' }}
         />
+        <Select
+          value={measuringUnit}
+          size={size}
+          style={{ width: this.props.showRemove ? '20%' : '28%', marginRight : this.props.showRemove ? '5%' : '0' }}
+          onChange={this.handleChemicalUnitChange}
+        >
+          <Option value="gm">gram</Option>
+          <Option value="mg">milligram</Option>
+          <Option value="μg">microgram</Option>
+        </Select>
       </span>
     );
   }

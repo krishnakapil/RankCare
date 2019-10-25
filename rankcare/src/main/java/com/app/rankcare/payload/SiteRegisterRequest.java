@@ -10,22 +10,21 @@ public class SiteRegisterRequest {
     private Long id;
 
     @NotBlank
-    @Size(min = 4, max = 40)
+    @Size(max = 40)
     private String siteName;
 
     @NotBlank
-    @Size(min = 3, max = 40)
     private String siteLocation;
 
     @NotBlank
     @Size(max = 40)
     private String state;
 
-    @Size(min = 2, max = 15)
+    @Size(max = 15)
     private String siteId;
 
     @NotBlank
-    @Size(min = 3, max = 40)
+    @Size(max = 40)
     private String orgName;
 
     private List<SiteContaminantData> siteContaminant;

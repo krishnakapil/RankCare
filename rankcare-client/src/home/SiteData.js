@@ -218,26 +218,15 @@ class SiteData extends Component {
 
     renderNavigationButtons() {
         const hasSelected = this.state.selectedRowKeys.length > 0;
-        const isAdmin = this.state.isAdmin;
 
-        if (isAdmin) {
-            return (
-                [
-                    <Button key="2" type="primary" onClick={this.compareSites} disabled={!hasSelected} loading={this.state.loading}>
-                        Compare
-                    </Button>,
-                    <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
-                ]
-            )
-        } else {
-            return (
-                [
-                    <Button key="2" type="primary" onClick={this.compareSites} disabled={!hasSelected} loading={this.state.loading}>
-                        Compare
-                    </Button>,
-                ]
-            )
-        }
+        return (
+            [
+                <Button key="2" type="primary" onClick={this.compareSites} disabled={!hasSelected} loading={this.state.loading}>
+                    Compare
+                </Button>,
+                <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
+            ]
+        )
     }
 
     handleDelete(id) {

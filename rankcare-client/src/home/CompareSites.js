@@ -92,18 +92,15 @@ class CompareSites extends Component {
     renderTierOneChart() {
         const sitesData = this.state.sitesData;
         if (sitesData && sitesData.length > 0) {
-            const fields = sitesData.map((site) => this.getSiteNameKey(site));
-            const types = ["Water", "Soil"];
+            const fields = ["Water", "Soil"];
+            const types = sitesData.map((site) => this.getSiteNameKey(site));
             const data = [];
 
-            for (const [index, type] of types.entries()) {
+            for (const [index, site] of sitesData.entries()) {
                 var typeData = {}
-                typeData.name = type
-
-                // For Each site
-                for (const [index, site] of sitesData.entries()) {
-                    typeData[this.getSiteNameKey(site)] = site.t1[type]
-                }
+                typeData.name = this.getSiteNameKey(site);
+                typeData["Water"] = site.t1["Water"]
+                typeData["Soil"] = site.t1["Soil"]
 
                 data.push(typeData)
             }
@@ -118,35 +115,29 @@ class CompareSites extends Component {
         const sitesData = this.state.sitesData;
         if (sitesData && sitesData.length > 1) {
             const ageGroups = ['0-3', '3-6', '6-10', '10-18', '18+'];
+            const fields = ["NCR", "CR"];
             const dataByAgeGroup = {};
 
-            for (const [index, ageGrp] of ageGroups.entries()) {
-                dataByAgeGroup[ageGrp] = [];
-                const ncr = { name: "NCR" };
-                const cr = { name: "CR" };
-                dataByAgeGroup[ageGrp].push(ncr);
-                dataByAgeGroup[ageGrp].push(cr);
-            }
+            for (const [i, ageGrp] of ageGroups.entries()) {
+                var data = [];
 
-            const fields = [];
-
-            for (const [index, siteData] of sitesData.entries()) {
-                const siteNameKey = this.getSiteNameKey(siteData);
-                fields.push(siteNameKey);
-
-                const t2Data = siteData.t2;
-
-                for (const [index, ageGrp] of ageGroups.entries()) {
-                    const data = dataByAgeGroup[ageGrp];
+                for (const [index, siteData] of sitesData.entries()) {
+                    const siteNameKey = this.getSiteNameKey(siteData);
+                    const t2Data = siteData.t2;
                     const ageGroupData = t2Data[ageGrp];
 
-                    if (ageGroupData) {
-                        data[0][siteNameKey] = ageGroupData.NCR;
-                        data[1][siteNameKey] = ageGroupData.CR;
+                    var siteInfo = {};
+                    siteInfo.name = siteNameKey;
+
+                    if(ageGroupData) {
+                        siteInfo["NCR"] = ageGroupData.NCR;
+                        siteInfo["CR"] = ageGroupData.CR;
                     }
 
-                    dataByAgeGroup[ageGrp] = data;
+                    data.push(siteInfo);
                 }
+
+                dataByAgeGroup[ageGrp] = data;
             }
 
             const views = []
@@ -168,37 +159,31 @@ class CompareSites extends Component {
         const sitesData = this.state.sitesData;
         if (sitesData && sitesData.length > 1) {
             const ageGroups = ['0-3', '3-6', '6-10', '10-18', '18+'];
+            const fields = ["NCR", "CR"];
             const dataByAgeGroup = {};
 
-            for (const [index, ageGrp] of ageGroups.entries()) {
-                dataByAgeGroup[ageGrp] = [];
-                const ncr = { name: "NCR" };
-                const cr = { name: "CR" };
-                dataByAgeGroup[ageGrp].push(ncr);
-                dataByAgeGroup[ageGrp].push(cr);
-            }
+            for (const [i, ageGrp] of ageGroups.entries()) {
+                var data = [];
 
-            const fields = [];
-
-            for (const [index, siteData] of sitesData.entries()) {
-                const siteNameKey = this.getSiteNameKey(siteData);
-                fields.push(siteNameKey);
-
-                const t3Data = siteData.t3;
-
-                for (const [index, ageGrp] of ageGroups.entries()) {
-                    const data = dataByAgeGroup[ageGrp];
+                for (const [index, siteData] of sitesData.entries()) {
+                    const siteNameKey = this.getSiteNameKey(siteData);
+                    const t3Data = siteData.t3;
                     const ageGroupData = t3Data[ageGrp];
 
-                    if (ageGroupData) {
-                        data[0][siteNameKey] = ageGroupData.NCR;
-                        data[1][siteNameKey] = ageGroupData.CR;
+                    var siteInfo = {};
+                    siteInfo.name = siteNameKey;
+
+                    if(ageGroupData) {
+                        siteInfo["NCR"] = ageGroupData.NCR;
+                        siteInfo["CR"] = ageGroupData.CR;
                     }
 
-                    dataByAgeGroup[ageGrp] = data;
+                    data.push(siteInfo);
                 }
-            }
 
+                dataByAgeGroup[ageGrp] = data;
+            }
+            
             const views = []
 
             for (const [index, ageGrp] of ageGroups.entries()) {

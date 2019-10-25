@@ -46,7 +46,7 @@ class RankChart extends Component {
     return (
       <div>
         <Chart width={1000} height={500} data={dv} forceFit onPlotClick={evt => {
-          this.props.onSiteClicked(evt.data._origin["X-Axis"]);
+          this.props.onSiteClicked(evt.data._origin.name);
         }} >
           <Axis name="X-Axis" />
           <Axis name="Tier Value" />

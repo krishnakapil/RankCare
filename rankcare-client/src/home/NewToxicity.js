@@ -129,7 +129,7 @@ class NewToxicity extends Component {
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item
-                        label="Soil Guideline">
+                        label="Soil Guideline (mg/kg)">
                         {getFieldDecorator('soilGuideline', {
                             rules: [
                                 { required: true, message: 'Please input Soil Guideline!' },
@@ -145,7 +145,7 @@ class NewToxicity extends Component {
                             ],
                         })(<Input />)}
                     </Form.Item>
-                    <Form.Item label="Water Guideline">
+                    <Form.Item label="Water Guideline (mg/ltr)">
                         {getFieldDecorator('waterGuideline', {
                             rules: [
                                 { required: true, message: 'Please input Water Guideline!' },

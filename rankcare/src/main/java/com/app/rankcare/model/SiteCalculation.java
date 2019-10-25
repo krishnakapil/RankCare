@@ -43,28 +43,33 @@ public class SiteCalculation extends DateAudit {
     @Column(name = "active_yn")
     private String activeYN;
 
+    @Column(name = "measuring_unit")
+    private String measuringUnit;
+
     public SiteCalculation() {
 
     }
 
     public SiteCalculation(Long siteId, Long chemicalId, String contaminationType,
-                           String contaminationValue, String activeYN) {
+                           String contaminationValue, String measuringUnit, String activeYN) {
         super();
         this.siteId = siteId;
         this.chemicalId = chemicalId;
         this.contaminationType = contaminationType;
         this.contaminationValue = contaminationValue;
+        this.measuringUnit = measuringUnit;
         this.activeYN = activeYN;
     }
 
     public SiteCalculation(Long id, Long siteId, Long chemicalId, String contaminationType,
-                           String contaminationValue, String activeYN) {
+                           String contaminationValue, String measuringUnit, String activeYN) {
         super();
         this.id = id;
         this.siteId = siteId;
         this.chemicalId = chemicalId;
         this.contaminationType = contaminationType;
         this.contaminationValue = contaminationValue;
+        this.measuringUnit = measuringUnit;
         this.activeYN = activeYN;
     }
 
@@ -113,6 +118,19 @@ public class SiteCalculation extends DateAudit {
         return contaminationValue;
     }
 
+    public Double getContaminationValueInMilli() {
+        Double value = Double.parseDouble(contaminationValue);
+
+        // Micro to Milli
+        if (measuringUnit.equalsIgnoreCase("μg")) {
+            value = value * 0.001;
+        } else if (measuringUnit.equalsIgnoreCase("gm")) { // Gm to milli
+            value = value * 1000;
+        }
+
+        return value;
+    }
+
     public void setContaminationValue(String contaminationValue) {
         this.contaminationValue = contaminationValue;
     }
@@ -125,4 +143,11 @@ public class SiteCalculation extends DateAudit {
         this.activeYN = activeYN;
     }
 
+    public String getMeasuringUnit() {
+        return measuringUnit;
+    }
+
+    public void setMeasuringUnit(String measuringUnit) {
+        this.measuringUnit = measuringUnit;
+    }
 }

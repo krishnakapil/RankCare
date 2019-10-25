@@ -27,7 +27,7 @@ class ConsumptionData extends Component {
                     sortDirections: ['descend', 'ascend'],
                 },
                 {
-                    title: 'Body Weight Avg',
+                    title: 'Body Weight Avg (Kg)',
                     dataIndex: 'bodyWtAvg',
                     key: 'bodyWtAvg',
                 },
@@ -42,12 +42,12 @@ class ConsumptionData extends Component {
                     key: 'ciData2',
                 },
                 {
-                    title: 'Soil In Avg',
+                    title: 'Avg Soil Ingestion (mg/day)',
                     dataIndex: 'soilInvAvg',
                     key: 'soilInvAvg',
                 },
                 {
-                    title: 'Water Consumption Avg',
+                    title: 'Avg Water Consumption (ltr/day)',
                     dataIndex: 'waterConsAvg',
                     key: 'waterConsAvg',
                 },
@@ -72,7 +72,7 @@ class ConsumptionData extends Component {
                     sortDirections: ['descend', 'ascend'],
                 },
                 {
-                    title: 'Body Weight Avg',
+                    title: 'Body Weight Avg (Kg)',
                     dataIndex: 'bodyWtAvg',
                     key: 'bodyWtAvg',
                 },
@@ -87,12 +87,12 @@ class ConsumptionData extends Component {
                     key: 'ciData2',
                 },
                 {
-                    title: 'Soil In Avg',
+                    title: 'Avg Soil Ingestion (mg/day)',
                     dataIndex: 'soilInvAvg',
                     key: 'soilInvAvg',
                 },
                 {
-                    title: 'Water Consumption Avg',
+                    title: 'Avg Water Consumption (ltr/day)',
                     dataIndex: 'waterConsAvg',
                     key: 'waterConsAvg',
                 },

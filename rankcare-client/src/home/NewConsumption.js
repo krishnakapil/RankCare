@@ -134,7 +134,7 @@ class NewConsumption extends Component {
                         )}
                     </Form.Item>
                     <Form.Item
-                        label="Body Weight Avg">
+                        label="Body Weight Avg (Kg)">
                         {getFieldDecorator('bodyWtAvg', {
                             rules: [
                                 { required: true, message: 'Please input Body Weight Average!' },
@@ -160,7 +160,7 @@ class NewConsumption extends Component {
                         })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item
-                        label="Soil In Avg">
+                        label="Avg Soil Ingestion (mg/day)">
                         {getFieldDecorator('soilInvAvg', {
                             rules: [
                                 { required: true, message: 'Please input Soil In Avg!' },
@@ -168,7 +168,7 @@ class NewConsumption extends Component {
                             ],
                         })(<InputNumber />)}
                     </Form.Item>
-                    <Form.Item label="Water Consumption Avg">
+                    <Form.Item label="Avg Water Consumption (ltr/day)">
                         {getFieldDecorator('waterConsAvg', {
                             rules: [
                                 { required: true, message: 'Please input Water Consumption Avg!' },

@@ -178,7 +178,7 @@ class NewSite extends Component {
 
         return (
             <Modal
-                width="600px"
+                width="800px"
                 title={this.props.isEdit ? "Edit Site Data" : "Add Site Data"}
                 visible={visible}
                 onOk={this.handleOkClick}

@@ -170,6 +170,7 @@ class NewSite extends Component {
                     index > 0 ? <Icon
                         className="dynamic-delete-button"
                         type="minus-circle-o"
+                        style={{ marginLeft: 24 }}
                         onClick={() => this.remove(k)}
                     /> : null
                 }

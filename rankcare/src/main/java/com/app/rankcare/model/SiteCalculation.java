@@ -119,16 +119,7 @@ public class SiteCalculation extends DateAudit {
     }
 
     public Double getContaminationValueInMilli() {
-        Double value = Double.parseDouble(contaminationValue);
-
-        // Micro to Milli
-        if (measuringUnit.equalsIgnoreCase("μg")) {
-            value = value * 0.001;
-        } else if (measuringUnit.equalsIgnoreCase("gm")) { // Gm to milli
-            value = value * 1000;
-        }
-
-        return value;
+        return Double.parseDouble(contaminationValue);
     }
 
     public void setContaminationValue(String contaminationValue) {

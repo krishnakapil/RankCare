@@ -19,9 +19,10 @@ import LoadingIndicator from '../common/LoadingIndicator';
 import UserList from '../home/UserList';
 import ToxicityData from '../home/ToxicityData';
 import ConsumptionData from '../home/ConsumptionData';
-import SiteData from '../home/SiteData'
-import SiteDetails from '../home/SiteDetails'
-import CompareSites from '../home/CompareSites'
+import SiteData from '../home/SiteData';
+import SiteDetails from '../home/SiteDetails';
+import CompareSites from '../home/CompareSites';
+import Signup from '../user/signup/Signup';
 
 import { Layout, notification } from 'antd';
 const { Content, Footer } = Layout;
@@ -38,6 +39,7 @@ class App extends Component {
     this.loadCurrentUser = this.loadCurrentUser.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleDetails = this.handleDetails.bind(this);
+    this.handleRequestAccess = this.handleRequestAccess.bind(this);
 
     notification.config({
       placement: 'topRight',
@@ -98,6 +100,10 @@ class App extends Component {
 
   }
 
+  handleRequestAccess() {
+    this.props.history.push("/");
+  }
+
   render() {
     if (this.state.isLoading) {
       return <LoadingIndicator />
@@ -118,7 +124,7 @@ class App extends Component {
               </Route>
               <Route path="/login"
                 render={(props) => <Login onLogin={this.handleLogin} {...props} />}></Route>
-              {/* <Route path="/signup" component={Signup}></Route> */}
+              <Route path="/signup" render={(props) => <Signup onRequestAccess={this.handleRequestAccess} {...props}/>}></Route>
               <Route exact path="/manage-users"
                 render={(props) => this.state.isAuthenticated && this.state.currentUser && this.state.currentUser.isAdmin ?
                   <UserList currentUser={this.state.currentUser} {...props} /> :

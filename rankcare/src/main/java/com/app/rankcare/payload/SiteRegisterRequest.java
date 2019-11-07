@@ -17,11 +17,7 @@ public class SiteRegisterRequest {
     private String siteLocation;
 
     @NotBlank
-    @Size(max = 40)
-    private String state;
-
-    @Size(max = 15)
-    private String siteId;
+    private Long projectId;
 
     @NotBlank
     @Size(max = 40)
@@ -59,20 +55,12 @@ public class SiteRegisterRequest {
         this.siteLocation = siteLocation;
     }
 
-    public String getState() {
-        return state;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getSiteId() {
-        return siteId;
-    }
-
-    public void setSiteId(String siteId) {
-        this.siteId = siteId;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public String getOrgName() {

@@ -44,16 +44,14 @@ public class SiteDataController {
     @Autowired
     private ConsumptionController consumptionController;
 
-
     private static final Logger logger = LoggerFactory.getLogger(SiteDataController.class);
 
     @PostMapping("/site/add")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
     public ResponseEntity<Object> registerSite(@Valid @RequestBody SiteRegisterRequest siteRegisterRequest) {
 
-        Site result = siteDataRepository.save(new Site(siteRegisterRequest.getSiteId(),
-                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(),
-                siteRegisterRequest.getState(), siteRegisterRequest.getOrgName()));
+        Site result = siteDataRepository.save(new Site(siteRegisterRequest.getProjectId(),
+                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(), siteRegisterRequest.getOrgName()));
         if (siteRegisterRequest.getSiteContaminant() != null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
@@ -71,9 +69,8 @@ public class SiteDataController {
         if (siteRegisterRequest.getId() == null || siteRegisterRequest.getId() <= 0L) {
             throw new Exception("Id cannot be null or empty");
         }
-        Site result = siteDataRepository.save(new Site(siteRegisterRequest.getId(), siteRegisterRequest.getSiteId(),
-                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(),
-                siteRegisterRequest.getState(), siteRegisterRequest.getOrgName()));
+        Site result = siteDataRepository.save(new Site(siteRegisterRequest.getId(), siteRegisterRequest.getProjectId(),
+                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(), siteRegisterRequest.getOrgName()));
         if (siteRegisterRequest.getSiteContaminant() != null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
@@ -130,7 +127,6 @@ public class SiteDataController {
         siteRegisterRequest.setOrgName(result.getSiteOrg());
         siteRegisterRequest.setSiteLocation(result.getSiteLocation());
         siteRegisterRequest.setSiteName(result.getSiteName());
-        siteRegisterRequest.setState(result.getSiteState());
 
         List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
 
@@ -184,7 +180,6 @@ public class SiteDataController {
             siteRegisterRequest.setOrgName(result.getSiteOrg());
             siteRegisterRequest.setSiteLocation(result.getSiteLocation());
             siteRegisterRequest.setSiteName(result.getSiteName());
-            siteRegisterRequest.setState(result.getSiteState());
 
             List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
 

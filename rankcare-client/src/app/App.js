@@ -20,6 +20,7 @@ import UserList from '../home/UserList';
 import ToxicityData from '../home/ToxicityData';
 import ConsumptionData from '../home/ConsumptionData';
 import SiteData from '../home/SiteData';
+import Projects from '../home/Projects';
 import SiteDetails from '../home/SiteDetails';
 import CompareSites from '../home/CompareSites';
 import Signup from '../user/signup/Signup';
@@ -140,7 +141,12 @@ class App extends Component {
                   <ConsumptionData currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>
               </Route>
-              <Route exact path="/sites"
+              <Route exact path="/projects"
+                render={(props) => this.state.isAuthenticated && this.state.currentUser ?
+                  <Projects onDetails={this.handleDetails} currentUser={this.state.currentUser} {...props} /> :
+                  <Redirect to="/" />}>
+              </Route>
+              <Route exact path="/project"
                 render={(props) => this.state.isAuthenticated && this.state.currentUser ?
                   <SiteData onDetails={this.handleDetails} currentUser={this.state.currentUser} {...props} /> :
                   <Redirect to="/" />}>

@@ -213,3 +213,33 @@ export function getSite(id) {
         method: 'GET'
     });
 }
+
+export function getProjects() {
+    return request({
+        url: API_BASE_URL + "/projects",
+        method: 'GET'
+    });
+}
+
+export function createProject(projectRequest) {
+    return request({
+        url: API_BASE_URL + "/project/add",
+        method: 'POST',
+        body: JSON.stringify(projectRequest)
+    });
+}
+
+export function updateProject(projectRequest) {
+    return request({
+        url: API_BASE_URL + "/project/update",
+        method: 'POST',
+        body: JSON.stringify(projectRequest)
+    });
+}
+
+export function deleteProject(id) {
+    return request({
+        url: API_BASE_URL + "/project/" + id,
+        method: 'DELETE'
+    });
+}

@@ -8,8 +8,4 @@ import com.app.rankcare.model.Site;
 @Repository
 public interface SiteDataRepository extends JpaRepository<Site, Long> {
 
-	public Site findBySiteId(String siteId);
-   
-  
-    
 }

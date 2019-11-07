@@ -69,7 +69,7 @@ range of effective management options</em></li>
                         </Col>
                         <Col className="gutter-row" span={6}>
                             <div className="gutter-box">
-                                <Button icon="table" className="gutter-button" onClick={this.handleSitesClicked}>Sites List</Button>
+                                <Button icon="table" className="gutter-button" onClick={this.handleSitesClicked}>Projects List</Button>
                             </div>
                         </Col>
                         <Col className="gutter-row" span={6}>
@@ -91,7 +91,7 @@ range of effective management options</em></li>
                     <Row gutter={16}>
                         <Col className="gutter-row" span={8}>
                             <div className="gutter-box">
-                                <Button icon="table" className="gutter-button" onClick={this.handleSitesClicked}>Sites List</Button>
+                                <Button icon="table" className="gutter-button" onClick={this.handleSitesClicked}>Projects List</Button>
                             </div>
                         </Col>
                         <Col className="gutter-row" span={8}>
@@ -139,7 +139,7 @@ range of effective management options</em></li>
     }
 
     handleSitesClicked() {
-        this.props.history.push("/sites")
+        this.props.history.push("/projects")
     }
 }
 

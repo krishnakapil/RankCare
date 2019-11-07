@@ -8,9 +8,6 @@ import java.util.Optional;
 import com.app.rankcare.model.Role;
 import com.app.rankcare.model.RoleName;
 
-/**
- * Created by rajeevkumarsingh on 02/08/17.
- */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Optional<Role> findByName(RoleName roleName);

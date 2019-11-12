@@ -5,19 +5,23 @@ import {
     Modal,
     Input,
     Icon,
-    notification
+    notification,
+    AutoComplete
 } from 'antd';
 import ChemicalInput from './ChemicalInput';
-import { createSite, updateSite } from '../util/APIUtils';
+import { createSite, updateSite, placesAutoComplete } from '../util/APIUtils';
+const AutoCompleteOption = AutoComplete.Option;
 
 let id = 0;
 
 class NewSite extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             confirmLoading: false,
-            isLoading: false
+            isLoading: false,
+            dataSource: []
         }
         this.handleOkClick = this.handleOkClick.bind(this);
     }
@@ -41,6 +45,7 @@ class NewSite extends Component {
 
             const siteRequest = {
                 "id": this.props.id,
+                "projectId": parseInt(this.props.projectId),
                 "siteName": values.siteName,
                 "siteLocation": values.siteLocation,
                 "state": values.siteState,
@@ -48,27 +53,22 @@ class NewSite extends Component {
                 "siteContaminant": nonNullChemicals
             }
 
-            console.log("Form values " + JSON.stringify(siteRequest));
-
-            // const consumptionRequest = Object.assign({}, values);
-            // consumptionRequest.id = this.props.id
-
             if (isEdit) {
-                // updateSite(consumptionRequest)
-                //     .then(response => {
-                //         this.setState({
-                //             confirmLoading: false,
-                //             isLoading: false
-                //         });
-                //         this.props.form.resetFields();
-                //         this.props.onCreate();
-                //     }).catch(error => {
-                //         this.setState({ isLoading: false });
-                //         notification.error({
-                //             message: 'rankCare',
-                //             description: error.message || 'Sorry! Something went wrong. Please try again!'
-                //         });
-                //     });
+                updateSite(siteRequest)
+                    .then(response => {
+                        this.setState({
+                            confirmLoading: false,
+                            isLoading: false
+                        });
+                        this.props.form.resetFields();
+                        this.props.onCreate();
+                    }).catch(error => {
+                        this.setState({ isLoading: false });
+                        notification.error({
+                            message: 'rankCare',
+                            description: error.message || 'Sorry! Something went wrong. Please try again!'
+                        });
+                    });
             } else {
                 createSite(siteRequest)
                     .then(response => {
@@ -126,6 +126,29 @@ class NewSite extends Component {
         });
     };
 
+    onLocationChanged = searchText => {
+        if (!searchText || searchText.length < 3) {
+            this.setState({
+                dataSource: []
+            })
+        } else {
+            placesAutoComplete(searchText)
+                .then(response => {
+                    this.setState({
+                        dataSource: response ? response : []
+                    });
+                }).catch(error => {
+                    this.setState({
+                        dataSource: []
+                    });
+                });
+        }
+    };
+
+    onLocationSelected = searchText => {
+        console.log("On Search " + searchText);
+    };
+
     render() {
         const formItemLayout = {
             labelCol: {
@@ -147,6 +170,7 @@ class NewSite extends Component {
 
         const { visible, onCancel, form } = this.props;
         const { getFieldDecorator, getFieldValue } = form;
+
         getFieldDecorator('keys', { initialValue: [] });
         const keys = getFieldValue('keys');
         const formItems = keys.map((k, index) => (
@@ -175,6 +199,10 @@ class NewSite extends Component {
                     /> : null
                 }
             </Form.Item>
+        ));
+
+        const locationOptions = this.state.dataSource.map(data => (
+            <AutoCompleteOption key={data.description}>{data.description}</AutoCompleteOption>
         ));
 
         return (
@@ -208,15 +236,14 @@ class NewSite extends Component {
                             rules: [
                                 { required: true, message: 'Please input Site Location!' },
                             ],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item
-                        label="Site State">
-                        {getFieldDecorator('siteState', {
-                            rules: [
-                                { required: true, message: 'Please input Site State!' },
-                            ],
-                        })(<Input />)}
+                        })(
+                            <AutoComplete
+                                dataSource={locationOptions}
+                                onSelect={this.onLocationSelected}
+                                onChange={this.onLocationChanged}>
+                                <Input />
+                            </AutoComplete>
+                        )}
                     </Form.Item>
                     <Form.Item label="Site Org">
                         {getFieldDecorator('siteOrg', {

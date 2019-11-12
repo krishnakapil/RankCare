@@ -4,7 +4,9 @@ import java.util.*;
 
 import javax.validation.Valid;
 
+import com.app.rankcare.model.*;
 import com.app.rankcare.payload.ApiResponse;
+import com.app.rankcare.payload.SiteResponse;
 import com.app.rankcare.repository.ToxicityRepository;
 import org.apache.commons.math3.distribution.LogNormalDistribution;
 import org.slf4j.Logger;
@@ -18,14 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.app.rankcare.model.Consumption;
-import com.app.rankcare.model.Site;
-import com.app.rankcare.model.SiteCalculation;
-import com.app.rankcare.model.Toxicity;
 import com.app.rankcare.payload.SiteContaminantData;
 import com.app.rankcare.payload.SiteRegisterRequest;
 import com.app.rankcare.repository.SiteCalculationRepository;
 import com.app.rankcare.repository.SiteDataRepository;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api")
@@ -65,7 +64,7 @@ public class SiteDataController {
 
     @PostMapping("/site/update")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public ResponseEntity<String> updateSiteRegistration(@Valid @RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
+    public ResponseEntity<Object> updateSiteRegistration(@Valid @RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
         if (siteRegisterRequest.getId() == null || siteRegisterRequest.getId() <= 0L) {
             throw new Exception("Id cannot be null or empty");
         }
@@ -83,7 +82,7 @@ public class SiteDataController {
             }
         }
         logger.info("Saved Data Result::" + result.toString());
-        return new ResponseEntity<String>("Site data updated successfully", HttpStatus.OK);
+        return new ResponseEntity<Object>(new ApiResponse(true, "Site updated successfully"), HttpStatus.OK);
     }
 
     @DeleteMapping("/site/{id}")
@@ -106,9 +105,26 @@ public class SiteDataController {
         Page<Site> pgLst = siteDataRepository.findAll(pagination);
         if (pgLst.hasContent()) {
             resMap.put("pageCnt", pgLst.getTotalPages());
-            resMap.put("data", pgLst.getContent());
+            List<Site> siteList = pgLst.getContent();
+            List<SiteResponse> updatedList = new ArrayList<>();
+
+            for (Site site : siteList) {
+                updatedList.add(new SiteResponse(site, siteCalculationRepository.findBySiteId(site.getId())));
+            }
+
+            resMap.put("data", updatedList);
         }
+
         return resMap;
+    }
+
+    @GetMapping("/location/autocomplete")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
+    public List<Place> getLocations(@RequestParam(name = "query", defaultValue = "") String query) {
+        final String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyDxUY1Syic2gVnXNTozIiJ3pg_V4TFsL3k&input=" + query;
+        RestTemplate restTemplate = new RestTemplate();
+        AutoCompleteResponse result = restTemplate.getForObject(uri, AutoCompleteResponse.class);
+        return result.predictions;
     }
 
     @GetMapping("/site/{id}")

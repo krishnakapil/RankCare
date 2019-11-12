@@ -16,7 +16,6 @@ public class SiteRegisterRequest {
     @NotBlank
     private String siteLocation;
 
-    @NotBlank
     private Long projectId;
 
     @NotBlank

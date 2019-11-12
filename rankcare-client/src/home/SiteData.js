@@ -6,6 +6,8 @@ import NewSite from './NewSite';
 class SiteData extends Component {
     constructor(props) {
         super(props);
+        const queryString = require('query-string');
+
         this.state = {
             currentUser: props.currentUser,
             isAdmin: props.currentUser.isAdmin,
@@ -13,6 +15,7 @@ class SiteData extends Component {
             modalVisible: false,
             selectedSite: null,
             sitesResponse: null,
+            projectId: queryString.parse(this.props.location.search).id,
             chemicals: [],
             sitesData: [],
             currentPage: 0,
@@ -20,6 +23,7 @@ class SiteData extends Component {
             totalRecords: 0,
             selectedRowKeys: [],
             selectedRows: [],
+            showMap : false,
             columns: props.currentUser.isAdmin ? [
                 {
                     title: 'Site Name',
@@ -35,11 +39,6 @@ class SiteData extends Component {
                     key: 'siteLocation',
                 },
                 {
-                    title: 'Site State',
-                    dataIndex: 'siteState',
-                    key: 'siteState',
-                },
-                {
                     title: 'Site Org',
                     dataIndex: 'siteOrg',
                     key: 'siteOrg',
@@ -49,11 +48,17 @@ class SiteData extends Component {
                     dataIndex: 'id',
                     key: 'id',
                     render: (text, record) =>
-                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)}>
-                            <a className="user-list-delete-link">
-                                <Icon type="delete" className="nav-icon" />
+                        <span>
+                            <a style={{ marginRight: 20 }} onClick={() => this.handleEditClick(record)}>
+                                <Icon type="edit" className="nav-icon" />
                             </a>
-                        </Popconfirm>,
+
+                            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)}>
+                                <a className="user-list-delete-link">
+                                    <Icon type="delete" className="nav-icon" />
+                                </a>
+                            </Popconfirm>
+                        </span>,
                 },
             ] :
                 [
@@ -69,11 +74,6 @@ class SiteData extends Component {
                         title: 'Site Location',
                         dataIndex: 'siteLocation',
                         key: 'siteLocation',
-                    },
-                    {
-                        title: 'Site State',
-                        dataIndex: 'siteState',
-                        key: 'siteState',
                     },
                     {
                         title: 'Site Org',
@@ -92,6 +92,8 @@ class SiteData extends Component {
         this.onPageChanged = this.onPageChanged.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
         this.compareSites = this.compareSites.bind(this);
+        this.handleEditClick = this.handleEditClick.bind(this);
+        this.handleMapClick = this.handleMapClick.bind(this);
     }
 
     componentDidMount() {
@@ -153,19 +155,13 @@ class SiteData extends Component {
 
     render() {
         const selectedSite = this.state.selectedSite
-        const { loading, selectedRowKeys } = this.state;
-        const rowSelection = {
-            selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
-
 
         const CollectionCreateForm = Form.create(
             {
                 name: 'form_in_modal',
                 mapPropsToFields(props) {
                     if (selectedSite) {
-                        return {
+                        let data = {
                             siteName: Form.createFormField({
                                 ...props.siteName,
                                 value: selectedSite.siteName
@@ -183,6 +179,26 @@ class SiteData extends Component {
                                 value: selectedSite.siteOrg
                             }),
                         };
+
+                        const siteCalculations = selectedSite ? selectedSite.siteCalculations : [];
+
+                        const keys = [];
+
+                        for (const [id, siteCalculation] of siteCalculations.entries()) {
+                            const key = `chemicals[${id}]`;
+                            data[key] = Form.createFormField({
+                                ...props.key,
+                                value: siteCalculation
+                            });
+                            keys.push(id);
+                        }
+
+                        data["keys"] = Form.createFormField({
+                            ...props.keys,
+                            value: keys
+                        });
+
+                        return data;
                     } else {
                         return {};
                     }
@@ -194,14 +210,7 @@ class SiteData extends Component {
             <div>
                 <div className="user-home-container">
                     <PageHeader className="user-list-page-title" title="Sites Data" onBack={this.handleBackClick} extra={this.renderNavigationButtons()} />
-                    <Table
-                        rowSelection={rowSelection}
-                        rowKey={record => record.id}
-                        columns={this.state.columns}
-                        dataSource={this.state.sitesData}
-                        onChange={this.onPageChanged}
-                        pagination={{ total: this.state.totalRecords, defaultPageSize: this.state.pageSize, current: this.state.currentPage }}
-                    />
+                    {this.renderMapOrTable()}
                 </div>
                 <CollectionCreateForm
                     wrappedComponentRef={this.saveFormRef}
@@ -210,14 +219,41 @@ class SiteData extends Component {
                     onCreate={this.handleAddUserSubmit}
                     isEdit={this.state.selectedSite != null}
                     chemicals={this.state.chemicals}
+                    projectId={this.state.projectId}
                     id={this.state.selectedSite ? this.state.selectedSite.id : null}
                 />
             </div>
         );
     }
 
+    renderMapOrTable() {
+        const showMap = this.state.showMap;
+
+        if(showMap) {
+
+        } else {
+            const { selectedRowKeys } = this.state;
+            const rowSelection = {
+                selectedRowKeys,
+                onChange: this.onSelectChange,
+            };
+
+            return(
+                <Table
+                        rowSelection={rowSelection}
+                        rowKey={record => record.id}
+                        columns={this.state.columns}
+                        dataSource={this.state.sitesData}
+                        onChange={this.onPageChanged}
+                        pagination={{ total: this.state.totalRecords, defaultPageSize: this.state.pageSize, current: this.state.currentPage }}
+                    />
+            )
+        }
+    }
+
     renderNavigationButtons() {
         const hasSelected = this.state.selectedRowKeys.length > 0;
+        const showMap = this.state.showMap;
 
         return (
             [
@@ -225,6 +261,7 @@ class SiteData extends Component {
                     Compare
                 </Button>,
                 <Button key="1" onClick={this.handleAddNewDataClick}>Add New Row</Button>,
+                <Button key="3" icon={showMap ? "unordered-list" : "environment"} onClick={this.handleMapClick}>{showMap ? 'Show List' : 'Show Map'}</Button>,
             ]
         )
     }
@@ -248,6 +285,13 @@ class SiteData extends Component {
                     description: error.message || 'Sorry! Something went wrong. Please try again!'
                 });
             });
+    }
+
+    handleEditClick(site) {
+        this.setState({
+            modalVisible: true,
+            selectedSite: site
+        });
     }
 
     handleSiteClick(site) {
@@ -279,6 +323,13 @@ class SiteData extends Component {
             modalVisible: false,
             selectedSite: null
         });
+    }
+
+    handleMapClick() {
+        const show = !this.state.showMap
+        this.setState({
+            showMap : show
+        })
     }
 
     compareSites() {

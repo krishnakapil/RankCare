@@ -23,7 +23,6 @@ public class Site extends DateAudit {
     @Column(name = "site_name")
     private String siteName;
 
-
     @Column(name = "site_location")
     private String siteLocation;
 

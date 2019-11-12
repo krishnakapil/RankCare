@@ -243,3 +243,10 @@ export function deleteProject(id) {
         method: 'DELETE'
     });
 }
+
+export function placesAutoComplete(query) {
+    return request({
+        url: API_BASE_URL + "/location/autocomplete?query=" + encodeURIComponent(query),
+        method: 'GET'
+    });
+}

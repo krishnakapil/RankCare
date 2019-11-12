@@ -129,7 +129,7 @@ class Projects extends Component {
                         />
                     </div>
                     <div className={classes.root}>
-                        <GridList cellHeight={120} cols="4" className={classes.gridList}>
+                        <GridList cellHeight={120} cols={4} className={classes.gridList}>
                             {projects.map(project => (
                                 <GridListTile key={project.id}>
                                     <div className="project-box">

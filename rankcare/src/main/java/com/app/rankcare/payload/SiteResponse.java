@@ -16,6 +16,10 @@ public class SiteResponse {
 
     private String siteOrg;
 
+    private Double siteLat;
+
+    private Double siteLng;
+
     private List<SiteCalculation> siteCalculations;
 
     public SiteResponse(Site site, List<SiteCalculation> siteCalculations) {
@@ -24,6 +28,8 @@ public class SiteResponse {
         siteName = site.getSiteName();
         siteLocation = site.getSiteLocation();
         siteOrg = site.getSiteOrg();
+        siteLat = site.getSiteLat();
+        siteLng = site.getSiteLng();
         this.siteCalculations = siteCalculations;
     }
 
@@ -73,5 +79,35 @@ public class SiteResponse {
 
     public void setSiteCalculations(List<SiteCalculation> siteCalculations) {
         this.siteCalculations = siteCalculations;
+    }
+
+    public Double getSiteLat() {
+        return siteLat;
+    }
+
+    public void setSiteLat(Double siteLat) {
+        this.siteLat = siteLat;
+    }
+
+    public Double getSiteLng() {
+        return siteLng;
+    }
+
+    public void setSiteLng(Double siteLng) {
+        this.siteLng = siteLng;
+    }
+
+    @Override
+    public String toString() {
+        return "SiteResponse{" +
+                "id=" + id +
+                ", projectId=" + projectId +
+                ", siteName='" + siteName + '\'' +
+                ", siteLocation='" + siteLocation + '\'' +
+                ", siteOrg='" + siteOrg + '\'' +
+                ", siteLat=" + siteLat +
+                ", siteLng=" + siteLng +
+                ", siteCalculations=" + siteCalculations +
+                '}';
     }
 }

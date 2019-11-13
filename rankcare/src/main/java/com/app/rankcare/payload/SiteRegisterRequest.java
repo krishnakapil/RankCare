@@ -30,6 +30,10 @@ public class SiteRegisterRequest {
 
     private Map<String, Map<String, Double>> t3;
 
+    private Double siteLat;
+
+    private Double siteLng;
+
     public Long getId() {
         return id;
     }
@@ -100,5 +104,21 @@ public class SiteRegisterRequest {
 
     public void setT3(Map<String, Map<String, Double>> t3) {
         this.t3 = t3;
+    }
+
+    public Double getSiteLat() {
+        return siteLat;
+    }
+
+    public void setSiteLat(Double siteLat) {
+        this.siteLat = siteLat;
+    }
+
+    public Double getSiteLng() {
+        return siteLng;
+    }
+
+    public void setSiteLng(Double siteLng) {
+        this.siteLng = siteLng;
     }
 }

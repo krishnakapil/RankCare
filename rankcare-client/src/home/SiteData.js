@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PageHeader, Table, Button, Popconfirm, Icon, Form, notification } from 'antd';
 import { getSites, deleteSite, getAllChemicals } from '../util/APIUtils';
 import NewSite from './NewSite';
+import MapContainer from './MapContainer';
 
 class SiteData extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class SiteData extends Component {
             totalRecords: 0,
             selectedRowKeys: [],
             selectedRows: [],
-            showMap : false,
+            showMap: false,
             columns: props.currentUser.isAdmin ? [
                 {
                     title: 'Site Name',
@@ -229,8 +230,12 @@ class SiteData extends Component {
     renderMapOrTable() {
         const showMap = this.state.showMap;
 
-        if(showMap) {
-
+        if (showMap) {
+            return (
+                <div style={{ width: 1000, height: 800 }}>
+                    <MapContainer onMarkerClicked={this.handleSiteClick} sitesData={this.state.sitesData} />
+                </div>
+            )
         } else {
             const { selectedRowKeys } = this.state;
             const rowSelection = {
@@ -238,15 +243,15 @@ class SiteData extends Component {
                 onChange: this.onSelectChange,
             };
 
-            return(
+            return (
                 <Table
-                        rowSelection={rowSelection}
-                        rowKey={record => record.id}
-                        columns={this.state.columns}
-                        dataSource={this.state.sitesData}
-                        onChange={this.onPageChanged}
-                        pagination={{ total: this.state.totalRecords, defaultPageSize: this.state.pageSize, current: this.state.currentPage }}
-                    />
+                    rowSelection={rowSelection}
+                    rowKey={record => record.id}
+                    columns={this.state.columns}
+                    dataSource={this.state.sitesData}
+                    onChange={this.onPageChanged}
+                    pagination={{ total: this.state.totalRecords, defaultPageSize: this.state.pageSize, current: this.state.currentPage }}
+                />
             )
         }
     }
@@ -328,7 +333,7 @@ class SiteData extends Component {
     handleMapClick() {
         const show = !this.state.showMap
         this.setState({
-            showMap : show
+            showMap: show
         })
     }
 

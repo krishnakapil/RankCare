@@ -29,23 +29,33 @@ public class Site extends DateAudit {
     @Column(name = "site_org")
     private String siteOrg;
 
+    @Column(name = "site_lat")
+    private Double siteLat;
+
+    @Column(name = "site_lng")
+    private Double siteLng;
+
     public Site() {
 
     }
 
-    public Site(Long id, Long projectId, String siteName, String siteLocation, String orgName) {
+    public Site(Long id, Long projectId, String siteName, String siteLocation, String orgName, Double siteLat, Double siteLng) {
         this.id = id;
         this.projectId = projectId;
         this.siteName = siteName;
         this.siteLocation = siteLocation;
         this.siteOrg = orgName;
+        this.siteLat = siteLat;
+        this.siteLng = siteLng;
     }
 
-    public Site(Long projectId, String siteName, String siteLocation, String orgName) {
+    public Site(Long projectId, String siteName, String siteLocation, String orgName, Double siteLat, Double siteLng) {
         this.projectId = projectId;
         this.siteName = siteName;
         this.siteLocation = siteLocation;
         this.siteOrg = orgName;
+        this.siteLat = siteLat;
+        this.siteLng = siteLng;
     }
 
 
@@ -89,9 +99,32 @@ public class Site extends DateAudit {
         this.siteOrg = siteOrg;
     }
 
+    public Double getSiteLat() {
+        return siteLat;
+    }
+
+    public void setSiteLat(Double siteLat) {
+        this.siteLat = siteLat;
+    }
+
+    public Double getSiteLng() {
+        return siteLng;
+    }
+
+    public void setSiteLng(Double siteLng) {
+        this.siteLng = siteLng;
+    }
+
     @Override
     public String toString() {
-        return "Site [id=" + id + ", projectId=" + projectId + ", siteName=" + siteName + ", siteLocation=" + siteLocation
-                 + ", siteOrg=" + siteOrg + "]";
+        return "Site{" +
+                "id=" + id +
+                ", projectId=" + projectId +
+                ", siteName='" + siteName + '\'' +
+                ", siteLocation='" + siteLocation + '\'' +
+                ", siteOrg='" + siteOrg + '\'' +
+                ", siteLat=" + siteLat +
+                ", siteLng=" + siteLng +
+                '}';
     }
 }

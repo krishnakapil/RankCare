@@ -1,5 +1,6 @@
 package com.app.rankcare.controller;
 
+import java.net.URLEncoder;
 import java.util.*;
 
 import javax.validation.Valid;
@@ -47,10 +48,15 @@ public class SiteDataController {
 
     @PostMapping("/site/add")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public ResponseEntity<Object> registerSite(@Valid @RequestBody SiteRegisterRequest siteRegisterRequest) {
+    public ResponseEntity<Object> registerSite(@Valid @RequestBody SiteRegisterRequest siteRegisterRequest) throws Exception {
+        PlaceDetail placeDetail = getPlaceDetail(siteRegisterRequest.getSiteLocation());
+
+        if (placeDetail == null) {
+            throw new Exception("Please enter a valid address");
+        }
 
         Site result = siteDataRepository.save(new Site(siteRegisterRequest.getProjectId(),
-                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(), siteRegisterRequest.getOrgName()));
+                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(), siteRegisterRequest.getOrgName(), placeDetail.getLat(), placeDetail.getLng()));
         if (siteRegisterRequest.getSiteContaminant() != null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
@@ -68,8 +74,15 @@ public class SiteDataController {
         if (siteRegisterRequest.getId() == null || siteRegisterRequest.getId() <= 0L) {
             throw new Exception("Id cannot be null or empty");
         }
+
+        PlaceDetail placeDetail = getPlaceDetail(siteRegisterRequest.getSiteLocation());
+
+        if (placeDetail == null) {
+            throw new Exception("Please enter a valid address");
+        }
+
         Site result = siteDataRepository.save(new Site(siteRegisterRequest.getId(), siteRegisterRequest.getProjectId(),
-                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(), siteRegisterRequest.getOrgName()));
+                siteRegisterRequest.getSiteName(), siteRegisterRequest.getSiteLocation(), siteRegisterRequest.getOrgName(), placeDetail.getLat(), placeDetail.getLng()));
         if (siteRegisterRequest.getSiteContaminant() != null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
@@ -101,7 +114,6 @@ public class SiteDataController {
         Map<String, Object> resMap = new HashMap<String, Object>();
         Pageable pagination = PageRequest.of(pageNo, pageSize);
         resMap.put("pageCnt", 0);
-        resMap.put("data", new ArrayList<Toxicity>());
         Page<Site> pgLst = siteDataRepository.findAll(pagination);
         if (pgLst.hasContent()) {
             resMap.put("pageCnt", pgLst.getTotalPages());
@@ -109,7 +121,9 @@ public class SiteDataController {
             List<SiteResponse> updatedList = new ArrayList<>();
 
             for (Site site : siteList) {
-                updatedList.add(new SiteResponse(site, siteCalculationRepository.findBySiteId(site.getId())));
+                SiteResponse siteResponse = new SiteResponse(site, siteCalculationRepository.findBySiteId(site.getId()));
+                System.out.println("Sute Response " + siteResponse);
+                updatedList.add(siteResponse);
             }
 
             resMap.put("data", updatedList);
@@ -125,6 +139,18 @@ public class SiteDataController {
         RestTemplate restTemplate = new RestTemplate();
         AutoCompleteResponse result = restTemplate.getForObject(uri, AutoCompleteResponse.class);
         return result.predictions;
+    }
+
+    private PlaceDetail getPlaceDetail(String location) {
+        try {
+            final String uri = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyDxUY1Syic2gVnXNTozIiJ3pg_V4TFsL3k&query=" + URLEncoder.encode(location, "UTF-8");
+            RestTemplate restTemplate = new RestTemplate();
+            return restTemplate.getForObject(uri, PlaceDetail.class);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
     }
 
     @GetMapping("/site/{id}")
@@ -143,6 +169,8 @@ public class SiteDataController {
         siteRegisterRequest.setOrgName(result.getSiteOrg());
         siteRegisterRequest.setSiteLocation(result.getSiteLocation());
         siteRegisterRequest.setSiteName(result.getSiteName());
+        siteRegisterRequest.setSiteLat(result.getSiteLat());
+        siteRegisterRequest.setSiteLng(result.getSiteLng());
 
         List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
 
@@ -196,6 +224,8 @@ public class SiteDataController {
             siteRegisterRequest.setOrgName(result.getSiteOrg());
             siteRegisterRequest.setSiteLocation(result.getSiteLocation());
             siteRegisterRequest.setSiteName(result.getSiteName());
+            siteRegisterRequest.setSiteLat(result.getSiteLat());
+            siteRegisterRequest.setSiteLng(result.getSiteLng());
 
             List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
 

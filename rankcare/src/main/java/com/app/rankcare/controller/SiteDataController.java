@@ -135,7 +135,7 @@ public class SiteDataController {
     @GetMapping("/location/autocomplete")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
     public List<Place> getLocations(@RequestParam(name = "query", defaultValue = "") String query) {
-        final String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyDxUY1Syic2gVnXNTozIiJ3pg_V4TFsL3k&input=" + query;
+        final String uri = "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=" + System.getenv("GOOGLE_API_KEY") + "&input=" + query;
         RestTemplate restTemplate = new RestTemplate();
         AutoCompleteResponse result = restTemplate.getForObject(uri, AutoCompleteResponse.class);
         return result.predictions;
@@ -143,7 +143,7 @@ public class SiteDataController {
 
     private PlaceDetail getPlaceDetail(String location) {
         try {
-            final String uri = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyDxUY1Syic2gVnXNTozIiJ3pg_V4TFsL3k&query=" + URLEncoder.encode(location, "UTF-8");
+            final String uri = "https://maps.googleapis.com/maps/api/place/textsearch/json?key=" + System.getenv("GOOGLE_API_KEY") + "&query=" + URLEncoder.encode(location, "UTF-8");
             RestTemplate restTemplate = new RestTemplate();
             return restTemplate.getForObject(uri, PlaceDetail.class);
         } catch (Exception ex) {

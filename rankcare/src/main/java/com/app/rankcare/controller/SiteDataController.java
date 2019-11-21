@@ -339,12 +339,14 @@ public class SiteDataController {
                     t = chemicalData.get(siteCalc.getChemicalId());
                     if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
                         val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getWaterConsAvg()))/bodyWt;
+                        valNCRStr += val / Double.valueOf(t.getWaterRef()) + "~";
+                        ncr += val / Double.valueOf(t.getWaterRef());
                     } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
                         val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg()))/bodyWt;
+                        valNCRStr += val / Double.valueOf(t.getSoilRef()) + "~";
+                        ncr += val / Double.valueOf(t.getSoilRef());
                     } 
-                    valNCRStr += val / Double.valueOf(t.getDosageRef()) + "~";
                     valCRStr += val * Double.valueOf(t.getCancerSlopeFactor()) + "~";
-                    ncr += val / Double.valueOf(t.getDosageRef());
                     cr += val * Double.valueOf(t.getCancerSlopeFactor());
                 }
                 int contaSize = siteContamiData.size();

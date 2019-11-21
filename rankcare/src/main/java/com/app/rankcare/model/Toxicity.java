@@ -44,10 +44,7 @@ public class Toxicity extends DateAudit {
 
     @Column(name = "cancer_slope_ref")
     private String cancerSlopeRef;
-
-	@Column(name="dosage_ref")
-	private String dosageRef;
-	
+ 
     public Toxicity() {
 
     }
@@ -148,15 +145,7 @@ public class Toxicity extends DateAudit {
 
     public void setCancerSlopeRef(String cancerSlopeRef) {
         this.cancerSlopeRef = cancerSlopeRef;
-    }
-
-	public String getDosageRef() {
-		return dosageRef;
-	}
-
-	public void setDosageRef(String dosageRef) {
-		this.dosageRef = dosageRef;
-	}
+    } 
     @Override
     public String toString() {
         return "Toxicity [id=" + id + ", chemicalName=" + chemicalName + ", chemicalFormula=" + chemicalFormula

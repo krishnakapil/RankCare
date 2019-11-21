@@ -51,17 +51,6 @@ class ConsumptionData extends Component {
                     dataIndex: 'waterConsAvg',
                     key: 'waterConsAvg',
                 },
-                {
-                    title: 'Action',
-                    dataIndex: 'id',
-                    key: 'id',
-                    render: (text, record) =>
-                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)}>
-                            <a className="user-list-delete-link">
-                                <Icon type="delete" className="nav-icon" />
-                            </a>
-                        </Popconfirm>,
-                },
             ] :
             [
                 {

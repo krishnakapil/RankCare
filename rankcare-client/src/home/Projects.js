@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { PageHeader, Empty, Button, Input, Icon, Form, notification, Popconfirm, Card } from 'antd';
-import { getProjects, deleteProject } from '../util/APIUtils';
+import { PageHeader, Empty, Button, Input, Icon, Form, notification, Popconfirm, Table } from 'antd';
+import { getProjects, deleteProject, searchProjects } from '../util/APIUtils';
 import NewProject from './NewProject';
 import './Home.css';
 import { makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
 
 const { Search } = Input;
 
@@ -18,7 +16,37 @@ class Projects extends Component {
             isLoading: false,
             modalVisible: false,
             projects: [],
-            selectedProject: null
+            selectedProject: null,
+            currentPage: 0,
+            pageSize: 20,
+            totalRecords: 0,
+            columns: [
+                {
+                    title: 'Project Name',
+                    dataIndex: 'projectName',
+                    key: 'projectName',
+                    render: (text, record) => <a className="user-list-name-link" onClick={() => this.handleProjectClicked(record.id)}>{text}</a>,
+                    sorter: (a, b) => a.chemicalName.length - b.chemicalName.length,
+                    sortDirections: ['descend', 'ascend'],
+                },
+                {
+                    title: 'Action',
+                    dataIndex: 'id',
+                    key: 'id',
+                    render: (text, record) =>
+                        <span>
+                            <a style={{ marginRight: 50 }} onClick={() => this.handleEditClicked(record)}>
+                                <Icon type="edit" className="nav-icon" />
+                            </a>
+
+                            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)}>
+                                <a className="user-list-delete-link">
+                                    <Icon type="delete" className="nav-icon" />
+                                </a>
+                            </Popconfirm>
+                        </span>,
+                },
+            ]
         }
 
         this.renderProjects = this.renderProjects.bind(this);
@@ -29,30 +57,65 @@ class Projects extends Component {
         this.handleAddProjectCancel = this.handleAddProjectCancel.bind(this)
         this.handleProjectClicked = this.handleProjectClicked.bind(this);
         this.handleEditClicked = this.handleEditClicked.bind(this);
+        this.searchProjects = this.searchProjects.bind(this);
+        this.onPageChanged = this.onPageChanged.bind(this);
     }
 
     componentDidMount() {
-        this.loadData();
+        this.loadData(0);
     }
 
-    loadData() {
+    loadData(page) {
         this.setState({
             isLoading: true
         });
-        getProjects()
+        getProjects(page, this.state.pageSize)
             .then(response => {
                 this.setState({
                     isLoading: false,
-                    projects: response,
-                    selectedProject: null
+                    projects: response.data,
+                    selectedProject: null,
+                    totalRecords: (response.pageCnt * this.state.pageSize)
                 });
             }).catch(error => {
                 this.setState({
                     isLoading: false,
                     projects: [],
-                    selectedProject: null
+                    selectedProject: null,
+                    totalRecords: 0
                 });
             });
+    }
+
+    searchProjects(query) {
+        if (!query || query.trim() == "") {
+            this.loadData(0)
+        } else {
+            this.setState({
+                isLoading: true,
+                totalRecords: 0,
+                pageCnt: 0,
+                projects: []
+            });
+            searchProjects(query)
+                .then(response => {
+                    this.setState({
+                        isLoading: false,
+                        projects: response,
+                        selectedProject: null
+                    });
+                }).catch(error => {
+                    this.setState({
+                        isLoading: false,
+                        projects: [],
+                        selectedProject: null
+                    });
+                });
+        }
+    }
+
+    onPageChanged(pagination, filters, sorter) {
+        this.loadData(pagination.current - 1)
     }
 
     saveFormRef = formRef => {
@@ -84,8 +147,15 @@ class Projects extends Component {
             <div>
                 <div className="user-home-container">
                     <PageHeader className="user-list-page-title" title="Projects" onBack={this.handleBackClick} extra={this.renderNavigationButtons()} />
-                    {this.renderProjects()}
+                    <div className="search-box">
+                        <Input
+                            placeholder="Search Projects"
+                            onChange={e => this.searchProjects(e.target.value)}
+                            style={{ width: 400 }}
+                        />
+                    </div>
                 </div>
+                {this.renderProjects()}
                 <CollectionCreateForm
                     wrappedComponentRef={this.saveFormRef}
                     visible={this.state.modalVisible}
@@ -94,7 +164,7 @@ class Projects extends Component {
                     isEdit={this.state.selectedProject != null}
                     id={this.state.selectedProject ? this.state.selectedProject.id : null}
                 />
-            </div>
+            </div >
         );
     }
 
@@ -116,42 +186,16 @@ class Projects extends Component {
                     color: 'rgba(255, 255, 255, 1)',
                 },
             }));
-            const projects = this.state.projects;
 
             return (
-                <div>
-                    <div className="search-box">
-                        <Search
-                            placeholder="Search Projects"
-                            onSearch={value => console.log(value)}
-                            style={{ width: 400 }}
-                            enterButton
-                        />
-                    </div>
-                    <div className={classes.root}>
-                        <GridList cellHeight={120} cols={4} className={classes.gridList}>
-                            {projects.map(project => (
-                                <GridListTile key={project.id}>
-                                    <div className="project-box">
-                                        <a class="fill-div" onClick={() => this.handleProjectClicked(project.id)}>
-                                            <h4 style={{ fontWeight: 400 }}>{project.projectName}</h4>
-                                        </a>
-                                        <span style={{ float: "right" }}>
-                                            <a style={{ marginRight: 20 }} onClick={() => this.handleEditClicked(project)}>
-                                                <Icon type="edit" />
-                                            </a>
-                                            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(project.id)}>
-                                                <a className="user-list-delete-link">
-                                                    <Icon type="delete" />
-                                                </a>
-                                            </Popconfirm>
-
-                                        </span>
-                                    </div>
-                                </GridListTile>
-                            ))}
-                        </GridList>
-                    </div>
+                <div className={classes.root}>
+                    <Table
+                        rowKey={record => record.id}
+                        columns={this.state.columns}
+                        dataSource={this.state.projects}
+                        onChange={this.onPageChanged}
+                        pagination={{ total: this.state.totalRecords, defaultPageSize: this.state.pageSize, current: this.state.currentPage }}
+                    />
                 </div>
             )
         } else {

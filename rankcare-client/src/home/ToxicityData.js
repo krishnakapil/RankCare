@@ -52,16 +52,6 @@ class ToxicityData extends Component {
                     key: 'waterRef',
                 },
                 {
-                    title: 'Dosage Ref',
-                    dataIndex: 'dosageRef',
-                    key: 'dosageRef'
-                },
-                {
-                    title: 'Reference',
-                    dataIndex: 'reference',
-                    key: 'reference'
-                },
-                {
                     title: 'Cancer Slope Factor',
                     dataIndex: 'cancerSlopeFactor',
                     key: 'cancerSlopeFactor'
@@ -70,17 +60,6 @@ class ToxicityData extends Component {
                     title: 'Cancer Slope Ref',
                     dataIndex: 'cancerSlopeRef',
                     key: 'cancerSlopeRef'
-                },
-                {
-                    title: 'Action',
-                    dataIndex: 'id',
-                    key: 'id',
-                    render: (text, record) =>
-                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)}>
-                            <a className="user-list-delete-link">
-                                <Icon type="delete" className="nav-icon" />
-                            </a>
-                        </Popconfirm>,
                 },
             ] :
             [
@@ -115,16 +94,6 @@ class ToxicityData extends Component {
                     title: 'Water Ref',
                     dataIndex: 'waterRef',
                     key: 'waterRef',
-                },
-                {
-                    title: 'Dosage Ref',
-                    dataIndex: 'dosageRef',
-                    key: 'dosageRef'
-                },
-                {
-                    title: 'Reference',
-                    dataIndex: 'reference',
-                    key: 'reference'
                 },
                 {
                     title: 'Cancer Slope Factor',
@@ -215,14 +184,6 @@ class ToxicityData extends Component {
                             waterRef: Form.createFormField({
                                 ...props.dosageRef,
                                 value: selectedToxicity.waterRef
-                            }),
-                            dosageRef: Form.createFormField({
-                                ...props.dosageRef,
-                                value: selectedToxicity.dosageRef
-                            }),
-                            reference: Form.createFormField({
-                                ...props.reference,
-                                value: selectedToxicity.reference
                             }),
                             cancerSlopeFactor: Form.createFormField({
                                 ...props.cancerSlopeFactor,

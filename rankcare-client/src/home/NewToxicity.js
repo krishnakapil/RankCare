@@ -118,7 +118,7 @@ class NewToxicity extends Component {
                             rules: [
                                 { required: true, message: 'Please input chemical name!' },
                             ],
-                        })(<Input />)}
+                        })(<Input disabled={this.props.isEdit}/>)}
                     </Form.Item>
                     <Form.Item
                         label="Chemical Formula">
@@ -157,20 +157,6 @@ class NewToxicity extends Component {
                         label="Water Reference">
                         {getFieldDecorator('waterRef', {
                             rules: [{ required: true, message: 'Please input Water Reference!' }],
-                        })(<Input />)}
-                    </Form.Item>
-                    <Form.Item label="Dosage Reference">
-                        {getFieldDecorator('dosageRef', {
-                            rules: [
-                                { required: true, message: 'Please input Dosage Reference!' },
-                                { validator: this.checkNumber },
-                            ]
-                        })(<InputNumber />)}
-                    </Form.Item>
-                    <Form.Item
-                        label="Reference">
-                        {getFieldDecorator('reference', {
-                            rules: [{ required: true, message: 'Please input Reference!' }],
                         })(<Input />)}
                     </Form.Item>
                     <Form.Item label="Cancer Slope Factor">

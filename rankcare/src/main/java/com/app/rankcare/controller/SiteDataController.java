@@ -109,12 +109,18 @@ public class SiteDataController {
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
     public Map<String, Object> getSitesPagination(
             @RequestParam(name = "page", defaultValue = "0") Integer pageNo,
-            @RequestParam(name = "count", defaultValue = "10") Integer pageSize
+            @RequestParam(name = "count", defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "projectId", defaultValue = "-1") Long projectId
     ) {
-        Map<String, Object> resMap = new HashMap<String, Object>();
+        Map<String, Object> resMap = new HashMap<>();
+
+        if (projectId <= 0) {
+            return resMap;
+        }
+
         Pageable pagination = PageRequest.of(pageNo, pageSize);
         resMap.put("pageCnt", 0);
-        Page<Site> pgLst = siteDataRepository.findAll(pagination);
+        Page<Site> pgLst = siteDataRepository.findSitesByProject(projectId, pagination);
         if (pgLst.hasContent()) {
             resMap.put("pageCnt", pgLst.getTotalPages());
             List<Site> siteList = pgLst.getContent();
@@ -122,7 +128,6 @@ public class SiteDataController {
 
             for (Site site : siteList) {
                 SiteResponse siteResponse = new SiteResponse(site, siteCalculationRepository.findBySiteId(site.getId()));
-                System.out.println("Sute Response " + siteResponse);
                 updatedList.add(siteResponse);
             }
 
@@ -227,12 +232,12 @@ public class SiteDataController {
             siteRegisterRequest.setSiteLat(result.getSiteLat());
             siteRegisterRequest.setSiteLng(result.getSiteLng());
 
-            List<SiteCalculation> siteContamiData = siteCalculationRepository.findBySiteId(id);
+            List<SiteCalculation> siteContaminantData = siteCalculationRepository.findBySiteId(id);
 
             List<SiteContaminantData> contaLst = new ArrayList<>();
             SiteContaminantData e = null;
-            if (siteContamiData != null && !siteContamiData.isEmpty()) {
-                for (SiteCalculation siteCalc : siteContamiData) {
+            if (siteContaminantData != null && !siteContaminantData.isEmpty()) {
+                for (SiteCalculation siteCalc : siteContaminantData) {
                     e = new SiteContaminantData();
                     e.setActiveYN(siteCalc.getActiveYN());
                     e.setId(siteCalc.getId());
@@ -314,9 +319,9 @@ public class SiteDataController {
                     } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
                         val = siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg());
                     }
-                    valNCRStr += val / Double.valueOf(t.getDosageRef()) + "~";
+                    valNCRStr += val / Double.valueOf(t.getCancerSlopeFactor()) + "~";
                     valCRStr += val * Double.valueOf(t.getCancerSlopeFactor()) + "~";
-                    ncr += val / Double.valueOf(t.getDosageRef());
+                    ncr += val / Double.valueOf(t.getCancerSlopeFactor());
                     cr += val * Double.valueOf(t.getCancerSlopeFactor());
                 }
                 int contaSize = siteContamiData.size();

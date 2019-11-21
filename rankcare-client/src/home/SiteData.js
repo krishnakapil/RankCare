@@ -107,7 +107,7 @@ class SiteData extends Component {
             isLoading: true,
             currentPage: page
         });
-        getSites(page, this.state.pageSize)
+        getSites(this.state.projectId, page, this.state.pageSize)
             .then(response => {
                 this.setState({
                     isLoading: false,

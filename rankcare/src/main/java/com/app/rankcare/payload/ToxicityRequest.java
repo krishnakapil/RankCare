@@ -18,10 +18,6 @@ public class ToxicityRequest {
 	
 	private String waterRef;
 
-	private String dosageRef;
-	
-	private String reference;
-
 	private String cancerSlopeFactor;
 	
 	private String cancerSlopeRef;
@@ -90,22 +86,6 @@ public class ToxicityRequest {
 
 	public void setWaterRef(String waterRef) {
 		this.waterRef = waterRef;
-	}
-
-	public String getDosageRef() {
-		return dosageRef;
-	}
-
-	public void setDosageRef(String dosageRef) {
-		this.dosageRef = dosageRef;
-	}
-
-	public String getReference() {
-		return reference;
-	}
-
-	public void setReference(String reference) {
-		this.reference = reference;
 	}
 
 	public String getCancerSlopeFactor() {

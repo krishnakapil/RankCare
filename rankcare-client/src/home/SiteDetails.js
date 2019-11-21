@@ -161,11 +161,10 @@ class SiteDetails extends Component {
                 <div>
                     <Descriptions bordered className="site-details-box">
                         <Descriptions.Item label="Site Name">{siteData.siteName}</Descriptions.Item>
-                        <Descriptions.Item label="Site Location" span={2}>
+                        <Descriptions.Item label="site Org"  span={2}>{siteData.orgName}</Descriptions.Item>
+                        <Descriptions.Item label="Site Location">
                             {siteData.siteLocation}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Site State">{siteData.state}</Descriptions.Item>
-                        <Descriptions.Item label="site Org">{siteData.orgName}</Descriptions.Item>
                     </Descriptions>
                 </div>
             )

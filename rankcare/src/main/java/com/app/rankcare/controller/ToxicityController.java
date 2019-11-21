@@ -56,7 +56,7 @@ public class ToxicityController {
     public ResponseEntity<Object> updateToxicity(@Valid @RequestBody ToxicityRequest toxicityRequest) {
         Toxicity result = toxicityRepository.save(new Toxicity(toxicityRequest.getId(), toxicityRequest.getChemicalName(), toxicityRequest.getChemicalFormula(),
                 toxicityRequest.getSoilGuideline(), toxicityRequest.getSoilRef(), toxicityRequest.getWaterGuideline(), toxicityRequest.getWaterRef(),
-                toxicityRequest.getDosageRef(), toxicityRequest.getReference(), toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
+                toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
 
         logger.info("Saved Data Result::" + result.toString());
         return new ResponseEntity<Object>(new ApiResponse(true, "Toxicity data updated successfully"), HttpStatus.OK);
@@ -67,7 +67,7 @@ public class ToxicityController {
     public ResponseEntity<Object> insertToxicity(@Valid @RequestBody ToxicityRequest toxicityRequest) {
         Toxicity result = toxicityRepository.save(new Toxicity(toxicityRequest.getChemicalName(), toxicityRequest.getChemicalFormula(),
                 toxicityRequest.getSoilGuideline(), toxicityRequest.getSoilRef(), toxicityRequest.getWaterGuideline(), toxicityRequest.getWaterRef(),
-                toxicityRequest.getDosageRef(), toxicityRequest.getReference(), toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
+                toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
 
         logger.info("Saved Data Result::" + result.toString());
         return new ResponseEntity<Object>(new ApiResponse(true, "Toxicity data saved successfully"), HttpStatus.OK);

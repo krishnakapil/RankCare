@@ -8,180 +8,151 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="toxicity_data")
+@Table(name = "toxicity_data")
 public class Toxicity extends DateAudit {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3578212100596393592L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3578212100596393592L;
 
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
-	@Column(name="chemical_name")
-	private String chemicalName;
-	
-	@Column(name="chemical_formula")
-	private String chemicalFormula;
-	
-	@Column(name="soil_guideline")
-	private String soilGuideline;
-	
-	@Column(name="soil_ref")
-	private String soilRef;
 
-	@Column(name="water_guideline")
-	private String waterGuideline;
-	
-	@Column(name="water_ref")
-	private String waterRef;
+    @Column(name = "chemical_name")
+    private String chemicalName;
 
-	@Column(name="dosage_ref")
-	private String dosageRef;
-	
-	@Column(name="reference")
-	private String reference;
+    @Column(name = "chemical_formula")
+    private String chemicalFormula;
 
-	@Column(name="cancer_slope_factor")
-	private String cancerSlopeFactor;
-	
-	@Column(name="cancer_slope_ref")
-	private String cancerSlopeRef;
+    @Column(name = "soil_guideline")
+    private String soilGuideline;
 
-	public Toxicity() {
-		
-	}
-	
-	public Toxicity(Long id, String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
-			String waterGuideline, String waterRef, String dosageRef, String reference, String cancerSlopeFactor,
-			String cancerSlopeRef) { 
-		this.id = id;
-		this.chemicalName = chemicalName;
-		this.chemicalFormula = chemicalFormula;
-		this.soilGuideline = soilGuideline;
-		this.soilRef = soilRef;
-		this.waterGuideline = waterGuideline;
-		this.waterRef = waterRef;
-		this.dosageRef = dosageRef;
-		this.reference = reference;
-		this.cancerSlopeFactor = cancerSlopeFactor;
-		this.cancerSlopeRef = cancerSlopeRef;
-	}
-	
+    @Column(name = "soil_ref")
+    private String soilRef;
 
-	public Toxicity(String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
-			String waterGuideline, String waterRef, String dosageRef, String reference, String cancerSlopeFactor,
-			String cancerSlopeRef) { 
-		this.chemicalName = chemicalName;
-		this.chemicalFormula = chemicalFormula;
-		this.soilGuideline = soilGuideline;
-		this.soilRef = soilRef;
-		this.waterGuideline = waterGuideline;
-		this.waterRef = waterRef;
-		this.dosageRef = dosageRef;
-		this.reference = reference;
-		this.cancerSlopeFactor = cancerSlopeFactor;
-		this.cancerSlopeRef = cancerSlopeRef;
-	}
+    @Column(name = "water_guideline")
+    private String waterGuideline;
 
-	public Long getId() {
-		return id;
-	}
+    @Column(name = "water_ref")
+    private String waterRef;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Column(name = "cancer_slope_factor")
+    private String cancerSlopeFactor;
 
-	public String getChemicalName() {
-		return chemicalName;
-	}
+    @Column(name = "cancer_slope_ref")
+    private String cancerSlopeRef;
 
-	public void setChemicalName(String chemicalName) {
-		this.chemicalName = chemicalName;
-	}
+    public Toxicity() {
 
-	public String getChemicalFormula() {
-		return chemicalFormula;
-	}
+    }
 
-	public void setChemicalFormula(String chemicalFormula) {
-		this.chemicalFormula = chemicalFormula;
-	}
+    public Toxicity(Long id, String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
+                    String waterGuideline, String waterRef, String cancerSlopeFactor, String cancerSlopeRef) {
+        this.id = id;
+        this.chemicalName = chemicalName;
+        this.chemicalFormula = chemicalFormula;
+        this.soilGuideline = soilGuideline;
+        this.soilRef = soilRef;
+        this.waterGuideline = waterGuideline;
+        this.waterRef = waterRef;
+        this.cancerSlopeFactor = cancerSlopeFactor;
+        this.cancerSlopeRef = cancerSlopeRef;
+    }
 
-	public String getSoilGuideline() {
-		return soilGuideline;
-	}
 
-	public void setSoilGuideline(String soilGuideline) {
-		this.soilGuideline = soilGuideline;
-	}
+    public Toxicity(String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
+                    String waterGuideline, String waterRef, String cancerSlopeFactor, String cancerSlopeRef) {
+        this.chemicalName = chemicalName;
+        this.chemicalFormula = chemicalFormula;
+        this.soilGuideline = soilGuideline;
+        this.soilRef = soilRef;
+        this.waterGuideline = waterGuideline;
+        this.waterRef = waterRef;
+        this.cancerSlopeFactor = cancerSlopeFactor;
+        this.cancerSlopeRef = cancerSlopeRef;
+    }
 
-	public String getSoilRef() {
-		return soilRef;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setSoilRef(String soilRef) {
-		this.soilRef = soilRef;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getWaterGuideline() {
-		return waterGuideline;
-	}
+    public String getChemicalName() {
+        return chemicalName;
+    }
 
-	public void setWaterGuideline(String waterGuideline) {
-		this.waterGuideline = waterGuideline;
-	}
+    public void setChemicalName(String chemicalName) {
+        this.chemicalName = chemicalName;
+    }
 
-	public String getWaterRef() {
-		return waterRef;
-	}
+    public String getChemicalFormula() {
+        return chemicalFormula;
+    }
 
-	public void setWaterRef(String waterRef) {
-		this.waterRef = waterRef;
-	}
+    public void setChemicalFormula(String chemicalFormula) {
+        this.chemicalFormula = chemicalFormula;
+    }
 
-	public String getDosageRef() {
-		return dosageRef;
-	}
+    public String getSoilGuideline() {
+        return soilGuideline;
+    }
 
-	public void setDosageRef(String dosageRef) {
-		this.dosageRef = dosageRef;
-	}
+    public void setSoilGuideline(String soilGuideline) {
+        this.soilGuideline = soilGuideline;
+    }
 
-	public String getReference() {
-		return reference;
-	}
+    public String getSoilRef() {
+        return soilRef;
+    }
 
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
+    public void setSoilRef(String soilRef) {
+        this.soilRef = soilRef;
+    }
 
-	public String getCancerSlopeFactor() {
-		return cancerSlopeFactor;
-	}
+    public String getWaterGuideline() {
+        return waterGuideline;
+    }
 
-	public void setCancerSlopeFactor(String cancerSlopeFactor) {
-		this.cancerSlopeFactor = cancerSlopeFactor;
-	}
+    public void setWaterGuideline(String waterGuideline) {
+        this.waterGuideline = waterGuideline;
+    }
 
-	public String getCancerSlopeRef() {
-		return cancerSlopeRef;
-	}
+    public String getWaterRef() {
+        return waterRef;
+    }
 
-	public void setCancerSlopeRef(String cancerSlopeRef) {
-		this.cancerSlopeRef = cancerSlopeRef;
-	}
+    public void setWaterRef(String waterRef) {
+        this.waterRef = waterRef;
+    }
 
-	@Override
-	public String toString() {
-		return "Toxicity [id=" + id + ", chemicalName=" + chemicalName + ", chemicalFormula=" + chemicalFormula
-				+ ", soilGuideline=" + soilGuideline + ", soilRef=" + soilRef + ", waterGuideline=" + waterGuideline
-				+ ", waterRef=" + waterRef + ", dosageRef=" + dosageRef + ", reference=" + reference
-				+ ", cancerSlopeFactor=" + cancerSlopeFactor + ", cancerSlopeRef=" + cancerSlopeRef + "]";
-	}
-	
-		
+    public String getCancerSlopeFactor() {
+        return cancerSlopeFactor;
+    }
+
+    public void setCancerSlopeFactor(String cancerSlopeFactor) {
+        this.cancerSlopeFactor = cancerSlopeFactor;
+    }
+
+    public String getCancerSlopeRef() {
+        return cancerSlopeRef;
+    }
+
+    public void setCancerSlopeRef(String cancerSlopeRef) {
+        this.cancerSlopeRef = cancerSlopeRef;
+    }
+
+    @Override
+    public String toString() {
+        return "Toxicity [id=" + id + ", chemicalName=" + chemicalName + ", chemicalFormula=" + chemicalFormula
+                + ", soilGuideline=" + soilGuideline + ", soilRef=" + soilRef + ", waterGuideline=" + waterGuideline
+                + ", waterRef=" + waterRef + ", cancerSlopeFactor=" + cancerSlopeFactor + ", cancerSlopeRef=" + cancerSlopeRef + "]";
+    }
+
+
 }

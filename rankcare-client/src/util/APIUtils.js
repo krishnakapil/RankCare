@@ -169,9 +169,9 @@ export function getAllChemicals() {
     });
 }
 
-export function getSites(page, count) {
+export function getSites(projectId, page, count) {
     return request({
-        url: API_BASE_URL + "/sites?page=" + page + "&count=" + count,
+        url: API_BASE_URL + "/sites?page=" + page + "&count=" + count + "&projectId=" + projectId,
         method: 'GET'
     });
 }
@@ -214,9 +214,16 @@ export function getSite(id) {
     });
 }
 
-export function getProjects() {
+export function getProjects(page, count) {
     return request({
-        url: API_BASE_URL + "/projects",
+        url: API_BASE_URL + "/projects?page=" + page + "&count=" + count,
+        method: 'GET'
+    });
+}
+
+export function searchProjects(query) {
+    return request({
+        url: API_BASE_URL + "/projects/search?query=" + query,
         method: 'GET'
     });
 }

@@ -1,15 +1,19 @@
 package com.app.rankcare.controller;
 
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 
 import javax.validation.Valid;
 
-import com.app.rankcare.model.*;
-import com.app.rankcare.payload.ApiResponse;
-import com.app.rankcare.payload.SiteResponse;
-import com.app.rankcare.repository.ToxicityRepository;
 import org.apache.commons.math3.distribution.LogNormalDistribution;
+import org.apache.commons.math3.random.RandomGenerator;
+import org.apache.commons.math3.random.RandomGeneratorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +23,30 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import com.app.rankcare.model.AutoCompleteResponse;
+import com.app.rankcare.model.Consumption;
+import com.app.rankcare.model.Place;
+import com.app.rankcare.model.PlaceDetail;
+import com.app.rankcare.model.Site;
+import com.app.rankcare.model.SiteCalculation;
+import com.app.rankcare.model.Toxicity;
+import com.app.rankcare.payload.ApiResponse;
 import com.app.rankcare.payload.SiteContaminantData;
 import com.app.rankcare.payload.SiteRegisterRequest;
+import com.app.rankcare.payload.SiteResponse;
 import com.app.rankcare.repository.SiteCalculationRepository;
 import com.app.rankcare.repository.SiteDataRepository;
-import org.springframework.web.client.RestTemplate;
+import com.app.rankcare.repository.ToxicityRepository;
 
 @RestController
 @RequestMapping("/api")
@@ -311,17 +332,19 @@ public class SiteDataController {
                 Double cr = 0d;
                 String valCRStr = "";
                 String valNCRStr = "";
+                Double bodyWt =0d;
                 for (SiteCalculation siteCalc : siteContamiData) {
                     val = 0d;
+                    bodyWt=Double.valueOf(consumptionData.get(c).getBodyWtAvg());
                     t = chemicalData.get(siteCalc.getChemicalId());
                     if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getWaterConsAvg());
+                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getWaterConsAvg()))/bodyWt;
                     } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg());
-                    }
-                    valNCRStr += val / Double.valueOf(t.getCancerSlopeFactor()) + "~";
+                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg()))/bodyWt;
+                    } 
+                    valNCRStr += val / Double.valueOf(t.getDosageRef()) + "~";
                     valCRStr += val * Double.valueOf(t.getCancerSlopeFactor()) + "~";
-                    ncr += val / Double.valueOf(t.getCancerSlopeFactor());
+                    ncr += val / Double.valueOf(t.getDosageRef());
                     cr += val * Double.valueOf(t.getCancerSlopeFactor());
                 }
                 int contaSize = siteContamiData.size();
@@ -391,16 +414,25 @@ public class SiteDataController {
             Double ncrVar = calculateVariance(tmpNCRArr, ncrMean, sampleSize);
             Double ncrMU = calculateMU(ncrMean, ncrVar);
             Double ncrSigma = calculateSigma(ncrMean, ncrVar);
-            LogNormalDistribution logNormalDistribution = new LogNormalDistribution(ncrMU, ncrSigma, 1);
+            LogNormalDistribution logNormalDistribution =null;
+            
+            /*LOGNRND with range-FOR TESTING*/
+            Random rm=new Random(); rm.nextInt(5000);
+            RandomGenerator rng=RandomGeneratorFactory.createRandomGenerator(rm);
+            logNormalDistribution = new LogNormalDistribution(rng,ncrMU, ncrSigma, 1) ;          
+            System.out.println("Random numbers::lognrnd::"+logNormalDistribution.sample()+"<<lognrndsamplesize>>"+logNormalDistribution.sample(5000));
+            /*LOGNRND with range-FOR TESTING*/
+           
+            logNormalDistribution = new LogNormalDistribution(ncrMU, ncrSigma, 1);
             double randomValue = logNormalDistribution.sample();
-            System.out.println("NCR>>ncrVar::" + ncrVar + "::ncrMU::" + ncrMU + "::ncrSigma::" + ncrSigma + "::ncrLogNrm::" + randomValue);
+            System.out.println("NCR>>ncrVar::" + ncrVar + "::ncrMU::" + ncrMU + "::ncrSigma::" + ncrSigma + "::ncrLogNrm::" + randomValue+ "::ncrLogNrm::" + logNormalDistribution.sample(5000));
 
             Double crVar = calculateVariance(tmpCRArr, crMean, sampleSize);
             Double crMU = calculateMU(crMean, crVar);
             Double crSigma = calculateSigma(crMean, crVar);
             logNormalDistribution = new LogNormalDistribution(crMU, crSigma, 1);
             double crRandomValue = logNormalDistribution.sample();
-            System.out.println("CR>>crVar::" + crVar + "::crMU::" + crMU + "::crSigma::" + crSigma + "::crLogNrm::" + crRandomValue);
+            System.out.println("CR>>crVar::" + crVar + "::crMU::" + crMU + "::crSigma::" + crSigma + "::crLogNrm::" + crRandomValue+ "::crLogNrm::" + logNormalDistribution.sample(5000));
             calcMap = new HashMap<String, Double>();
             calcMap.put("NCR", randomValue);
             calcMap.put("CR", crRandomValue);

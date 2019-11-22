@@ -21,10 +21,10 @@ public class Toxicity extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "chemical_name")
+    @Column(name = "chemical_name", unique = true)
     private String chemicalName;
 
-    @Column(name = "chemical_formula")
+    @Column(name = "chemical_formula", unique = true)
     private String chemicalFormula;
 
     @Column(name = "soil_guideline")
@@ -44,7 +44,7 @@ public class Toxicity extends DateAudit {
 
     @Column(name = "cancer_slope_ref")
     private String cancerSlopeRef;
- 
+
     public Toxicity() {
 
     }
@@ -145,7 +145,8 @@ public class Toxicity extends DateAudit {
 
     public void setCancerSlopeRef(String cancerSlopeRef) {
         this.cancerSlopeRef = cancerSlopeRef;
-    } 
+    }
+
     @Override
     public String toString() {
         return "Toxicity [id=" + id + ", chemicalName=" + chemicalName + ", chemicalFormula=" + chemicalFormula

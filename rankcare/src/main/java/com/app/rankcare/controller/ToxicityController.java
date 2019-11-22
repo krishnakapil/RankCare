@@ -1,5 +1,6 @@
 package com.app.rankcare.controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,9 +9,11 @@ import javax.persistence.EntityManager;
 import javax.validation.Valid;
 
 import com.app.rankcare.payload.ApiResponse;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,22 +57,35 @@ public class ToxicityController {
     @PostMapping("/toxicity/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateToxicity(@Valid @RequestBody ToxicityRequest toxicityRequest) {
-        Toxicity result = toxicityRepository.save(new Toxicity(toxicityRequest.getId(), toxicityRequest.getChemicalName(), toxicityRequest.getChemicalFormula(),
-                toxicityRequest.getSoilGuideline(), toxicityRequest.getSoilRef(), toxicityRequest.getWaterGuideline(), toxicityRequest.getWaterRef(),
-                toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
+        try {
+            Toxicity result = toxicityRepository.save(new Toxicity(toxicityRequest.getId(), toxicityRequest.getChemicalName(), toxicityRequest.getChemicalFormula(),
+                    toxicityRequest.getSoilGuideline(), toxicityRequest.getSoilRef(), toxicityRequest.getWaterGuideline(), toxicityRequest.getWaterRef(),
+                    toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
 
-        logger.info("Saved Data Result::" + result.toString());
+            logger.info("Saved Data Result::" + result.toString());
+        } catch (DataIntegrityViolationException ex) {
+            return new ResponseEntity<Object>(new ApiResponse(false, "Chemical name and Chemical formula should be unique"), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(new ApiResponse(false, "Something went wrong!"), HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<Object>(new ApiResponse(true, "Toxicity data updated successfully"), HttpStatus.OK);
     }
 
     @PostMapping("/toxicity/insert")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> insertToxicity(@Valid @RequestBody ToxicityRequest toxicityRequest) {
-        Toxicity result = toxicityRepository.save(new Toxicity(toxicityRequest.getChemicalName(), toxicityRequest.getChemicalFormula(),
-                toxicityRequest.getSoilGuideline(), toxicityRequest.getSoilRef(), toxicityRequest.getWaterGuideline(), toxicityRequest.getWaterRef(),
-                toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
+        try {
+            Toxicity result = toxicityRepository.save(new Toxicity(toxicityRequest.getChemicalName(), toxicityRequest.getChemicalFormula(),
+                    toxicityRequest.getSoilGuideline(), toxicityRequest.getSoilRef(), toxicityRequest.getWaterGuideline(), toxicityRequest.getWaterRef(),
+                    toxicityRequest.getCancerSlopeFactor(), toxicityRequest.getCancerSlopeRef()));
 
-        logger.info("Saved Data Result::" + result.toString());
+            logger.info("Saved Data Result::" + result.toString());
+        } catch (DataIntegrityViolationException ex) {
+            return new ResponseEntity<Object>(new ApiResponse(false, "Chemical name and Chemical formula should be unique"), HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(new ApiResponse(false, "Something went wrong!"), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<Object>(new ApiResponse(true, "Toxicity data saved successfully"), HttpStatus.OK);
     }
 

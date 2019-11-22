@@ -30,11 +30,9 @@ class AppHeader extends Component {
                 </div>
                 <Header className="app-header">
                     <div className="container">
-                        <div>
-                            <Link to="/">
-                                <img className="app-title-img" src={mainLogo} alt="rankCare" />
-                            </Link>
-                        </div>
+                        <a href="/">
+                            <h2 style={{ float: "left", marginLeft: 40, color: "#327c36" }}>rankCare-II</h2>
+                        </a>
                         {this.props.currentUser &&
                             this.renderMenu()
                         }

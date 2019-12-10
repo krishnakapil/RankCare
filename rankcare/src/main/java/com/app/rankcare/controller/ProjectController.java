@@ -7,6 +7,7 @@ import com.app.rankcare.payload.ApiResponse;
 import com.app.rankcare.payload.ProjectRequest;
 import com.app.rankcare.payload.SiteResponse;
 import com.app.rankcare.repository.ProjectRepository;
+import com.app.rankcare.repository.SiteDataRepository;
 import com.app.rankcare.repository.UserRepository;
 import com.app.rankcare.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class ProjectController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SiteDataRepository siteDataRepository;
+
     @GetMapping("/projects")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
     public Map<String, Object> getProjects(
@@ -48,19 +52,22 @@ public class ProjectController {
 
         Map<String, Object> resMap = new HashMap<>();
 
-        Pageable pagination = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.asc("projectName")));
         resMap.put("pageCnt", 0);
         Page<Project> pgLst;
 
         if (userOptional.isPresent() && userOptional.get().isAdmin()) {
+            Pageable pagination = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.asc("projectName")));
             pgLst = projectRepository.findAll(pagination);
         } else {
+            Pageable pagination = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Order.asc("project_name")));
             pgLst = projectRepository.findUserCreatedProjects(userId, pagination);
         }
 
         if (pgLst.hasContent()) {
             resMap.put("pageCnt", pgLst.getTotalPages());
             resMap.put("data", pgLst.getContent());
+        } else {
+            resMap.put("data", new ArrayList<Project>());
         }
 
         return resMap;
@@ -119,7 +126,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/project/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
     public ResponseEntity<Object> deleteById(@RequestHeader("Authorization") String bearerToken, @PathVariable("id") Long id) {
         String authToken = bearerToken.replace("Bearer ", "");
         Long userId = tokenProvider.getUserIdFromJWT(authToken);
@@ -135,6 +142,8 @@ public class ProjectController {
             ex.printStackTrace();
             return new ResponseEntity<>(new ApiResponse(false, "You don't have access to this project"), HttpStatus.UNAUTHORIZED);
         }
+
+        siteDataRepository.deleteAllByProject(id);
 
         projectRepository.deleteById(id);
 

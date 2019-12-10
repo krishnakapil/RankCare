@@ -17,6 +17,14 @@
     width: auto;
   }
 
+  .app-title{
+    float: left;
+    padding-left: 40px;
+    max-height: 50px;
+    padding-top: 10px;
+    width: auto;
+  }
+
   .crc-title-img{
     float: left;
     padding-left: 40px;

@@ -471,21 +471,30 @@ public class SiteDataController {
                     t=chemicalData.get(siteCalc.getChemicalId());
                     double valNcr=0d;
                     double valCr=0d;
-                    for(int i=0;i<5000;i++) {
-                        if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                            logNormalDistribution = new LogNormalDistribution(Double.valueOf(consumptionData.get(c).getWaterInvGomMean()), Double.valueOf(consumptionData.get(c).getWaterInvGomSd()), 1) ;
-                            refDosage=Double.valueOf(t.getWaterGuideline());
-                        }
-                        else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                            logNormalDistribution = new LogNormalDistribution(Double.valueOf(consumptionData.get(c).getSoilInvGomMean()), Double.valueOf(consumptionData.get(c).getSoilInvGomSd()), 1) ;
-                            refDosage=Double.valueOf(t.getSoilGuideline());
-                        }
-                        double b=logNormalDistribution.sample();
-                        valNcr+=((a*b)/d)/refDosage;
-                        valCr+=((a*b)/d)*Double.valueOf(t.getCancerSlopeFactor());
+                    double gomMean=0d;
+                    double gomSd=0d;
+                    if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
+                    	gomMean=Double.valueOf(consumptionData.get(c).getWaterInvGomMean());
+                    	gomSd=Double.valueOf(consumptionData.get(c).getWaterInvGomSd());
+                    	refDosage=Double.valueOf(t.getWaterGuideline());
                     }
-                    ncr=valNcr/5000;
-                    cr=valCr/5000;
+                    else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
+                    	gomMean=Double.valueOf(consumptionData.get(c).getSoilInvGomMean());
+                    	gomSd=Double.valueOf(consumptionData.get(c).getSoilInvGomSd());  
+                    	refDosage=Double.valueOf(t.getSoilGuideline());
+                    }
+                    double b=0d;
+                    double cncrSlope=Double.valueOf(t.getCancerSlopeFactor());
+                    for(int i=0;i<5000;i++) {
+                        logNormalDistribution = new LogNormalDistribution(gomMean, gomSd, 1) ;                        
+                        b=logNormalDistribution.sample();
+                        valNcr+=((a*b)/d)/refDosage;
+                        valCr+=((a*b)/d)*cncrSlope;
+                    }
+                    valNcr=Double.isNaN(valNcr)==true?0:valNcr;
+                    valCr=Double.isNaN(valCr)==true?0:valCr;
+                    ncr+=valNcr/5000;
+                    cr=+valCr/5000;
                 }
                 siteT3Vals.put("NCR", ncr);
                 siteT3Vals.put("CR", cr);

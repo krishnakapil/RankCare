@@ -125,19 +125,35 @@ class NewConsumption extends Component {
                                 value={getFieldValue('ageGrp')}
                                 style={{ width: '25%' }}
                             >
-                                <Option value="0-3">0-3</Option>
-                                <Option value="3-6">3-6</Option>
-                                <Option value="6-10">6-10</Option>
-                                <Option value="10-18">10-18</Option>
+                                <Option value="0-6">0-6</Option>
+                                <Option value="6-18">6-18</Option>
                                 <Option value="18+">18+</Option>
                             </Select>
                         )}
                     </Form.Item>
                     <Form.Item
-                        label="Body Weight Avg (Kg)">
-                        {getFieldDecorator('bodyWtAvg', {
+                        label="Body Weight Mean">
+                        {getFieldDecorator('bodyWtMean', {
                             rules: [
-                                { required: true, message: 'Please input Body Weight Average!' },
+                                { required: true, message: 'Please input Body Weight Mean!' },
+                                { validator: this.checkNumber },
+                            ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item
+                        label="Body Weight Standard Deviation">
+                        {getFieldDecorator('bodyWtSd', {
+                            rules: [
+                                { required: true, message: 'Please input Body Weight Standard Deviation!' },
+                                { validator: this.checkNumber },
+                            ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item
+                        label="Soil Ingestion Avg (mg/day)">
+                        {getFieldDecorator('soilInvAvg', {
+                            rules: [
+                                { required: true, message: 'Please input Soil In Avg!' },
                                 { validator: this.checkNumber },
                             ],
                         })(<InputNumber />)}
@@ -146,32 +162,57 @@ class NewConsumption extends Component {
                         label="Confidence Limit 95% of soil">
                         {getFieldDecorator('ciData1', {
                             rules: [
-                                { required: true, message: 'Please input CI Data 1!' },
+                                { required: true, message: 'Please input CI Data for Soil!' },
                                 { validator: this.checkNumber },
                             ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item
+                        label="Soil Ingestion Geo Mean">
+                        {getFieldDecorator('soilInvGomMean', {
+                            rules: [
+                                { required: true, message: 'Please input Soil Ingestion Geo Mean!' },
+                                { validator: this.checkNumber },
+                            ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item
+                        label="Soil Ingestion Geo Sd">
+                        {getFieldDecorator('soilInvGomSd', {
+                            rules: [
+                                { required: true, message: 'Please input Soil Ingestion Standard Deviation!' },
+                                { validator: this.checkNumber },
+                            ],
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item label="Water Consumption Avg (ltr/day)">
+                        {getFieldDecorator('waterConsAvg', {
+                            rules: [
+                                { required: true, message: 'Please input Water Consumption Avg!' },
+                                { validator: this.checkNumber },
+                            ]
                         })(<InputNumber />)}
                     </Form.Item>
                     <Form.Item label="Confidence Limit 95% of water">
                         {getFieldDecorator('ciData2', {
                             rules: [
-                                { required: true, message: 'Please input CI Data 2!' },
+                                { required: true, message: 'Please input CI Data of water!' },
                                 { validator: this.checkNumber },
                             ]
                         })(<InputNumber />)}
                     </Form.Item>
-                    <Form.Item
-                        label="Avg Soil Ingestion (mg/day)">
-                        {getFieldDecorator('soilInvAvg', {
+                    <Form.Item label="Water Consumption Geo Mean">
+                        {getFieldDecorator('waterInvGomMean', {
                             rules: [
-                                { required: true, message: 'Please input Soil In Avg!' },
+                                { required: true, message: 'Please input Water Geo Mean!' },
                                 { validator: this.checkNumber },
-                            ],
+                            ]
                         })(<InputNumber />)}
                     </Form.Item>
-                    <Form.Item label="Avg Water Consumption (ltr/day)">
-                        {getFieldDecorator('waterConsAvg', {
+                    <Form.Item label="Water Consumption Geo Sd">
+                        {getFieldDecorator('waterInvGomSd', {
                             rules: [
-                                { required: true, message: 'Please input Water Consumption Avg!' },
+                                { required: true, message: 'Please input Water Geo Sd!' },
                                 { validator: this.checkNumber },
                             ]
                         })(<InputNumber />)}

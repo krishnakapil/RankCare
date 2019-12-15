@@ -40,6 +40,9 @@ public class SiteCalculation extends DateAudit {
     @Column(name = "contamination_value")
     private String contaminationValue;
 
+    @Column(name = "contamination_value_sd")
+    private String contaminationValueSd;
+
     @Column(name = "active_yn")
     private String activeYN;
 
@@ -49,6 +52,32 @@ public class SiteCalculation extends DateAudit {
     public SiteCalculation() {
 
     }
+
+    public SiteCalculation(Long siteId, Long chemicalId, String contaminationType,
+                           String contaminationValue, String measuringUnit, String activeYN,String contaminationValueSd) {
+        super();
+        this.siteId = siteId;
+        this.chemicalId = chemicalId;
+        this.contaminationType = contaminationType;
+        this.contaminationValue = contaminationValue;
+        this.measuringUnit = measuringUnit;
+        this.activeYN = activeYN;
+        this.contaminationValueSd=contaminationValueSd;
+    }
+
+    public SiteCalculation(Long id, Long siteId, Long chemicalId, String contaminationType,
+                           String contaminationValue, String measuringUnit, String activeYN,String contaminationValueSd) {
+        super();
+        this.id = id;
+        this.siteId = siteId;
+        this.chemicalId = chemicalId;
+        this.contaminationType = contaminationType;
+        this.contaminationValue = contaminationValue;
+        this.measuringUnit = measuringUnit;
+        this.activeYN = activeYN;
+        this.contaminationValueSd=contaminationValueSd;
+    }
+
 
     public SiteCalculation(Long siteId, Long chemicalId, String contaminationType,
                            String contaminationValue, String measuringUnit, String activeYN) {
@@ -141,4 +170,13 @@ public class SiteCalculation extends DateAudit {
     public void setMeasuringUnit(String measuringUnit) {
         this.measuringUnit = measuringUnit;
     }
+
+    public String getContaminationValueSd() {
+        return contaminationValueSd;
+    }
+
+    public void setContaminationValueSd(String contaminationValueSd) {
+        this.contaminationValueSd = contaminationValueSd;
+    }
+
 }

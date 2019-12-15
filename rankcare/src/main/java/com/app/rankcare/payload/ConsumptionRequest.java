@@ -5,18 +5,28 @@ import java.util.Map;
 public class ConsumptionRequest {
 
     private Long id;
-	
-    private String ageGrp; 
-    
-    private String bodyWtAvg; 
-    
-    private String ciData1; 
-    
-    private String soilInvAvg; 
-    
-    private String waterConsAvg; 
-    
-    private String ciData2; 
+
+	private String ageGrp;
+
+	private String bodyWtMean;
+
+	private String bodyWtSd;
+
+	private String ciData1;
+
+	private String soilInvAvg;
+
+	private String soilInvGomMean;
+
+	private String soilInvGomSd;
+
+	private String waterConsAvg;
+
+	private String ciData2;
+
+	private String waterInvGomMean;
+
+	private String waterInvGomSd;
 	
 	private Integer pageNo=0;
 	
@@ -42,14 +52,6 @@ public class ConsumptionRequest {
 
 	public void setAgeGrp(String ageGrp) {
 		this.ageGrp = ageGrp;
-	}
-
-	public String getBodyWtAvg() {
-		return bodyWtAvg;
-	}
-
-	public void setBodyWtAvg(String bodyWtAvg) {
-		this.bodyWtAvg = bodyWtAvg;
 	}
 
 	public String getCiData1() {
@@ -122,5 +124,29 @@ public class ConsumptionRequest {
 
 	public void setSearchBy(Map<String, String> searchBy) {
 		this.searchBy = searchBy;
+	}
+
+	public String getBodyWtMean() {
+		return bodyWtMean;
+	}
+
+	public String getBodyWtSd() {
+		return bodyWtSd;
+	}
+
+	public String getSoilInvGomMean() {
+		return soilInvGomMean;
+	}
+
+	public String getSoilInvGomSd() {
+		return soilInvGomSd;
+	}
+
+	public String getWaterInvGomMean() {
+		return waterInvGomMean;
+	}
+
+	public String getWaterInvGomSd() {
+		return waterInvGomSd;
 	}
 }

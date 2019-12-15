@@ -27,9 +27,19 @@ class ConsumptionData extends Component {
                     sortDirections: ['descend', 'ascend'],
                 },
                 {
-                    title: 'Body Weight Avg (Kg)',
-                    dataIndex: 'bodyWtAvg',
-                    key: 'bodyWtAvg',
+                    title: 'Body Weight Mean',
+                    dataIndex: 'bodyWtMean',
+                    key: 'bodyWtMean',
+                },
+                {
+                    title: 'Body Weight SD',
+                    dataIndex: 'bodyWtSd',
+                    key: 'bodyWtSd',
+                },
+                {
+                    title: 'Soil Ingestion Avg (mg/day)',
+                    dataIndex: 'soilInvAvg',
+                    key: 'soilInvAvg',
                 },
                 {
                     title: 'Confidence Limit 95% of soil',
@@ -37,19 +47,34 @@ class ConsumptionData extends Component {
                     key: 'ciData1',
                 },
                 {
+                    title: 'Soil Ingestion Geo Mean',
+                    dataIndex: 'soilInvGomMean',
+                    key: 'soilInvGomMean',
+                },
+                {
+                    title: 'Soil Ingestion Geo SD',
+                    dataIndex: 'soilInvGomSd',
+                    key: 'soilInvGomSd',
+                },
+                {
+                    title: 'Water Consumption Avg (ltr/day)',
+                    dataIndex: 'waterConsAvg',
+                    key: 'waterConsAvg',
+                },
+                {
                     title: 'Confidence Limit 95% of water',
                     dataIndex: 'ciData2',
                     key: 'ciData2',
                 },
                 {
-                    title: 'Avg Soil Ingestion (mg/day)',
-                    dataIndex: 'soilInvAvg',
-                    key: 'soilInvAvg',
+                    title: 'Water Consumption Geo Mean',
+                    dataIndex: 'waterInvGomMean',
+                    key: 'waterInvGomMean',
                 },
                 {
-                    title: 'Avg Water Consumption (ltr/day)',
-                    dataIndex: 'waterConsAvg',
-                    key: 'waterConsAvg',
+                    title: 'Water Consumption Geo SD',
+                    dataIndex: 'waterInvGomSd',
+                    key: 'waterInvGomSd',
                 },
             ] :
             [
@@ -61,9 +86,19 @@ class ConsumptionData extends Component {
                     sortDirections: ['descend', 'ascend'],
                 },
                 {
-                    title: 'Body Weight Avg (Kg)',
-                    dataIndex: 'bodyWtAvg',
-                    key: 'bodyWtAvg',
+                    title: 'Body Weight Mean',
+                    dataIndex: 'bodyWtMean',
+                    key: 'bodyWtMean',
+                },
+                {
+                    title: 'Body Weight SD',
+                    dataIndex: 'bodyWtSd',
+                    key: 'bodyWtSd',
+                },
+                {
+                    title: 'Soil Ingestion Avg (mg/day)',
+                    dataIndex: 'soilInvAvg',
+                    key: 'soilInvAvg',
                 },
                 {
                     title: 'Confidence Limit 95% of soil',
@@ -71,19 +106,34 @@ class ConsumptionData extends Component {
                     key: 'ciData1',
                 },
                 {
-                    title: 'Confidence Limit 95% of water',
-                    dataIndex: 'ciData2',
-                    key: 'ciData2',
+                    title: 'Soil Ingestion Geo Mean',
+                    dataIndex: 'soilInvGomMean',
+                    key: 'soilInvGomMean',
                 },
                 {
-                    title: 'Avg Soil Ingestion (mg/day)',
-                    dataIndex: 'soilInvAvg',
-                    key: 'soilInvAvg',
+                    title: 'Soil Ingestion Geo SD',
+                    dataIndex: 'soilInvGomSd',
+                    key: 'soilInvGomSd',
                 },
                 {
                     title: 'Avg Water Consumption (ltr/day)',
                     dataIndex: 'waterConsAvg',
                     key: 'waterConsAvg',
+                },
+                {
+                    title: 'Confidence Limit 95% of water',
+                    dataIndex: 'ciData2',
+                    key: 'ciData2',
+                },
+                {
+                    title: 'Water Consumption Geo Mean',
+                    dataIndex: 'waterInvGomMean',
+                    key: 'waterInvGomMean',
+                },
+                {
+                    title: 'Water Consumption Geo SD',
+                    dataIndex: 'waterInvGomSd',
+                    key: 'waterInvGomSd',
                 },
             ]
         }
@@ -145,25 +195,45 @@ class ConsumptionData extends Component {
                                 ...props.ageGrp,
                                 value: selectedConsumption.ageGrp
                             }),
-                            bodyWtAvg: Form.createFormField({
-                                ...props.bodyWtAvg,
-                                value: selectedConsumption.bodyWtAvg
+                            bodyWtMean: Form.createFormField({
+                                ...props.bodyWtMean,
+                                value: selectedConsumption.bodyWtMean
                             }),
-                            ciData1: Form.createFormField({
-                                ...props.ciData1,
-                                value: selectedConsumption.ciData1
-                            }),
-                            ciData2: Form.createFormField({
-                                ...props.ciData2,
-                                value: selectedConsumption.ciData2
+                            bodyWtSd: Form.createFormField({
+                                ...props.bodyWtSd,
+                                value: selectedConsumption.bodyWtSd
                             }),
                             soilInvAvg: Form.createFormField({
                                 ...props.soilInvAvg,
                                 value: selectedConsumption.soilInvAvg
                             }),
+                            ciData1: Form.createFormField({
+                                ...props.ciData1,
+                                value: selectedConsumption.ciData1
+                            }),
+                            soilInvGomMean: Form.createFormField({
+                                ...props.soilInvGomMean,
+                                value: selectedConsumption.soilInvGomMean
+                            }),
+                            soilInvGomSd: Form.createFormField({
+                                ...props.soilInvGomSd,
+                                value: selectedConsumption.soilInvGomSd
+                            }),
                             waterConsAvg: Form.createFormField({
                                 ...props.waterConsAvg,
                                 value: selectedConsumption.waterConsAvg
+                            }),
+                            ciData2: Form.createFormField({
+                                ...props.ciData2,
+                                value: selectedConsumption.ciData2
+                            }),
+                            waterInvGomMean: Form.createFormField({
+                                ...props.waterInvGomMean,
+                                value: selectedConsumption.waterInvGomMean
+                            }),
+                            waterInvGomSd: Form.createFormField({
+                                ...props.waterInvGomSd,
+                                value: selectedConsumption.waterInvGomSd
                             }),
                         };
                     } else {

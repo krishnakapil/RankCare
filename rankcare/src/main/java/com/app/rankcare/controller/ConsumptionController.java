@@ -133,8 +133,11 @@ public class ConsumptionController {
     @PostMapping("/consumption/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateConsumption(@Valid @RequestBody ConsumptionRequest consumptionRequest) {
-        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getId(), consumptionRequest.getAgeGrp(), consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
-                consumptionRequest.getSoilInvAvg(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2()));
+        Consumption consumption = new Consumption(consumptionRequest.getId(), consumptionRequest.getAgeGrp(), consumptionRequest.getBodyWtMean(), consumptionRequest.getBodyWtSd(), consumptionRequest.getCiData1(),
+                consumptionRequest.getSoilInvAvg(), consumptionRequest.getSoilInvGomMean(), consumptionRequest.getSoilInvGomSd(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2(),
+                consumptionRequest.getWaterInvGomMean(), consumptionRequest.getWaterInvGomSd());
+
+        Consumption result = consumptionRepository.save(consumption);
 
         logger.info("Saved Data Result::" + result.toString());
         return new ResponseEntity<Object>(new ApiResponse(true, "Consumption data updated successfully"), HttpStatus.OK);
@@ -143,8 +146,11 @@ public class ConsumptionController {
     @PostMapping("/consumption/insert")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> insertConsumption(@Valid @RequestBody ConsumptionRequest consumptionRequest) {
-        Consumption result = consumptionRepository.save(new Consumption(consumptionRequest.getAgeGrp(), consumptionRequest.getBodyWtAvg(), consumptionRequest.getCiData1(),
-                consumptionRequest.getSoilInvAvg(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2()));
+        Consumption consumption = new Consumption(consumptionRequest.getAgeGrp(), consumptionRequest.getBodyWtMean(), consumptionRequest.getBodyWtSd(), consumptionRequest.getCiData1(),
+                consumptionRequest.getSoilInvAvg(), consumptionRequest.getSoilInvGomMean(), consumptionRequest.getSoilInvGomSd(), consumptionRequest.getWaterConsAvg(), consumptionRequest.getCiData2(),
+                consumptionRequest.getWaterInvGomMean(), consumptionRequest.getWaterInvGomSd());
+
+        Consumption result = consumptionRepository.save(consumption);
 
         logger.info("Saved Data Result::" + result.toString());
         return new ResponseEntity<Object>(new ApiResponse(true, "Consumption data saved successfully"), HttpStatus.OK);
@@ -156,15 +162,15 @@ public class ConsumptionController {
         consumptionRepository.deleteById(id.longValue());
         return new ResponseEntity<Object>(new ApiResponse(true, "Consumption data deleted successfully!"), HttpStatus.OK);
     }
-    
-    public Map<String,Consumption> getConsumptionAgeGrpData() {
-    	Map<String,Consumption> resMap=new HashMap<String,Consumption>();
+
+    public Map<String, Consumption> getConsumptionAgeGrpData() {
+        Map<String, Consumption> resMap = new HashMap<String, Consumption>();
         try {
-            List<Consumption> consLst=getAllConsumptionData();
-            if(consLst!=null && !consLst.isEmpty()) {
-            	for(Consumption cons:consLst) {
-            		resMap.put(cons.getAgeGrp(), cons);
-            	}
+            List<Consumption> consLst = getAllConsumptionData();
+            if (consLst != null && !consLst.isEmpty()) {
+                for (Consumption cons : consLst) {
+                    resMap.put(cons.getAgeGrp(), cons);
+                }
             }
         } catch (Exception e) {
             logger.error("Fetching of getConsumptionAgeGrpData error:" + e.getMessage());

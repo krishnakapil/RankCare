@@ -12,6 +12,7 @@ import java.util.Random;
 import javax.validation.Valid;
 
 import org.apache.commons.math3.distribution.LogNormalDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.random.RandomGeneratorFactory;
 import org.slf4j.Logger;
@@ -81,7 +82,7 @@ public class SiteDataController {
         if (siteRegisterRequest.getSiteContaminant() != null && !siteRegisterRequest.getSiteContaminant().isEmpty()) {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
-                res = siteCalculationRepository.save(new SiteCalculation(result.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), "Y"));
+                res = siteCalculationRepository.save(new SiteCalculation(result.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), "Y",contaminantData.getContaminationValueSd()));
                 logger.info("Data Saved>" + res);
             }
         }
@@ -108,9 +109,9 @@ public class SiteDataController {
             SiteCalculation res;
             for (SiteContaminantData contaminantData : siteRegisterRequest.getSiteContaminant()) {
                 if (contaminantData.getId() != null) {
-                    res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(), siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), contaminantData.getActiveYN()));
+                    res = siteCalculationRepository.save(new SiteCalculation(contaminantData.getId(), siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), contaminantData.getActiveYN(),contaminantData.getContaminationValueSd()));
                 } else {
-                    res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), "Y"));
+                    res = siteCalculationRepository.save(new SiteCalculation(siteRegisterRequest.getId(), contaminantData.getChemicalId(), contaminantData.getContaminationType(), contaminantData.getContaminationValue(), contaminantData.getMeasuringUnit(), "Y",contaminantData.getContaminationValueSd()));
                 }
                 logger.info("Data Saved>" + res);
             }
@@ -212,7 +213,7 @@ public class SiteDataController {
                 e.setContaminationValue(siteCalc.getContaminationValue());
                 e.setMeasuringUnit(siteCalc.getMeasuringUnit());
                 e.setValueWithUnit(siteCalc.getContaminationValue() + " " + siteCalc.getMeasuringUnit());
-
+                e.setContaminationValueSd(siteCalc.getContaminationValueSd());
                 Optional<Toxicity> toxicityOptional = toxicityRepository.findById(siteCalc.getChemicalId());
                 if (toxicityOptional.isPresent()) {
                     e.setChemicalName(toxicityOptional.get().getChemicalName());
@@ -332,20 +333,18 @@ public class SiteDataController {
                 Double cr = 0d;
                 String valCRStr = "";
                 String valNCRStr = "";
-                Double bodyWt =0d;
                 for (SiteCalculation siteCalc : siteContamiData) {
                     val = 0d;
-                    bodyWt=Double.valueOf(consumptionData.get(c).getBodyWtAvg());
                     t = chemicalData.get(siteCalc.getChemicalId());
                     if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getWaterConsAvg()))/bodyWt;
+                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getWaterConsAvg()));
                         valNCRStr += val / Double.valueOf(t.getWaterGuideline()) + "~";
                         ncr += val / Double.valueOf(t.getWaterGuideline());
                     } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg()))/bodyWt;
+                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg()));
                         valNCRStr += val / Double.valueOf(t.getSoilGuideline()) + "~";
                         ncr += val / Double.valueOf(t.getSoilGuideline());
-                    } 
+                    }
                     valCRStr += val * Double.valueOf(t.getCancerSlopeFactor()) + "~";
                     cr += val * Double.valueOf(t.getCancerSlopeFactor());
                 }
@@ -369,7 +368,8 @@ public class SiteDataController {
         Map<String, Object> resMap = new HashMap<String, Object>();
         resMap.put("T1", siteCalculationT1(id));
         Map<String, Map<String, Double>> t2 = siteCalculationT2(id);
-        resMap.put("T3", siteCalculationT3(id, t2));
+        //resMap.put("T3", siteCalculationT3(id, t2));
+        resMap.put("T3", siteCalculationT3(id));
         Map<String, Double> inMap = null;
         for (String s : t2.keySet()) {
             inMap = t2.get(s);
@@ -417,14 +417,14 @@ public class SiteDataController {
             Double ncrMU = calculateMU(ncrMean, ncrVar);
             Double ncrSigma = calculateSigma(ncrMean, ncrVar);
             LogNormalDistribution logNormalDistribution =null;
-            
+
             /*LOGNRND with range-FOR TESTING*/
             Random rm=new Random(); rm.nextInt(5000);
             RandomGenerator rng=RandomGeneratorFactory.createRandomGenerator(rm);
-            logNormalDistribution = new LogNormalDistribution(rng,ncrMU, ncrSigma, 1) ;          
+            logNormalDistribution = new LogNormalDistribution(rng,ncrMU, ncrSigma, 1) ;
             System.out.println("Random numbers::lognrnd::"+logNormalDistribution.sample()+"<<lognrndsamplesize>>"+logNormalDistribution.sample(5000));
             /*LOGNRND with range-FOR TESTING*/
-           
+
             logNormalDistribution = new LogNormalDistribution(ncrMU, ncrSigma, 1);
             double randomValue = logNormalDistribution.sample();
             System.out.println("NCR>>ncrVar::" + ncrVar + "::ncrMU::" + ncrMU + "::ncrSigma::" + ncrSigma + "::ncrLogNrm::" + randomValue+ "::ncrLogNrm::" + logNormalDistribution.sample(5000));
@@ -441,6 +441,59 @@ public class SiteDataController {
             resMap.put(s, calcMap);
         }
         return resMap;
+    }
+    private Map<String, Map<String, Double>> siteCalculationT3(Long id) {
+        Map<Long, Toxicity> chemicalData = chemicalController.getChemicalsData();
+        Map<String, Consumption> consumptionData = consumptionController.getConsumptionAgeGrpData();
+        List<SiteCalculation> siteContamiData = null;
+        Map<String, Double> siteT3Vals = null;
+        Map<String, Map<String, Double>> res = new HashMap<String, Map<String, Double>>();
+        siteContamiData = siteCalculationRepository.findBySiteId(id);
+        if (siteContamiData != null && !siteContamiData.isEmpty()) {
+            for (String c : consumptionData.keySet()) {
+                siteT3Vals = new HashMap<String, Double>();
+                Toxicity t = null;
+                Double ncr = 0d;
+                Double cr = 0d;
+                LogNormalDistribution logNormalDistribution =null;
+                NormalDistribution normalDistribution=null;
+                for (SiteCalculation siteCalc : siteContamiData) {
+                    double m=Double.valueOf(siteCalc.getContaminationValue());
+                    double sd=Double.valueOf(siteCalc.getContaminationValueSd());
+                    double mPow2=Math.pow(m, 2);
+                    double mu=Math.log(mPow2/Math.sqrt(sd+mPow2));
+                    double var=Math.sqrt(Math.log(sd/(mPow2+1)));
+                    logNormalDistribution = new LogNormalDistribution(mu, var, 1) ;
+                    double a=logNormalDistribution.sample();
+                    normalDistribution = new NormalDistribution(Double.valueOf(consumptionData.get(c).getBodyWtMean()), Double.valueOf(consumptionData.get(c).getBodyWtSd()), 1) ;
+                    double d=normalDistribution.sample();
+                    double refDosage=0d;
+                    t=chemicalData.get(siteCalc.getChemicalId());
+                    double valNcr=0d;
+                    double valCr=0d;
+                    for(int i=0;i<5000;i++) {
+                        if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
+                            logNormalDistribution = new LogNormalDistribution(Double.valueOf(consumptionData.get(c).getWaterInvGomMean()), Double.valueOf(consumptionData.get(c).getWaterInvGomSd()), 1) ;
+                            refDosage=Double.valueOf(t.getWaterGuideline());
+                        }
+                        else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
+                            logNormalDistribution = new LogNormalDistribution(Double.valueOf(consumptionData.get(c).getSoilInvGomMean()), Double.valueOf(consumptionData.get(c).getSoilInvGomSd()), 1) ;
+                            refDosage=Double.valueOf(t.getSoilGuideline());
+                        }
+                        double b=logNormalDistribution.sample();
+                        valNcr+=((a*b)/d)/refDosage;
+                        valCr+=((a*b)/d)*Double.valueOf(t.getCancerSlopeFactor());
+                    }
+                    ncr=valNcr/5000;
+                    cr=valCr/5000;
+                }
+                siteT3Vals.put("NCR", ncr);
+                siteT3Vals.put("CR", cr);
+                res.put(c, siteT3Vals);
+            }
+        }
+
+        return res;
     }
 
     private Double calculateVariance(String[] indvArr, Double mean, Double sampleSize) {
@@ -461,5 +514,16 @@ public class SiteDataController {
         //sigma = sqrt(log(v/(m^2)+1))
         Double meanSq = Math.pow(mean, 2);
         return Math.sqrt(Math.log(variance / (meanSq + 1)));
+    }
+    public static void main(String k[]) {
+        Random rm=new Random(); rm.nextInt(5000);
+        RandomGenerator rng=RandomGeneratorFactory.createRandomGenerator(rm);
+        LogNormalDistribution logNormalDistribution = new LogNormalDistribution(rng,15, 0.5, 1) ;
+        System.out.println(logNormalDistribution.sample());
+        logNormalDistribution = new LogNormalDistribution(15, 0.5, 1) ;
+        System.out.println(logNormalDistribution.sample());
+        logNormalDistribution = new LogNormalDistribution(15, 0.5, 1) ;
+        double[] cc=logNormalDistribution.sample(5000);
+        System.out.println(logNormalDistribution.sample(5000).getClass());
     }
 }

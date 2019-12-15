@@ -122,11 +122,7 @@ class NewToxicity extends Component {
                     </Form.Item>
                     <Form.Item
                         label="Chemical Formula">
-                        {getFieldDecorator('chemicalFormula', {
-                            rules: [
-                                { required: true, message: 'Please input Chemical Formula!' },
-                            ],
-                        })(<Input />)}
+                        {getFieldDecorator('chemicalFormula', {})(<Input />)}
                     </Form.Item>
                     <Form.Item
                         label="Soil Guideline (mg/kg)">
@@ -139,11 +135,7 @@ class NewToxicity extends Component {
                     </Form.Item>
                     <Form.Item
                         label="Soil Reference">
-                        {getFieldDecorator('soilRef', {
-                            rules: [
-                                { required: true, message: 'Please input Soil Reference!' },
-                            ],
-                        })(<Input />)}
+                        {getFieldDecorator('soilRef', {})(<Input />)}
                     </Form.Item>
                     <Form.Item label="Water Guideline (mg/ltr)">
                         {getFieldDecorator('waterGuideline', {
@@ -155,9 +147,7 @@ class NewToxicity extends Component {
                     </Form.Item>
                     <Form.Item
                         label="Water Reference">
-                        {getFieldDecorator('waterRef', {
-                            rules: [{ required: true, message: 'Please input Water Reference!' }],
-                        })(<Input />)}
+                        {getFieldDecorator('waterRef', {})(<Input />)}
                     </Form.Item>
                     <Form.Item label="Cancer Slope Factor">
                         {getFieldDecorator('cancerSlopeFactor', {
@@ -169,9 +159,7 @@ class NewToxicity extends Component {
                     </Form.Item>
                     <Form.Item
                         label="Cancer Slope Reference">
-                        {getFieldDecorator('cancerSlopeRef', {
-                            rules: [{ required: true, message: 'Please input Cancer Slope Reference!' }],
-                        })(<Input />)}
+                        {getFieldDecorator('cancerSlopeRef', {})(<Input />)}
                     </Form.Item>
                 </Form>
             </Modal>

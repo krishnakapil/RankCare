@@ -3,21 +3,23 @@ package com.app.rankcare.payload;
 public class SiteContaminantData {
 
 	private Long id;
-	
+
 
 	private Long chemicalId;
-	
+
 	private String chemicalName;
 
 	private String contaminationType;
 
 	private String contaminationValue;
-	
+
 	private String activeYN;
 
 	private String measuringUnit;
 
 	private String valueWithUnit;
+
+	private String contaminationValueSd;
 
 	public String getValueWithUnit() {
 		return valueWithUnit;
@@ -82,6 +84,14 @@ public class SiteContaminantData {
 	public void setActiveYN(String activeYN) {
 		this.activeYN = activeYN;
 	}
-	
-	
+
+	public String getContaminationValueSd() {
+		return contaminationValueSd;
+	}
+
+	public void setContaminationValueSd(String contaminationValueSd) {
+		this.contaminationValueSd = contaminationValueSd;
+	}
+
+
 }

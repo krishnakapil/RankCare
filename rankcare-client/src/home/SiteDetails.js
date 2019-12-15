@@ -31,9 +31,14 @@ class SiteDetails extends Component {
                     sortDirections: ['descend', 'ascend'],
                 },
                 {
-                    title: 'Contamination Value',
-                    dataIndex: 'valueWithUnit',
-                    key: 'valueWithUnit',
+                    title: 'Contamination Mean',
+                    dataIndex: 'contaminationValue',
+                    key: 'contaminationValue',
+                },
+                {
+                    title: 'Contamination Standard Deviation',
+                    dataIndex: 'contaminationValueSd',
+                    key: 'contaminationValueSd',
                 },
             ]
         }

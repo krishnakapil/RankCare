@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { InputNumber, Select } from 'antd';
+import { InputNumber, Select, Row, Col } from 'antd';
 
 const { Option } = Select;
 
@@ -25,10 +25,11 @@ class ChemicalInput extends React.Component {
     this.state = {
       chemicalOptions: checmicalOptions,
       chemicalId: chemicals[0].id || 0,
-      chemicalName : chemicals[0].chemicalName || "",
+      chemicalName: chemicals[0].chemicalName || "",
       contaminationValue: value.contaminationValue || 0,
       contaminationType: value.contaminationType || 'soil',
-      measuringUnit : value.measuringUnit || 'mg/kg'
+      measuringUnit: value.measuringUnit || 'mg/kg',
+      contaminationValueSd: value.contaminationValueSd || 0,
     };
   }
 
@@ -43,10 +44,21 @@ class ChemicalInput extends React.Component {
     this.triggerChange({ contaminationValue });
   };
 
+  handleSdChange = e => {
+    const contaminationValueSd = parseFloat(e || 0, 10);
+    if (isNaN(contaminationValueSd)) {
+      return;
+    }
+    if (!('value' in this.props)) {
+      this.setState({ contaminationValueSd });
+    }
+    this.triggerChange({ contaminationValueSd });
+  };
+
   handleContaminationTypeChange = contaminationType => {
     const measuringUnit = contaminationType === "water" ? "mg/ltr" : "mg/kg";
     if (!('value' in this.props)) {
-      this.setState({ contaminationType, measuringUnit});
+      this.setState({ contaminationType, measuringUnit });
     }
     this.triggerChange({ contaminationType, measuringUnit });
   };
@@ -55,16 +67,16 @@ class ChemicalInput extends React.Component {
     const chemicalName = this.props.chemicals.find((chemical) => {
       return chemical.id === chemical_id;
     }).chemicalName
-    
+
     if (!('value' in this.props)) {
-      this.setState({ 
-        chemicalId : chemical_id,
-        chemicalName : chemicalName
+      this.setState({
+        chemicalId: chemical_id,
+        chemicalName: chemicalName
       });
     }
-    this.triggerChange({ 
-      chemicalId : chemical_id,
-      chemicalName : chemicalName
+    this.triggerChange({
+      chemicalId: chemical_id,
+      chemicalName: chemicalName
     });
   };
 
@@ -81,35 +93,58 @@ class ChemicalInput extends React.Component {
 
   render() {
     const { size } = this.props;
-    const { measuringUnit, chemicalOptions, chemicalId, contaminationType, contaminationValue } = this.state;
+    const { measuringUnit, chemicalOptions, chemicalId, contaminationType, contaminationValue, contaminationValueSd } = this.state;
     return (
-      <span>
-        <Select
-          value={contaminationType}
-          size={size}
-          style={{ width: '23%', marginRight: '2%' }}
-          onChange={this.handleContaminationTypeChange}
-        >
-          <Option value="soil">Soil</Option>
-          <Option value="water">Water</Option>
-        </Select>
-        <Select
-          value={chemicalId}
-          size={size}
-          style={{ width: '28%', marginRight: '2%' }}
-          onChange={this.handleChemicalChange}
-        >
-          {chemicalOptions}
-        </Select>
-        <InputNumber
-          type="text"
-          size={size}
-          value={contaminationValue}
-          onChange={this.handleNumberChange}
-          style={{ width: '20%', marginRight: '2%' }}
-        />
-        {measuringUnit}
-      </span>
+      <div>
+        <Row>
+          <Col span={8}>
+            <Select
+              value={contaminationType}
+              size={size}
+              onChange={this.handleContaminationTypeChange}
+            >
+              <Option value="soil">Soil</Option>
+              <Option value="water">Water</Option>
+            </Select>
+          </Col>
+          <Col span={16}>
+            <Select
+              value={chemicalId}
+              size={size}
+              style={{ marginLeft: '5%', width : '95%' }}
+              onChange={this.handleChemicalChange}
+            >
+              {chemicalOptions}
+            </Select>
+          </Col>
+        </Row>
+        <Row style={{ marginTop : '10px' }}>
+          <Col span={7}><h4>Mean</h4></Col>
+          <Col>
+          <InputNumber
+            type="text"
+            size={size}
+            value={contaminationValue}
+            onChange={this.handleNumberChange}
+            style={{ width: '30%', marginLeft: '5%', marginRight: '2%' }}
+          />
+          {measuringUnit}
+          </Col>
+        </Row>
+        <Row style={{ marginTop : '10px' }}>
+          <Col span={7}><h4>Standard Deviation</h4></Col>
+          <Col>
+          <InputNumber
+            type="text"
+            size={size}
+            value={contaminationValueSd}
+            onChange={this.handleSdChange}
+            style={{ width: '30%', marginLeft: '5%', marginRight: '2%' }}
+          />
+          {measuringUnit}
+          </Col>
+        </Row>
+      </div>
     );
   }
 }

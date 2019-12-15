@@ -38,7 +38,7 @@ class NewSite extends Component {
                 confirmLoading: true,
                 isLoading: true
             });
-
+            
             const nonNullChemicals = values.chemicals.filter(function (chemical) {
                 return chemical
             });
@@ -193,8 +193,7 @@ class NewSite extends Component {
                 {
                     index > 0 ? <Icon
                         className="dynamic-delete-button"
-                        type="minus-circle-o"
-                        style={{ marginLeft: 24 }}
+                        type="delete"
                         onClick={() => this.remove(k)}
                     /> : null
                 }

@@ -147,10 +147,10 @@ public class SiteCalculation extends DateAudit {
         return contaminationValue;
     }
 
-    public Double getContaminationValueInMilli() {
-        return Double.parseDouble(contaminationValue);
-    }
-
+	/*
+	 * public Double getContaminationValueInMilli() { return
+	 * Double.parseDouble(contaminationValue); }
+	 */
     public void setContaminationValue(String contaminationValue) {
         this.contaminationValue = contaminationValue;
     }

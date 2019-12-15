@@ -305,9 +305,9 @@ public class SiteDataController {
             for (SiteCalculation siteCalc : siteContamiData) {
                 t = chemicalData.get(siteCalc.getChemicalId());
                 if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                    tw += siteCalc.getContaminationValueInMilli() / Double.valueOf(t.getWaterGuideline());
+                    tw += (Double.valueOf(siteCalc.getContaminationValue())) / Double.valueOf(t.getWaterGuideline());
                 } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                    ts += siteCalc.getContaminationValueInMilli() / Double.valueOf(t.getSoilGuideline());
+                    ts += (Double.valueOf(siteCalc.getContaminationValue())) / Double.valueOf(t.getSoilGuideline());
                 }
             }
         }
@@ -337,11 +337,11 @@ public class SiteDataController {
                     val = 0d;
                     t = chemicalData.get(siteCalc.getChemicalId());
                     if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getWaterConsAvg()));
+                        val = ((Double.valueOf(siteCalc.getContaminationValue())) * Double.valueOf(consumptionData.get(c).getWaterConsAvg()));
                         valNCRStr += val / Double.valueOf(t.getWaterGuideline()) + "~";
                         ncr += val / Double.valueOf(t.getWaterGuideline());
                     } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = (siteCalc.getContaminationValueInMilli() * Double.valueOf(consumptionData.get(c).getSoilInvAvg()));
+                        val = ((Double.valueOf(siteCalc.getContaminationValue())) * Double.valueOf(consumptionData.get(c).getSoilInvAvg()));
                         valNCRStr += val / Double.valueOf(t.getSoilGuideline()) + "~";
                         ncr += val / Double.valueOf(t.getSoilGuideline());
                     }

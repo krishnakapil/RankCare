@@ -2,6 +2,7 @@ package com.app.rankcare.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -164,7 +165,7 @@ public class ConsumptionController {
     }
 
     public Map<String, Consumption> getConsumptionAgeGrpData() {
-        Map<String, Consumption> resMap = new HashMap<String, Consumption>();
+        Map<String, Consumption> resMap = new LinkedHashMap<String, Consumption>();
         try {
             List<Consumption> consLst = getAllConsumptionData();
             if (consLst != null && !consLst.isEmpty()) {

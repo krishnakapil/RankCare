@@ -114,7 +114,7 @@ class CompareSites extends Component {
     renderTierTwoChart() {
         const sitesData = this.state.sitesData;
         if (sitesData && sitesData.length > 1) {
-            const ageGroups = ['0-3', '3-6', '6-10', '10-18', '18+'];
+            const ageGroups = ['0-6', '6-18', '18+'];
             const fields = ["NCR", "CR"];
             const dataByAgeGroup = {};
 
@@ -158,7 +158,7 @@ class CompareSites extends Component {
     renderTierThreeChart() {
         const sitesData = this.state.sitesData;
         if (sitesData && sitesData.length > 1) {
-            const ageGroups = ['0-3', '3-6', '6-10', '10-18', '18+'];
+            const ageGroups = ['0-6', '6-18', '18+'];
             const fields = ["NCR", "CR"];
             const dataByAgeGroup = {};
 

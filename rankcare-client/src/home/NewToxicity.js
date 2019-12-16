@@ -161,6 +161,18 @@ class NewToxicity extends Component {
                         label="Cancer Slope Reference">
                         {getFieldDecorator('cancerSlopeRef', {})(<Input />)}
                     </Form.Item>
+                    <Form.Item label="Ref Dosage Value">
+                        {getFieldDecorator('dosageRefValue', {
+                            rules: [
+                                { required: true, message: 'Please input Ref Dosage Value!' },
+                                { validator: this.checkNumber },
+                            ]
+                        })(<InputNumber />)}
+                    </Form.Item>
+                    <Form.Item
+                        label="Reference">
+                        {getFieldDecorator('reference', {})(<Input />)}
+                    </Form.Item>
                 </Form>
             </Modal>
         )

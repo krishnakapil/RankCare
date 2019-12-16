@@ -5,144 +5,154 @@ import java.util.Map;
 public class ToxicityRequest {
 
     private Long id;
-	
-	private String chemicalName;
-	
-	private String chemicalFormula;
-	
-	private String soilGuideline;
-	
-	private String soilRef;
 
-	private String waterGuideline;
-	
-	private String waterRef;
+    private String chemicalName;
 
-	private String cancerSlopeFactor;
-	
-	private String cancerSlopeRef;
-	
-	private Integer pageNo=0;
-	
-	private Integer pageSize=10;
-	
-	private String sortBy="id";
-	
-	private String orderBy="ASC";
-	
-	private Map<String,String> searchBy;
+    private String chemicalFormula;
 
-	public Long getId() {
-		return id;
-	}
+    private String soilGuideline;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private String soilRef;
 
-	public String getChemicalName() {
-		return chemicalName;
-	}
+    private String waterGuideline;
 
-	public void setChemicalName(String chemicalName) {
-		this.chemicalName = chemicalName;
-	}
+    private String waterRef;
 
-	public String getChemicalFormula() {
-		return chemicalFormula;
-	}
+    private String cancerSlopeFactor;
 
-	public void setChemicalFormula(String chemicalFormula) {
-		this.chemicalFormula = chemicalFormula;
-	}
+    private String cancerSlopeRef;
 
-	public String getSoilGuideline() {
-		return soilGuideline;
-	}
+    private String dosageRefValue;
 
-	public void setSoilGuideline(String soilGuideline) {
-		this.soilGuideline = soilGuideline;
-	}
+    private String reference;
 
-	public String getSoilRef() {
-		return soilRef;
-	}
+    private Integer pageNo = 0;
 
-	public void setSoilRef(String soilRef) {
-		this.soilRef = soilRef;
-	}
+    private Integer pageSize = 10;
 
-	public String getWaterGuideline() {
-		return waterGuideline;
-	}
+    private String sortBy = "id";
 
-	public void setWaterGuideline(String waterGuideline) {
-		this.waterGuideline = waterGuideline;
-	}
+    private String orderBy = "ASC";
 
-	public String getWaterRef() {
-		return waterRef;
-	}
+    private Map<String, String> searchBy;
 
-	public void setWaterRef(String waterRef) {
-		this.waterRef = waterRef;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getCancerSlopeFactor() {
-		return cancerSlopeFactor;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setCancerSlopeFactor(String cancerSlopeFactor) {
-		this.cancerSlopeFactor = cancerSlopeFactor;
-	}
+    public String getChemicalName() {
+        return chemicalName;
+    }
 
-	public String getCancerSlopeRef() {
-		return cancerSlopeRef;
-	}
+    public void setChemicalName(String chemicalName) {
+        this.chemicalName = chemicalName;
+    }
 
-	public void setCancerSlopeRef(String cancerSlopeRef) {
-		this.cancerSlopeRef = cancerSlopeRef;
-	}
+    public String getChemicalFormula() {
+        return chemicalFormula;
+    }
 
-	public Integer getPageNo() {
-		return pageNo;
-	}
+    public void setChemicalFormula(String chemicalFormula) {
+        this.chemicalFormula = chemicalFormula;
+    }
 
-	public void setPageNo(Integer pageNo) {
-		this.pageNo = pageNo;
-	}
+    public String getSoilGuideline() {
+        return soilGuideline;
+    }
 
-	public Integer getPageSize() {
-		return pageSize;
-	}
+    public void setSoilGuideline(String soilGuideline) {
+        this.soilGuideline = soilGuideline;
+    }
 
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
+    public String getSoilRef() {
+        return soilRef;
+    }
 
-	public String getSortBy() {
-		return sortBy;
-	}
+    public void setSoilRef(String soilRef) {
+        this.soilRef = soilRef;
+    }
 
-	public void setSortBy(String sortBy) {
-		this.sortBy = sortBy;
-	}
+    public String getWaterGuideline() {
+        return waterGuideline;
+    }
 
-	public String getOrderBy() {
-		return orderBy;
-	}
+    public void setWaterGuideline(String waterGuideline) {
+        this.waterGuideline = waterGuideline;
+    }
 
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
-	}
+    public String getWaterRef() {
+        return waterRef;
+    }
 
-	public Map<String, String> getSearchBy() {
-		return searchBy;
-	}
+    public void setWaterRef(String waterRef) {
+        this.waterRef = waterRef;
+    }
 
-	public void setSearchBy(Map<String, String> searchBy) {
-		this.searchBy = searchBy;
-	}
-	
-	
+    public String getCancerSlopeFactor() {
+        return cancerSlopeFactor;
+    }
+
+    public void setCancerSlopeFactor(String cancerSlopeFactor) {
+        this.cancerSlopeFactor = cancerSlopeFactor;
+    }
+
+    public String getCancerSlopeRef() {
+        return cancerSlopeRef;
+    }
+
+    public void setCancerSlopeRef(String cancerSlopeRef) {
+        this.cancerSlopeRef = cancerSlopeRef;
+    }
+
+    public Integer getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(Integer pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
+    public Map<String, String> getSearchBy() {
+        return searchBy;
+    }
+
+    public void setSearchBy(Map<String, String> searchBy) {
+        this.searchBy = searchBy;
+    }
+
+    public String getDosageRefValue() {
+        return dosageRefValue;
+    }
+
+    public String getReference() {
+        return reference;
+    }
 }

@@ -45,12 +45,19 @@ public class Toxicity extends DateAudit {
     @Column(name = "cancer_slope_ref")
     private String cancerSlopeRef;
 
+    @Column(name = "dosage_ref")
+    private String dosageRefValue;
+
+    @Column(name = "reference")
+    private String reference;
+
     public Toxicity() {
 
     }
 
     public Toxicity(Long id, String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
-                    String waterGuideline, String waterRef, String cancerSlopeFactor, String cancerSlopeRef) {
+                    String waterGuideline, String waterRef, String cancerSlopeFactor, String cancerSlopeRef,
+                    String dosageRefValue, String reference) {
         this.id = id;
         this.chemicalName = chemicalName;
         this.chemicalFormula = chemicalFormula;
@@ -60,11 +67,14 @@ public class Toxicity extends DateAudit {
         this.waterRef = waterRef;
         this.cancerSlopeFactor = cancerSlopeFactor;
         this.cancerSlopeRef = cancerSlopeRef;
+        this.dosageRefValue = dosageRefValue;
+        this.reference = reference;
     }
 
 
     public Toxicity(String chemicalName, String chemicalFormula, String soilGuideline, String soilRef,
-                    String waterGuideline, String waterRef, String cancerSlopeFactor, String cancerSlopeRef) {
+                    String waterGuideline, String waterRef, String cancerSlopeFactor, String cancerSlopeRef,
+                    String dosageRefValue, String reference) {
         this.chemicalName = chemicalName;
         this.chemicalFormula = chemicalFormula;
         this.soilGuideline = soilGuideline;
@@ -73,6 +83,8 @@ public class Toxicity extends DateAudit {
         this.waterRef = waterRef;
         this.cancerSlopeFactor = cancerSlopeFactor;
         this.cancerSlopeRef = cancerSlopeRef;
+        this.dosageRefValue = dosageRefValue;
+        this.reference = reference;
     }
 
     public Long getId() {
@@ -87,6 +99,22 @@ public class Toxicity extends DateAudit {
         return chemicalName;
     }
 
+    public String getSoilGuideline() {
+        return soilGuideline;
+    }
+
+    public String getWaterGuideline() {
+        return waterGuideline;
+    }
+
+    public String getCancerSlopeFactor() {
+        return cancerSlopeFactor;
+    }
+
+    public String getDosageRefValue() {
+        return dosageRefValue;
+    }
+
     public void setChemicalName(String chemicalName) {
         this.chemicalName = chemicalName;
     }
@@ -97,10 +125,6 @@ public class Toxicity extends DateAudit {
 
     public void setChemicalFormula(String chemicalFormula) {
         this.chemicalFormula = chemicalFormula;
-    }
-
-    public String getSoilGuideline() {
-        return soilGuideline;
     }
 
     public void setSoilGuideline(String soilGuideline) {
@@ -115,10 +139,6 @@ public class Toxicity extends DateAudit {
         this.soilRef = soilRef;
     }
 
-    public String getWaterGuideline() {
-        return waterGuideline;
-    }
-
     public void setWaterGuideline(String waterGuideline) {
         this.waterGuideline = waterGuideline;
     }
@@ -129,10 +149,6 @@ public class Toxicity extends DateAudit {
 
     public void setWaterRef(String waterRef) {
         this.waterRef = waterRef;
-    }
-
-    public String getCancerSlopeFactor() {
-        return cancerSlopeFactor;
     }
 
     public void setCancerSlopeFactor(String cancerSlopeFactor) {
@@ -147,12 +163,32 @@ public class Toxicity extends DateAudit {
         this.cancerSlopeRef = cancerSlopeRef;
     }
 
-    @Override
-    public String toString() {
-        return "Toxicity [id=" + id + ", chemicalName=" + chemicalName + ", chemicalFormula=" + chemicalFormula
-                + ", soilGuideline=" + soilGuideline + ", soilRef=" + soilRef + ", waterGuideline=" + waterGuideline
-                + ", waterRef=" + waterRef + ", cancerSlopeFactor=" + cancerSlopeFactor + ", cancerSlopeRef=" + cancerSlopeRef + "]";
+    public void setDosageRefValue(String dosageRefValue) {
+        this.dosageRefValue = dosageRefValue;
     }
 
+    public String getReference() {
+        return reference;
+    }
 
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    @Override
+    public String toString() {
+        return "Toxicity{" +
+                "id=" + id +
+                ", chemicalName='" + chemicalName + '\'' +
+                ", chemicalFormula='" + chemicalFormula + '\'' +
+                ", soilGuideline='" + soilGuideline + '\'' +
+                ", soilRef='" + soilRef + '\'' +
+                ", waterGuideline='" + waterGuideline + '\'' +
+                ", waterRef='" + waterRef + '\'' +
+                ", cancerSlopeFactor='" + cancerSlopeFactor + '\'' +
+                ", cancerSlopeRef='" + cancerSlopeRef + '\'' +
+                ", dosageRefValue='" + dosageRefValue + '\'' +
+                ", reference='" + reference + '\'' +
+                '}';
+    }
 }

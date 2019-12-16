@@ -61,6 +61,16 @@ class ToxicityData extends Component {
                     dataIndex: 'cancerSlopeRef',
                     key: 'cancerSlopeRef'
                 },
+                {
+                    title: 'Ref Dosage Value',
+                    dataIndex: 'dosageRefValue',
+                    key: 'dosageRefValue'
+                },
+                {
+                    title: 'Reference',
+                    dataIndex: 'reference',
+                    key: 'reference'
+                },
             ] :
             [
                 {
@@ -104,6 +114,16 @@ class ToxicityData extends Component {
                     title: 'Cancer Slope Ref',
                     dataIndex: 'cancerSlopeRef',
                     key: 'cancerSlopeRef'
+                },
+                {
+                    title: 'Ref Dosage Value',
+                    dataIndex: 'dosageRefValue',
+                    key: 'dosageRefValue'
+                },
+                {
+                    title: 'Reference',
+                    dataIndex: 'reference',
+                    key: 'reference'
                 },
             ]
         }
@@ -192,6 +212,14 @@ class ToxicityData extends Component {
                             cancerSlopeRef: Form.createFormField({
                                 ...props.cancerSlopeRef,
                                 value: selectedToxicity.cancerSlopeRef
+                            }),
+                            dosageRefValue: Form.createFormField({
+                                ...props.dosageRefValue,
+                                value: selectedToxicity.dosageRefValue
+                            }),
+                            reference: Form.createFormField({
+                                ...props.reference,
+                                value: selectedToxicity.reference
                             }),
                         };
                     } else {

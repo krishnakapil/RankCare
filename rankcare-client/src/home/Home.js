@@ -38,7 +38,7 @@ class Home extends Component {
     renderAboutPoints() {
         return (
             <div>
-                <h3 className="about-title">CRC Care Innovative Research Programs</h3>
+                <h3 className="about-title">CRC CARE Innovative Research Programs</h3>
             <div className="about-points-box">
                 <ol>
                     <li><strong><a href="https://www.crccare.com/our-research/program-1-policy" target="_blank">Best Practice Policy</a></strong><strong>: </strong><em>More

@@ -31,7 +31,7 @@ class AppHeader extends Component {
                 <Header className="app-header">
                     <div className="container">
                         <a href="/">
-                            <h2 style={{ float: "left", marginLeft: 40, color: "#327c36" }}>rankCare-II</h2>
+                            <h2 style={{ float: "left", marginLeft: 40, color: "#327c36" }}>rankCARE-II</h2>
                         </a>
                         {this.props.currentUser &&
                             this.renderMenu()

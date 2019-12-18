@@ -399,9 +399,13 @@ public class SiteDataController {
                 for (SiteChemicalData siteChemicalData : siteChemicalDataMap.values()) {
                     double aSoil = calculateAValue(siteChemicalData.getSoilMean(), siteChemicalData.getSoilSd());
                     double aWater = calculateAValue(siteChemicalData.getSoilMean(), siteChemicalData.getSoilSd());
-                    double b = calculateLogNrnd(soilGeoMean, soilGeoSd);
-                    double c = calculateLogNrnd(waterGeoMean, waterGeoSd);
+                    double b = calculateLogNrnd(Math.log(soilGeoMean), Math.log(soilGeoSd)) / Math.pow(10, 6);
+                    double c = calculateLogNrnd(Math.log(waterGeoMean), Math.log(waterGeoSd));
                     double d = calculateNormrnd(bodyWtMean, bodyWtSd);
+
+//                    System.out.println("CalValues b -> " + b);
+//                    System.out.println("CalValues c -> " + c);
+//                    System.out.println("CalValues d -> " + d);
 
                     double value = (aSoil * b / d) + (aWater * c / d);
                     double crValue = (value / Double.parseDouble(siteChemicalData.getToxicity().getCancerSlopeFactor()));

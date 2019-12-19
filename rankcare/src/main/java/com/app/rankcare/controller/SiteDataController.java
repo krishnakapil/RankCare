@@ -340,6 +340,8 @@ public class SiteDataController {
                         val = ((Double.valueOf(siteCalc.getContaminationValue())) * Double.valueOf(consumptionData.get(c).getSoilInvAvg()));
                     }
 
+                    val = val / Double.valueOf(consumptionData.get(c).getBodyWtMean());
+
                     ncr += val / Double.valueOf(t.getDosageRefValue());
                     cr += val * Double.valueOf(t.getCancerSlopeFactor());
                 }
@@ -402,10 +404,6 @@ public class SiteDataController {
                     double b = calculateLogNrnd(Math.log(soilGeoMean), Math.log(soilGeoSd)) / Math.pow(10, 6);
                     double c = calculateLogNrnd(Math.log(waterGeoMean), Math.log(waterGeoSd));
                     double d = calculateNormrnd(bodyWtMean, bodyWtSd);
-
-//                    System.out.println("CalValues b -> " + b);
-//                    System.out.println("CalValues c -> " + c);
-//                    System.out.println("CalValues d -> " + d);
 
                     double value = (aSoil * b / d) + (aWater * c / d);
                     double crValue = (value / Double.parseDouble(siteChemicalData.getToxicity().getCancerSlopeFactor()));

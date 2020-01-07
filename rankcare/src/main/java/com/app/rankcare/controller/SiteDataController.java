@@ -406,7 +406,7 @@ public class SiteDataController {
                     double d = calculateNormrnd(bodyWtMean, bodyWtSd);
 
                     double value = (aSoil * b / d) + (aWater * c / d);
-                    double crValue = (value / Double.parseDouble(siteChemicalData.getToxicity().getCancerSlopeFactor()));
+                    double crValue = (value * Double.parseDouble(siteChemicalData.getToxicity().getCancerSlopeFactor()));
                     double ncrValue = (value / Double.parseDouble(siteChemicalData.getToxicity().getDosageRefValue()));
 
                     cr += crValue;
@@ -425,8 +425,9 @@ public class SiteDataController {
 
     private double calculateAValue(double mean, double sd) {
         double pow2 = Math.pow(mean, 2);
-        double mu = Math.log(pow2 / Math.sqrt(sd + pow2));
-        double sigma = Math.sqrt(Math.log(sd / pow2 + 1));
+        double sdPow2 = Math.pow(sd, 2);
+        double mu = Math.log(pow2 / Math.sqrt(sdPow2 + pow2));
+        double sigma = Math.sqrt(Math.log(sdPow2 / pow2 + 1));
 
         return calculateLogNrnd(mu, sigma);
     }

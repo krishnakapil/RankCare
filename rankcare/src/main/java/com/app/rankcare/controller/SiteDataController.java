@@ -340,7 +340,7 @@ public class SiteDataController {
                     if ("Water".equalsIgnoreCase(siteCalc.getContaminationType())) {
                         val = ((Double.valueOf(siteCalc.getContaminationValue())) * Double.valueOf(consumptionData.get(c).getWaterConsAvg()));
                     } else if ("Soil".equalsIgnoreCase(siteCalc.getContaminationType())) {
-                        val = ((Double.valueOf(siteCalc.getContaminationValue())) * Double.valueOf(consumptionData.get(c).getSoilInvAvg()));
+                        val = ((Double.valueOf(siteCalc.getContaminationValue())) * Double.valueOf(consumptionData.get(c).getSoilInvAvg()) / Math.pow(10, 6));
                     }
 
                     val = val / Double.valueOf(consumptionData.get(c).getBodyWtMean());
